@@ -9,8 +9,8 @@ function App() {
   return (
     <>
       <Header />
-      <main className="pt-24">
-        <section id="home">
+      <main>
+        <section id="home" className="min-h-screen">
           <HeroSection />
         </section>
         <section id="roadmap">

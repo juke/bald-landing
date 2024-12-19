@@ -103,7 +103,7 @@ const HeroSection = () => {
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-600/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-24 md:pt-0">
         {/* Text Content */}
         <div className="text-left text-white">
           <motion.div

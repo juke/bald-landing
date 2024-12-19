@@ -18,7 +18,7 @@ const Header = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <nav className="bg-black/20 backdrop-blur-md border border-yellow-400/20 rounded-2xl px-4 lg:px-6 py-4">
+        <nav className="bg-black/10 backdrop-blur-sm border border-yellow-400/20 rounded-2xl px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.a
