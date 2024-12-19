@@ -13,13 +13,13 @@ function App() {
         <section id="home" className="min-h-screen">
           <HeroSection />
         </section>
-        <section id="roadmap">
+        <section id="roadmap" className="scroll-mt-32">
           <PublicGoodSection />
         </section>
-        <section id="distribution">
+        <section id="distribution" className="scroll-mt-32">
           <DistributionSection />
         </section>
-        <section id="progress">
+        <section id="progress" className="scroll-mt-32">
           <ProgressTracker />
         </section>
       </main>
