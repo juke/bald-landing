@@ -5,7 +5,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import baldHero from '../assets/bald-hero.png'
+import baldHero from '../public/bald-hero.png'
 
 const ParticleEffect = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
