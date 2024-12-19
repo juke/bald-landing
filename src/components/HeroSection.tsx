@@ -5,7 +5,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import baldHero from '../public/bald-hero.png'
 
 const ParticleEffect = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -253,7 +252,7 @@ const HeroSection = () => {
             />
             <div className="relative group overflow-hidden rounded-2xl">
               <motion.img
-                src={baldHero}
+                src="/bald-landing/bald-hero.png"
                 alt="Bald Hero"
                 className="rounded-2xl shadow-2xl w-full drop-shadow-[0_0_30px_rgba(250,204,21,0.3)] transition-transform duration-300 group-hover:scale-105"
               />
