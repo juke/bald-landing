@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -48,13 +49,13 @@ const ContractForm = () => {
       transition={{ duration: 0.5, delay: 0.6 }}
     >
       {/* Contract Address Display */}
-      <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm p-2 rounded-xl border border-yellow-400/20">
-        <div className="flex-1 px-4 py-2 text-yellow-400 font-mono">
+      <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm p-2 rounded-xl border border-yellow-400/20 overflow-hidden">
+        <div className="flex-1 px-4 py-2 text-yellow-400 font-mono text-sm md:text-base overflow-x-auto">
           {contractAddress}
         </div>
         <motion.button
           onClick={handleCopy}
-          className="bg-yellow-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-300 transition-colors"
+          className="bg-yellow-400 text-black px-4 md:px-6 py-2 rounded-lg font-bold hover:bg-yellow-300 transition-colors shrink-0 z-10"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -65,7 +66,7 @@ const ContractForm = () => {
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-4">
         <motion.a
-          href="#" // Add your buy link here
+          href="#"
           className="bg-yellow-400 text-black px-6 py-3 rounded-xl font-bold hover:bg-yellow-300 transition-colors text-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -73,7 +74,7 @@ const ContractForm = () => {
           BUY $BALD
         </motion.a>
         <motion.a
-          href="#" // Add your DEX screener link here
+          href="#"
           className="bg-black/20 backdrop-blur-sm text-yellow-400 px-6 py-3 rounded-xl font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors text-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -86,6 +87,8 @@ const ContractForm = () => {
 };
 
 const HeroSection = () => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
   return (
     <section className="min-h-screen relative overflow-hidden flex items-center justify-center p-8">
       {/* Animated gradient background */}
@@ -153,8 +156,8 @@ const HeroSection = () => {
           >
             Witness{" "}
             <TooltipProvider delayDuration={0}>
-              <Tooltip>
-                <TooltipTrigger asChild>
+              <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
+                <TooltipTrigger asChild onClick={() => setTooltipOpen(!tooltipOpen)}>
                   <motion.span
                     className="inline-flex items-center px-4 py-2 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1"
                     whileHover={{ 
@@ -182,7 +185,7 @@ const HeroSection = () => {
                 </TooltipTrigger>
                 <TooltipContent 
                   side="top"
-                  className="bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px]"
+                  className="bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px] z-50"
                   sideOffset={5}
                 >
                   <div className="space-y-2">
