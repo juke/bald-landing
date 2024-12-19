@@ -19,12 +19,12 @@ const Header = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <nav className="bg-black/10 backdrop-blur-sm border border-yellow-400/20 rounded-2xl px-4 lg:px-6 py-4">
+        <nav className="bg-black/40 backdrop-blur-md border border-yellow-400/20 rounded-2xl px-4 lg:px-6 py-4 shadow-lg">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.a
               href="#"
-              className="text-xl md:text-2xl font-bold text-yellow-400"
+              className="text-xl md:text-2xl font-bold text-yellow-400 drop-shadow-glow"
               whileHover={{ scale: 1.05 }}
             >
               $BALD
@@ -48,7 +48,7 @@ const Header = () => {
 
               <motion.a
                 href="#"
-                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors"
+                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors shadow-md"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -58,7 +58,7 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden text-yellow-400 p-2"
+              className="md:hidden text-yellow-400 p-2 drop-shadow-glow"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <Menu className="w-6 h-6" />
@@ -111,7 +111,7 @@ const Header = () => {
               </div>
               <motion.a
                 href="#"
-                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors"
+                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors shadow-md"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -129,7 +129,7 @@ const Header = () => {
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <motion.a
     href={href}
-    className="text-gray-200 hover:text-yellow-400 transition-colors"
+    className="text-white hover:text-yellow-400 transition-colors drop-shadow-glow"
     whileHover={{ scale: 1.1 }}
   >
     {children}
@@ -147,7 +147,7 @@ const MobileNavLink = ({
 }) => (
   <motion.a
     href={href}
-    className="text-gray-200 hover:text-yellow-400 transition-colors px-2 py-1"
+    className="text-white hover:text-yellow-400 transition-colors px-2 py-1 drop-shadow-glow"
     whileHover={{ scale: 1.05 }}
     onClick={onClick}
   >
@@ -160,7 +160,7 @@ const SocialIcon = ({ href, icon }: { href: string; icon: React.ReactNode }) => 
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-gray-200 hover:text-yellow-400 transition-colors"
+    className="text-white hover:text-yellow-400 transition-colors drop-shadow-glow"
     whileHover={{ scale: 1.2, rotate: 10 }}
     whileTap={{ scale: 0.9 }}
   >
