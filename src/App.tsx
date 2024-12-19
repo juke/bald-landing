@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Header />
-      <main>
+      <main className="pt-24">
         <section id="home">
           <HeroSection />
         </section>
