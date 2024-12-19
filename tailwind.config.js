@@ -58,10 +58,58 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "gradient-shift": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
+        "text-shine": {
+          "0%": {
+            "background-size": "200% 200%",
+            "background-position": "-200% center",
+          },
+          "100%": {
+            "background-size": "200% 200%",
+            "background-position": "200% center",
+          },
+        },
+        blob: {
+          "0%, 100%": {
+            transform: "translate(0, 0) scale(1)",
+          },
+          "25%": {
+            transform: "translate(20px, -30px) scale(1.1)",
+          },
+          "50%": {
+            transform: "translate(-20px, 20px) scale(0.9)",
+          },
+          "75%": {
+            transform: "translate(-30px, -20px) scale(1.05)",
+          },
+        },
+        "gold-shimmer": {
+          "0%": {
+            "background-size": "200% 200%",
+            "background-position": "-100% center",
+          },
+          "100%": {
+            "background-size": "200% 200%",
+            "background-position": "100% center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "gradient-shift": "gradient-shift 15s ease infinite",
+        "text-shine": "text-shine 8s ease-in-out infinite",
+        "blob": "blob 10s infinite",
+        "gold-shimmer": "gold-shimmer 2s ease-in-out infinite",
       },
     },
   },

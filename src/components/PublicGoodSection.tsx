@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const RoadmapSection = () => {
+const PublicGoodSection = () => {
   return (
     <section className="bg-gray-100 text-gray-900 py-16 text-center relative overflow-hidden">
       {/* Background gradient animation */}
@@ -25,7 +25,7 @@ const RoadmapSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Roadmap
+          A Public Good
         </motion.h2>
         <motion.p 
           className="max-w-2xl mx-auto text-lg mb-8"
@@ -34,11 +34,12 @@ const RoadmapSection = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          $BALD's roadmap section.
+          $BALD exists as a public good with a single purpose: to bootstrap new liquidity for the original $BALD token. 
+          No roadmap, no promises - just a community-driven initiative to strengthen the $BALD ecosystem.
         </motion.p>
       </motion.div>
     </section>
   );
 };
 
-export default RoadmapSection;
+export default PublicGoodSection; 

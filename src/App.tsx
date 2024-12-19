@@ -1,5 +1,6 @@
+import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
-import RoadmapSection from "./components/RoadmapSection";
+import PublicGoodSection from "./components/PublicGoodSection";
 import DistributionSection from "./components/DistributionSection";
 import ProgressTracker from "./components/ProgressTracker";
 import Footer from "./components/Footer";
@@ -7,10 +8,21 @@ import Footer from "./components/Footer";
 function App() {
   return (
     <>
-      <HeroSection />
-      <RoadmapSection />
-      <DistributionSection />
-      <ProgressTracker />
+      <Header />
+      <main>
+        <section id="home">
+          <HeroSection />
+        </section>
+        <section id="roadmap">
+          <PublicGoodSection />
+        </section>
+        <section id="distribution">
+          <DistributionSection />
+        </section>
+        <section id="progress">
+          <ProgressTracker />
+        </section>
+      </main>
       <Footer />
     </>
   );
