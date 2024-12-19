@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/bald-landing/',
   plugins: [react()],
   resolve: {
     alias: {
