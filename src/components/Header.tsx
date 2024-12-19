@@ -9,6 +9,7 @@ import { useState } from "react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
@@ -66,19 +67,43 @@ const Header = () => {
 
           {/* Mobile Menu */}
           <motion.div
-            className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col gap-4 mt-4 pt-4 border-t border-yellow-400/20`}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: isMobileMenuOpen ? 1 : 0, height: isMobileMenuOpen ? 'auto' : 0 }}
-            transition={{ duration: 0.2 }}
+            className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col gap-4 mt-4 pt-4 border-t border-yellow-400/20 overflow-hidden`}
+            initial={false}
+            animate={{
+              height: isMobileMenuOpen ? 'auto' : 0,
+              opacity: isMobileMenuOpen ? 1 : 0,
+            }}
+            transition={{ 
+              type: "spring",
+              duration: 0.4,
+              onStart: () => setIsAnimating(true),
+              onComplete: () => setIsAnimating(false)
+            }}
           >
-            <div className="flex flex-col gap-2">
+            <motion.div 
+              className="flex flex-col gap-2"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ 
+                opacity: isMobileMenuOpen && !isAnimating ? 1 : 0,
+                y: isMobileMenuOpen && !isAnimating ? 0 : -20 
+              }}
+              transition={{ delay: 0.2 }}
+            >
               <MobileNavLink href="#home" onClick={() => setIsMobileMenuOpen(false)}>Home</MobileNavLink>
               <MobileNavLink href="#roadmap" onClick={() => setIsMobileMenuOpen(false)}>Roadmap</MobileNavLink>
               <MobileNavLink href="#distribution" onClick={() => setIsMobileMenuOpen(false)}>Distribution</MobileNavLink>
               <MobileNavLink href="#progress" onClick={() => setIsMobileMenuOpen(false)}>Progress</MobileNavLink>
-            </div>
+            </motion.div>
 
-            <div className="flex items-center justify-end gap-4 py-2">
+            <motion.div 
+              className="flex items-center justify-end gap-4 py-2"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ 
+                opacity: isMobileMenuOpen && !isAnimating ? 1 : 0,
+                y: isMobileMenuOpen && !isAnimating ? 0 : -20 
+              }}
+              transition={{ delay: 0.3 }}
+            >
               <div className="flex items-center gap-3">
                 <SocialIcon href="https://twitter.com" icon={<TwitterIcon />} />
                 <SocialIcon href="https://t.me" icon={<TelegramIcon />} />
@@ -92,7 +117,7 @@ const Header = () => {
               >
                 BUY $BALD
               </motion.a>
-            </div>
+            </motion.div>
           </motion.div>
         </nav>
       </motion.header>

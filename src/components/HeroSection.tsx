@@ -106,7 +106,7 @@ const HeroSection = () => {
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-600/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-24 md:pt-0">
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-16 md:pt-0">
         {/* Text Content */}
         <div className="text-left text-white">
           <motion.div
@@ -149,7 +149,7 @@ const HeroSection = () => {
             </div>
           </motion.div>
           <motion.p
-            className="text-xl mt-8 mb-8 text-gray-200 max-w-xl"
+            className="text-xl mt-8 mb-8 text-gray-200 max-w-xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
@@ -159,7 +159,7 @@ const HeroSection = () => {
               <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
                 <TooltipTrigger asChild onClick={() => setTooltipOpen(!tooltipOpen)}>
                   <motion.span
-                    className="inline-flex items-center px-4 py-2 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1"
+                    className="inline-flex items-center px-2 py-0 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1"
                     whileHover={{ 
                       scale: 1.05,
                       backgroundColor: "rgba(250, 204, 21, 0.2)",
