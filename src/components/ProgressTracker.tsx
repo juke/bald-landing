@@ -150,8 +150,8 @@ const ProgressTracker = () => {
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: false, amount: 0.3, margin: "100px" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <Badge 
             variant="outline" 
@@ -164,8 +164,8 @@ const ProgressTracker = () => {
             className="text-4xl md:text-5xl font-bold mb-6 text-white"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: false, amount: 0.3, margin: "100px" }}
+            transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
           >
             Baldness Levels
           </motion.h2>
@@ -174,8 +174,8 @@ const ProgressTracker = () => {
             className="text-xl text-gray-400 max-w-2xl mx-auto"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: false, amount: 0.3, margin: "100px" }}
+            transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
           >
             Track your journey to complete baldness through our revolutionary level system
           </motion.p>
