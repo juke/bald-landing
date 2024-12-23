@@ -158,9 +158,9 @@ const Header = () => {
         <AnimatePresence>
           {isMenuOpen && (
             <>
-              {/* Backdrop */}
+              {/* Dark overlay behind menu */}
               <motion.div
-                className="fixed inset-0 top-16 bg-black/80 md:hidden"
+                className="fixed inset-0 top-16 bg-black/60 md:hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -169,20 +169,20 @@ const Header = () => {
               
               {/* Menu Content */}
               <motion.div
-                className="fixed inset-x-0 top-16 bg-black/95 backdrop-blur-md md:hidden mobile-menu"
+                className="fixed inset-x-4 top-[4.5rem] bg-black supports-[backdrop-filter]:backdrop-blur-lg md:hidden mobile-menu rounded-2xl border border-white/5 shadow-lg shadow-black/20"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="flex flex-col items-center pt-8 px-4 pb-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                <div className="flex flex-col items-center py-6 px-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
                   {navItems.map((item) => (
                     <a
                       key={item.id}
                       href={`#${item.id}`}
                       onClick={(e) => handleNavClick(e, item.id)}
                       className={cn(
-                        "w-full text-center py-4 text-lg font-medium transition-colors",
+                        "w-full text-center py-4 text-lg font-medium transition-colors hover:bg-white/5 rounded-xl",
                         activeSection === item.id 
                           ? "text-yellow-400" 
                           : "text-gray-400"
@@ -192,7 +192,7 @@ const Header = () => {
                     </a>
                   ))}
 
-                  <div className="flex items-center gap-6 mt-8">
+                  <div className="flex items-center gap-6 mt-6">
                     <motion.a
                       href="https://twitter.com"
                       target="_blank"
@@ -225,23 +225,23 @@ const Header = () => {
                     </motion.a>
                   </div>
 
-                  <div className="flex flex-col w-full gap-4 mt-8">
+                  <div className="flex flex-col w-full gap-4 mt-6">
                     <motion.a
                       href="https://app.uniswap.org"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 bg-yellow-400 text-black px-3 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors"
+                      className="flex items-center justify-center gap-1.5 bg-yellow-400 text-black px-4 py-3 rounded-xl text-base font-bold hover:bg-yellow-300 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Buy Now
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-4 h-4" />
                     </motion.a>
                     <motion.a
                       href="https://dexscreener.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 bg-black/20 backdrop-blur-sm text-yellow-400 px-3 py-2 rounded-lg text-sm font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors"
+                      className="flex items-center justify-center gap-1.5 bg-black/20 backdrop-blur-sm text-yellow-400 px-4 py-3 rounded-xl text-base font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

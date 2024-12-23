@@ -84,28 +84,62 @@
 html {
   scroll-behavior: smooth;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
   height: 100%;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 #root {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .snap-container {
   height: 100vh;
+  width: 100vw;
   overflow-y: auto;
-  scroll-snap-type: y mandatory;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .snap-container {
+    scroll-snap-type: y mandatory;
+  }
 }
 
 .section-content {
-  height: 100vh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  min-height: 100vh;
+  width: 100vw;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.section-content > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  padding-top: 4rem; /* Account for header */
+}
+
+@media (min-width: 768px) {
+  .section-content {
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 }

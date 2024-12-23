@@ -6,7 +6,7 @@ import ProgressTracker from "@/components/ProgressTracker";
 
 function App() {
   return (
-    <div className="relative min-h-screen bg-black text-white">
+    <div className="relative min-h-screen w-screen overflow-hidden bg-black text-white">
       <Header />
       <div className="snap-container">
         <section id="home" className="section-content">
