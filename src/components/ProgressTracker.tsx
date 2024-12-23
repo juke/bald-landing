@@ -9,7 +9,7 @@ const ProgressTracker = () => {
       {/* Static gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 py-20 pb-32">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
