@@ -10,24 +10,39 @@ import SectionDivider from './SectionDivider';
 
 const ParticleEffect = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(15)].map((_, i) => (
+    {[...Array(40)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute w-1 h-1 bg-yellow-400/20 rounded-full"
+        className={`absolute rounded-full ${
+          i % 3 === 0
+            ? "w-1 h-1 bg-yellow-400/30"
+            : i % 3 === 1
+            ? "w-1.5 h-1.5 bg-yellow-400/20"
+            : "w-0.5 h-0.5 bg-yellow-400/40"
+        }`}
         initial={{
           x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          scale: 0,
+          y: window.innerHeight * (1 + Math.random()),
+          scale: Math.random(),
+          opacity: Math.random() * 0.5,
         }}
         animate={{
-          y: [null, -500],
-          scale: [0, 2, 0],
+          y: -100,
+          scale: [null, 1, 0.8],
+          opacity: [null, 1, 0],
         }}
         transition={{
-          duration: Math.random() * 20 + 15,
+          duration: Math.random() * 15 + 25,
           repeat: Infinity,
-          ease: "easeInOut",
-          delay: Math.random() * 5,
+          repeatDelay: -5,
+          ease: "linear",
+          delay: -(Math.random() * 25),
+          opacity: {
+            duration: Math.random() * 15 + 25,
+            times: [0, 0.1, 1],
+            ease: "easeInOut",
+            repeat: Infinity,
+          },
         }}
       />
     ))}
