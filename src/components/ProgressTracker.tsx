@@ -119,10 +119,9 @@ const ProgressTracker = () => {
       <div className="absolute inset-0">
         {/* Animated gradient background */}
         <div 
-          className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black"
+          className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift"
           style={{
             backgroundSize: '200% 200%',
-            animation: 'gradientShift 15s ease infinite',
           }}
         />
         
@@ -215,14 +214,6 @@ const ProgressTracker = () => {
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes gradientShift {
-          0% { background-position: 50% 100% }
-          50% { background-position: 50% 0% }
-          100% { background-position: 50% 100% }
-        }
-      `}</style>
     </div>
   );
 };
