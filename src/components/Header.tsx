@@ -1,171 +1,261 @@
-import { motion } from "framer-motion";
-import { Menu } from "lucide-react";
-import { 
-  TwitterIcon, 
-  TelegramIcon, 
-  DiscordIcon 
-} from "./icons/SocialIcons";
-import { useState } from "react";
+import { useActiveSection } from "@/hooks/useActiveSection";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Menu, X } from "lucide-react";
+import { TwitterIcon, TelegramIcon, DiscordIcon } from "@/components/icons/SocialIcons";
+import { useState, useEffect } from "react";
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const activeSection = useActiveSection();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (isMenuOpen && !target.closest('.mobile-menu') && !target.closest('.menu-button')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMenuOpen]);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
+
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'public-good', label: 'Public Good' },
+    { id: 'distribution', label: 'Distribution' },
+    { id: 'progress', label: 'Progress' },
+  ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+  };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4">
-      <motion.header
-        className="w-full max-w-7xl"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <nav className="bg-black/40 backdrop-blur-md border border-yellow-400/20 rounded-2xl px-4 lg:px-6 py-4 shadow-lg">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <motion.a
-              href="#"
-              className="text-xl md:text-2xl font-bold text-yellow-400 drop-shadow-glow"
-              whileHover={{ scale: 1.05 }}
-            >
-              $BALD
-            </motion.a>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-md border-b border-white/5">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <nav className="flex items-center justify-between h-16">
+          <div className="text-xl font-bold text-yellow-400">$BALD</div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => handleNavClick(e, item.id)}
+                className="relative"
+              >
+                <motion.span
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-yellow-400",
+                    activeSection === item.id 
+                      ? "text-yellow-400" 
+                      : "text-gray-400"
+                  )}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {item.label}
+                </motion.span>
+                {activeSection === item.id && (
+                  <motion.div
+                    className="absolute -bottom-[1.5px] left-0 right-0 h-[2px] bg-yellow-400"
+                    layoutId="activeSection"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </a>
+            ))}
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              <NavLink href="#home">Home</NavLink>
-              <NavLink href="#roadmap">Roadmap</NavLink>
-              <NavLink href="#distribution">Distribution</NavLink>
-              <NavLink href="#progress">Progress</NavLink>
-            </div>
-
-            {/* Desktop Social Links & Buy Button */}
-            <div className="hidden md:flex items-center gap-4">
-              <div className="flex items-center gap-3">
-                <SocialIcon href="https://twitter.com" icon={<TwitterIcon />} />
-                <SocialIcon href="https://t.me" icon={<TelegramIcon />} />
-                <SocialIcon href="https://discord.com" icon={<DiscordIcon />} />
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 mr-2">
+                <motion.a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <TwitterIcon />
+                </motion.a>
+                <motion.a
+                  href="https://telegram.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <TelegramIcon />
+                </motion.a>
+                <motion.a
+                  href="https://discord.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-yellow-400 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <DiscordIcon />
+                </motion.a>
               </div>
 
               <motion.a
-                href="#"
-                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors shadow-md"
+                href="https://app.uniswap.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-yellow-400 text-black px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                BUY $BALD
+                Buy Now
+                <ArrowRight className="w-3.5 h-3.5" />
+              </motion.a>
+              <motion.a
+                href="https://dexscreener.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-black/20 backdrop-blur-sm text-yellow-400 px-3 py-1.5 rounded-lg text-sm font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Chart
               </motion.a>
             </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-yellow-400 p-2 drop-shadow-glow"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <Menu className="w-6 h-6" />
-            </button>
           </div>
 
-          {/* Mobile Menu */}
-          <motion.div
-            className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:hidden flex-col gap-4 mt-4 pt-4 border-t border-yellow-400/20 overflow-hidden`}
-            initial={false}
-            animate={{
-              height: isMobileMenuOpen ? 'auto' : 0,
-              opacity: isMobileMenuOpen ? 1 : 0,
+          {/* Mobile Menu Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMenuOpen(!isMenuOpen);
             }}
-            transition={{ 
-              type: "spring",
-              duration: 0.4,
-              onStart: () => setIsAnimating(true),
-              onComplete: () => setIsAnimating(false)
-            }}
+            className="md:hidden text-gray-400 hover:text-yellow-400 transition-colors menu-button"
           >
-            <motion.div 
-              className="flex flex-col gap-2"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ 
-                opacity: isMobileMenuOpen && !isAnimating ? 1 : 0,
-                y: isMobileMenuOpen && !isAnimating ? 0 : -20 
-              }}
-              transition={{ delay: 0.2 }}
-            >
-              <MobileNavLink href="#home" onClick={() => setIsMobileMenuOpen(false)}>Home</MobileNavLink>
-              <MobileNavLink href="#roadmap" onClick={() => setIsMobileMenuOpen(false)}>Roadmap</MobileNavLink>
-              <MobileNavLink href="#distribution" onClick={() => setIsMobileMenuOpen(false)}>Distribution</MobileNavLink>
-              <MobileNavLink href="#progress" onClick={() => setIsMobileMenuOpen(false)}>Progress</MobileNavLink>
-            </motion.div>
-
-            <motion.div 
-              className="flex items-center justify-end gap-4 py-2"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ 
-                opacity: isMobileMenuOpen && !isAnimating ? 1 : 0,
-                y: isMobileMenuOpen && !isAnimating ? 0 : -20 
-              }}
-              transition={{ delay: 0.3 }}
-            >
-              <div className="flex items-center gap-3">
-                <SocialIcon href="https://twitter.com" icon={<TwitterIcon />} />
-                <SocialIcon href="https://t.me" icon={<TelegramIcon />} />
-                <SocialIcon href="https://discord.com" icon={<DiscordIcon />} />
-              </div>
-              <motion.a
-                href="#"
-                className="bg-yellow-400 text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors shadow-md"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                BUY $BALD
-              </motion.a>
-            </motion.div>
-          </motion.div>
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </nav>
-      </motion.header>
-    </div>
+
+        {/* Mobile Menu with Backdrop */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                className="fixed inset-0 top-16 bg-black/80 md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              {/* Menu Content */}
+              <motion.div
+                className="fixed inset-x-0 top-16 bg-black/95 backdrop-blur-md md:hidden mobile-menu"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex flex-col items-center pt-8 px-4 pb-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      onClick={(e) => handleNavClick(e, item.id)}
+                      className={cn(
+                        "w-full text-center py-4 text-lg font-medium transition-colors",
+                        activeSection === item.id 
+                          ? "text-yellow-400" 
+                          : "text-gray-400"
+                      )}
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+
+                  <div className="flex items-center gap-6 mt-8">
+                    <motion.a
+                      href="https://twitter.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-yellow-400 transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <TwitterIcon />
+                    </motion.a>
+                    <motion.a
+                      href="https://telegram.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-yellow-400 transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <TelegramIcon />
+                    </motion.a>
+                    <motion.a
+                      href="https://discord.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-yellow-400 transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <DiscordIcon />
+                    </motion.a>
+                  </div>
+
+                  <div className="flex flex-col w-full gap-4 mt-8">
+                    <motion.a
+                      href="https://app.uniswap.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 bg-yellow-400 text-black px-3 py-2 rounded-lg text-sm font-bold hover:bg-yellow-300 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Buy Now
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </motion.a>
+                    <motion.a
+                      href="https://dexscreener.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 bg-black/20 backdrop-blur-sm text-yellow-400 px-3 py-2 rounded-lg text-sm font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Chart
+                    </motion.a>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+    </header>
   );
 };
-
-// Helper Components
-const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <motion.a
-    href={href}
-    className="text-white hover:text-yellow-400 transition-colors drop-shadow-glow"
-    whileHover={{ scale: 1.1 }}
-  >
-    {children}
-  </motion.a>
-);
-
-const MobileNavLink = ({ 
-  href, 
-  children, 
-  onClick 
-}: { 
-  href: string; 
-  children: React.ReactNode;
-  onClick: () => void;
-}) => (
-  <motion.a
-    href={href}
-    className="text-white hover:text-yellow-400 transition-colors px-2 py-1 drop-shadow-glow"
-    whileHover={{ scale: 1.05 }}
-    onClick={onClick}
-  >
-    {children}
-  </motion.a>
-);
-
-const SocialIcon = ({ href, icon }: { href: string; icon: React.ReactNode }) => (
-  <motion.a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-white hover:text-yellow-400 transition-colors drop-shadow-glow"
-    whileHover={{ scale: 1.2, rotate: 10 }}
-    whileTap={{ scale: 0.9 }}
-  >
-    {icon}
-  </motion.a>
-);
 
 export default Header;

@@ -1,30 +1,28 @@
-import Header from "./components/Header";
-import HeroSection from "./components/HeroSection";
-import PublicGoodSection from "./components/PublicGoodSection";
-import DistributionSection from "./components/DistributionSection";
-import ProgressTracker from "./components/ProgressTracker";
-import Footer from "./components/Footer";
+import Header from "@/components/Header";
+import HeroSection from "@/components/HeroSection";
+import PublicGoodSection from "@/components/PublicGoodSection";
+import DistributionSection from "@/components/DistributionSection";
+import ProgressTracker from "@/components/ProgressTracker";
 
 function App() {
   return (
-    <>
+    <div className="relative min-h-screen bg-black text-white">
       <Header />
-      <main>
-        <section id="home" className="min-h-screen">
+      <div className="snap-container">
+        <section id="home" className="section-content">
           <HeroSection />
         </section>
-        <section id="roadmap" className="scroll-mt-32">
+        <section id="public-good" className="section-content">
           <PublicGoodSection />
         </section>
-        <section id="distribution" className="scroll-mt-32">
+        <section id="distribution" className="section-content">
           <DistributionSection />
         </section>
-        <section id="progress" className="scroll-mt-32">
+        <section id="progress" className="section-content">
           <ProgressTracker />
         </section>
-      </main>
-      <Footer />
-    </>
+      </div>
+    </div>
   );
 }
 

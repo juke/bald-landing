@@ -6,6 +6,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import SectionDivider from './SectionDivider';
 
 const ParticleEffect = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -90,7 +91,7 @@ const HeroSection = () => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   return (
-    <section className="min-h-screen relative overflow-hidden flex items-center justify-center p-8">
+    <div className="relative w-full h-full overflow-hidden bg-gray-950 flex items-center">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
       
@@ -106,7 +107,7 @@ const HeroSection = () => {
         <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-600/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-24 md:pt-0">
+      <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8 py-20">
         {/* Text Content */}
         <div className="text-left text-white">
           <motion.div
@@ -263,7 +264,9 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
       </div>
-    </section>
+
+      <SectionDivider />
+    </div>
   );
 };
 
