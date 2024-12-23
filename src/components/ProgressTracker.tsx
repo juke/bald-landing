@@ -2,12 +2,149 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { ArrowUp } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const FloatingArrows = () => {
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Large background arrows - very slow and ethereal */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`bg-${i}`}
+          className="absolute"
+          initial={{
+            x: (dimensions.width / 6) * i + (Math.random() * 100 - 50),
+            y: dimensions.height + 100,
+            opacity: 0,
+          }}
+          animate={{
+            y: -200,
+            opacity: [0, 0.08, 0.08, 0],
+          }}
+          transition={{
+            duration: 20, // Much slower
+            repeat: Infinity,
+            delay: i * 3, // More spread out
+            ease: "linear",
+          }}
+        >
+          <ArrowUp className="w-40 h-40 text-yellow-400/10" />
+        </motion.div>
+      ))}
+
+      {/* Medium arrows - steady flow */}
+      {[...Array(10)].map((_, i) => {
+        const startX = Math.random() * dimensions.width;
+        const duration = Math.random() * 4 + 12; // 12-16 seconds
+        return (
+          <motion.div
+            key={`med-${i}`}
+            className="absolute"
+            initial={{
+              x: startX,
+              y: dimensions.height + 50,
+              opacity: 0,
+              scale: 0.8,
+            }}
+            animate={{
+              y: -100,
+              opacity: [0, 0.25, 0.25, 0],
+              scale: [0.8, 1, 0.9],
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: i * 1.2, // More spread out
+              ease: "linear",
+            }}
+          >
+            <ArrowUp className="w-16 h-16 text-yellow-400/20" />
+          </motion.div>
+        );
+      })}
+
+      {/* Small arrows - gentle rise */}
+      {[...Array(12)].map((_, i) => {
+        const startX = Math.random() * dimensions.width;
+        const duration = Math.random() * 3 + 8; // 8-11 seconds
+        return (
+          <motion.div
+            key={`small-${i}`}
+            className="absolute"
+            initial={{
+              x: startX,
+              y: dimensions.height,
+              opacity: 0,
+              scale: 0.6,
+            }}
+            animate={{
+              y: 0,
+              opacity: [0, 0.3, 0.3, 0],
+              scale: [0.6, 0.8, 0.7],
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: i * 0.8,
+              ease: "linear",
+            }}
+          >
+            <ArrowUp className="w-8 h-8 text-yellow-400/30" />
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
 
 const ProgressTracker = () => {
   return (
     <div className="relative w-full h-full overflow-hidden bg-gray-950 flex items-center">
-      {/* Static gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80" />
+      {/* Animated background */}
+      <div className="absolute inset-0">
+        {/* Animated gradient background */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black"
+          style={{
+            backgroundSize: '200% 200%',
+            animation: 'gradientShift 15s ease infinite',
+          }}
+        />
+        
+        {/* Glowing effect */}
+        <motion.div
+          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(250,204,21,0.15),transparent_70%)]"
+          animate={{
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Floating arrows effect */}
+        <FloatingArrows />
+
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none" />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-8 py-20 pb-32">
         <motion.div
@@ -78,6 +215,14 @@ const ProgressTracker = () => {
           ))}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes gradientShift {
+          0% { background-position: 50% 100% }
+          50% { background-position: 50% 0% }
+          100% { background-position: 50% 100% }
+        }
+      `}</style>
     </div>
   );
 };

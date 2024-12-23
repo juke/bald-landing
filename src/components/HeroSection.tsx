@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -8,46 +8,62 @@ import {
 } from "@/components/ui/tooltip";
 import SectionDivider from './SectionDivider';
 
-const ParticleEffect = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(40)].map((_, i) => (
-      <motion.div
-        key={i}
-        className={`absolute rounded-full ${
-          i % 3 === 0
-            ? "w-1 h-1 bg-yellow-400/30"
-            : i % 3 === 1
-            ? "w-1.5 h-1.5 bg-yellow-400/20"
-            : "w-0.5 h-0.5 bg-yellow-400/40"
-        }`}
-        initial={{
-          x: Math.random() * window.innerWidth,
-          y: window.innerHeight * (1 + Math.random()),
-          scale: Math.random(),
-          opacity: Math.random() * 0.5,
-        }}
-        animate={{
-          y: -100,
-          scale: [null, 1, 0.8],
-          opacity: [null, 1, 0],
-        }}
-        transition={{
-          duration: Math.random() * 15 + 25,
-          repeat: Infinity,
-          repeatDelay: -5,
-          ease: "linear",
-          delay: -(Math.random() * 25),
-          opacity: {
+const ParticleEffect = () => {
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(40)].map((_, i) => (
+        <motion.div
+          key={i}
+          className={`absolute rounded-full ${
+            i % 3 === 0
+              ? "w-1 h-1 bg-yellow-400/30"
+              : i % 3 === 1
+              ? "w-1.5 h-1.5 bg-yellow-400/20"
+              : "w-0.5 h-0.5 bg-yellow-400/40"
+          }`}
+          initial={{
+            x: Math.random() * dimensions.width,
+            y: dimensions.height * (1 + Math.random()),
+            scale: Math.random(),
+            opacity: Math.random() * 0.5,
+          }}
+          animate={{
+            y: -100,
+            scale: [null, 1, 0.8],
+            opacity: [null, 1, 0],
+          }}
+          transition={{
             duration: Math.random() * 15 + 25,
-            times: [0, 0.1, 1],
-            ease: "easeInOut",
             repeat: Infinity,
-          },
-        }}
-      />
-    ))}
-  </div>
-);
+            repeatDelay: -5,
+            ease: "linear",
+            delay: -(Math.random() * 25),
+            opacity: {
+              duration: Math.random() * 15 + 25,
+              times: [0, 0.1, 1],
+              ease: "easeInOut",
+              repeat: Infinity,
+            },
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const ContractForm = () => {
   const contractAddress = "0xE1aBD004...01d094FAa420";
