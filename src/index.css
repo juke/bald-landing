@@ -92,9 +92,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
   height: 100%;
   overflow: hidden;
+  scroll-behavior: auto;
 }
 
 body {
@@ -114,19 +114,20 @@ body {
   width: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: auto;
   position: relative;
   z-index: 0;
-  scroll-behavior: smooth;
   will-change: scroll-position;
   backface-visibility: hidden;
   transform: translateZ(0);
+  scroll-snap-type: y mandatory;
+  scroll-behavior: auto;
+  overscroll-behavior: none;
 }
 
 @media (min-width: 768px) {
   .snap-container {
     scroll-snap-type: y mandatory;
-    scroll-snap-stop: always;
   }
 }
 
@@ -140,6 +141,8 @@ body {
   align-items: stretch;
   will-change: transform;
   backface-visibility: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .section-content > div {
@@ -159,6 +162,5 @@ body {
   .section-content {
     height: 100vh;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 }

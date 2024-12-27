@@ -3,8 +3,11 @@ import HeroSection from "@/components/HeroSection";
 import PublicGoodSection from "@/components/PublicGoodSection";
 import DistributionSection from "@/components/DistributionSection";
 import ProgressTracker from "@/components/ProgressTracker";
+import { useScrollSnap } from "@/hooks/useScrollSnap";
 
 function App() {
+  useScrollSnap();
+
   return (
     <div className="relative min-h-screen w-screen overflow-hidden bg-black text-white">
       <Header />
