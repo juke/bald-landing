@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, Lock } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const FloatingArrows = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -182,14 +182,15 @@ const LevelDetails = ({ level }: { level: number }) => {
 
   return (
     <motion.div
-      className="col-span-2 md:col-span-5 bg-black/40 rounded-2xl border border-yellow-400/20 backdrop-blur-sm p-6"
+      className="col-span-2 md:col-span-5 bg-black/40 rounded-2xl border border-yellow-400/20 backdrop-blur-sm p-6 
+        md:max-w-3xl md:mx-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex flex-col md:flex-row gap-6 items-center">
-        <div className="w-48 h-48 rounded-xl overflow-hidden">
+        <div className="w-48 h-48 shrink-0 rounded-xl overflow-hidden">
           <motion.img
             src={`/bald-landing/levels/${level}.jpg`}
             alt={`Level ${level} baldness`}
@@ -199,7 +200,7 @@ const LevelDetails = ({ level }: { level: number }) => {
             transition={{ duration: 0.3 }}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 md:max-w-xl">
           <h3 className="text-2xl font-bold text-yellow-400 mb-2">
             Level {level} - {level * 10}% Baldness
           </h3>
@@ -215,10 +216,34 @@ const LevelDetails = ({ level }: { level: number }) => {
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [unlockedLevels, setUnlockedLevels] = useState(3); // Start with 3 levels unlocked
+  // Add ref for the details section
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   const handleLevelClick = (level: number) => {
     if (level <= unlockedLevels) {
       setSelectedLevel(level);
+      
+      // Check if we're on mobile
+      if (window.innerWidth < 768) {
+        // Wait for the details to render
+        setTimeout(() => {
+          if (detailsRef.current) {
+            const headerHeight = 64; // Height of the header (4rem)
+            const padding = 20; // Additional padding/gap
+            const container = document.querySelector('.snap-container');
+            if (!container) return;
+
+            const containerRect = container.getBoundingClientRect();
+            const elementRect = detailsRef.current.getBoundingClientRect();
+            const relativeTop = elementRect.top - containerRect.top;
+            
+            container.scrollTo({
+              top: container.scrollTop + relativeTop - headerHeight - padding,
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      }
     }
   };
 
@@ -295,7 +320,7 @@ const ProgressTracker = () => {
         </motion.div>
 
         {/* Always show LevelDetails above the grid */}
-        <div className="mb-8">
+        <div className="mb-8" ref={detailsRef}>
           <AnimatePresence mode="wait">
             {selectedLevel && (
               <LevelDetails key={selectedLevel} level={selectedLevel} />

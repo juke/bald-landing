@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 
 export const useScrollSnap = () => {
   useEffect(() => {
+    // Check if we're on mobile/tablet
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return; // Don't apply scroll snap behavior on mobile
+    
     const container = document.querySelector('.snap-container');
     if (!container) return;
 
@@ -9,7 +13,7 @@ export const useScrollSnap = () => {
     let lastScrollTime = 0;
     let accumulatedDelta = 0;
     const SCROLL_THRESHOLD = 50;
-    const SCROLL_COOLDOWN = 800; // Increased to account for animation duration
+    const SCROLL_COOLDOWN = 800;
     const sections = Array.from(document.querySelectorAll('.section-content'));
 
     const scrollToSection = (index: number) => {
@@ -26,6 +30,9 @@ export const useScrollSnap = () => {
     };
 
     const handleScroll = (e: Event) => {
+      // Don't handle scroll events on mobile
+      if (isMobile) return;
+      
       const wheelEvent = e as WheelEvent;
       wheelEvent.preventDefault();
       
@@ -58,6 +65,9 @@ export const useScrollSnap = () => {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't handle keyboard events on mobile
+      if (isMobile) return;
+      
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
         
@@ -83,12 +93,15 @@ export const useScrollSnap = () => {
       }
     };
 
-    container.addEventListener('wheel', handleScroll, { passive: false });
-    window.addEventListener('keydown', handleKeyDown);
+    // Only add event listeners if not on mobile
+    if (!isMobile) {
+      container.addEventListener('wheel', handleScroll, { passive: false });
+      window.addEventListener('keydown', handleKeyDown);
 
-    return () => {
-      container.removeEventListener('wheel', handleScroll);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+      return () => {
+        container.removeEventListener('wheel', handleScroll);
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
   }, []);
 }; 
