@@ -34,7 +34,7 @@ const FloatingArrows = () => {
           }}
           animate={{
             y: -200,
-            opacity: [0, 0.08, 0.08, 0],
+            opacity: [0, 0.15, 0.15, 0],
           }}
           transition={{
             duration: 20, // Much slower
@@ -43,7 +43,7 @@ const FloatingArrows = () => {
             ease: "linear",
           }}
         >
-          <ArrowUp className="w-40 h-40 text-yellow-400/10" />
+          <ArrowUp className="w-40 h-40 text-yellow-400/20" />
         </motion.div>
       ))}
 
@@ -63,7 +63,7 @@ const FloatingArrows = () => {
             }}
             animate={{
               y: -100,
-              opacity: [0, 0.25, 0.25, 0],
+              opacity: [0, 0.35, 0.35, 0],
               scale: [0.8, 1, 0.9],
             }}
             transition={{
@@ -73,7 +73,7 @@ const FloatingArrows = () => {
               ease: "linear",
             }}
           >
-            <ArrowUp className="w-16 h-16 text-yellow-400/20" />
+            <ArrowUp className="w-16 h-16 text-yellow-400/30" />
           </motion.div>
         );
       })}
@@ -94,7 +94,7 @@ const FloatingArrows = () => {
             }}
             animate={{
               y: 0,
-              opacity: [0, 0.3, 0.3, 0],
+              opacity: [0, 0.4, 0.4, 0],
               scale: [0.6, 0.8, 0.7],
             }}
             transition={{
@@ -104,7 +104,7 @@ const FloatingArrows = () => {
               ease: "linear",
             }}
           >
-            <ArrowUp className="w-8 h-8 text-yellow-400/30" />
+            <ArrowUp className="w-8 h-8 text-yellow-400/40" />
           </motion.div>
         );
       })}
@@ -182,33 +182,86 @@ const LevelDetails = ({ level }: { level: number }) => {
 
   return (
     <motion.div
-      className="col-span-2 md:col-span-5 bg-black/40 rounded-2xl border border-yellow-400/20 backdrop-blur-sm p-6 
-        md:max-w-3xl md:mx-auto"
+      className="col-span-2 md:col-span-5 max-w-md mx-auto w-full space-y-4"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex flex-col md:flex-row gap-6 items-center">
-        <div className="w-48 h-48 shrink-0 rounded-xl overflow-hidden">
+      {/* Image Container */}
+      <motion.div
+        className="relative w-full rounded-2xl overflow-hidden bg-black/20 backdrop-blur-sm border border-yellow-400/10"
+        animate={{
+          boxShadow: [
+            '0 0 20px rgba(250,204,21,0.2)',
+            '0 0 40px rgba(250,204,21,0.4)',
+            '0 0 20px rgba(250,204,21,0.2)',
+          ],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        <div className="relative w-full aspect-square">
           <motion.img
             src={`/bald-landing/levels/${level}.jpg`}
             alt={`Level ${level} baldness`}
             className="w-full h-full object-cover"
-            initial={{ scale: 0.9 }}
+            initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5 }}
           />
+          
+          {/* Title Overlay */}
+          <div className="absolute inset-0 flex flex-col justify-end">
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+            
+            <div className="relative w-full p-8">
+              {/* Level Title */}
+              <div className="flex items-baseline gap-3">
+                <h3 className="text-[42px] font-bold text-yellow-400 leading-none">
+                  Level {level}
+                </h3>
+                <span className="text-2xl text-yellow-400/60">
+                  {level * 10}% Baldness
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex-1 md:max-w-xl">
-          <h3 className="text-2xl font-bold text-yellow-400 mb-2">
-            Level {level} - {level * 10}% Baldness
-          </h3>
-          <p className="text-gray-300 text-lg leading-relaxed">
-            {levelDescriptions[level - 1]}
-          </p>
+      </motion.div>
+
+      {/* Info Section */}
+      <motion.div
+        className="bg-black/20 backdrop-blur-sm rounded-2xl border border-yellow-400/10 p-6 space-y-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.2 }}
+      >
+        {/* Progress Section */}
+        <div>
+          <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden backdrop-blur-sm">
+            <motion.div 
+              className="h-full bg-yellow-400 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${level * 10}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            />
+          </div>
+          <div className="flex justify-between text-base text-white/60 mt-2">
+            <span>0%</span>
+            <span>100%</span>
+          </div>
         </div>
-      </div>
+
+        {/* Description */}
+        <p className="text-white/90 text-xl">
+          {levelDescriptions[level - 1]}
+        </p>
+      </motion.div>
     </motion.div>
   );
 };
@@ -268,7 +321,7 @@ const ProgressTracker = () => {
   }, [unlockedLevels]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-gray-950 flex items-center">
+    <div id="progress-tracker" className="relative w-full h-full overflow-hidden bg-gray-950 flex items-center">
       {/* Background elements remain the same */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift"
@@ -283,7 +336,7 @@ const ProgressTracker = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-20 pb-32">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 py-20 pb-32 w-full">
         <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
@@ -319,25 +372,31 @@ const ProgressTracker = () => {
           </motion.p>
         </motion.div>
 
-        {/* Always show LevelDetails above the grid */}
-        <div className="mb-8" ref={detailsRef}>
-          <AnimatePresence mode="wait">
-            {selectedLevel && (
-              <LevelDetails key={selectedLevel} level={selectedLevel} />
-            )}
-          </AnimatePresence>
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {[...Array(10)].map((_, idx) => (
-            <LevelCard
-              key={idx + 1}
-              level={idx + 1}
-              isUnlocked={idx + 1 <= unlockedLevels}
-              onClick={() => handleLevelClick(idx + 1)}
-              isSelected={selectedLevel === idx + 1}
-            />
-          ))}
+        {/* Desktop: Grid on left, Details on right. Mobile: Details above, Grid below */}
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          {/* Grid Section */}
+          <div className="w-full md:w-1/2 order-2 md:order-1">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
+              {[...Array(10)].map((_, idx) => (
+                <LevelCard
+                  key={idx + 1}
+                  level={idx + 1}
+                  isUnlocked={idx + 1 <= unlockedLevels}
+                  onClick={() => handleLevelClick(idx + 1)}
+                  isSelected={selectedLevel === idx + 1}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Details Section - Sticky on desktop */}
+          <div className="w-full md:w-1/2 order-1 md:order-2 md:sticky md:top-20" ref={detailsRef}>
+            <AnimatePresence mode="wait">
+              {selectedLevel && (
+                <LevelDetails key={selectedLevel} level={selectedLevel} />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>
