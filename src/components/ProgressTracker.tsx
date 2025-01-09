@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUp, Lock } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import usePageTitle from '@/hooks/usePageTitle';
 
 const FloatingArrows = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });

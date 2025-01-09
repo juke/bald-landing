@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import usePageTitle from '@/hooks/usePageTitle';  
 
 const RoadmapSection = () => {
+  usePageTitle('Roadmap');
   return (
     <section className="bg-gray-100 text-gray-900 py-16 text-center relative overflow-hidden">
       {/* Background gradient animation */}

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import SectionDivider from './SectionDivider';
+import usePageTitle from '@/hooks/usePageTitle';
 
 const PublicGoodSection = () => {
   return (

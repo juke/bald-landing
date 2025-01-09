@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -15,15 +19,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
           
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
         
       - name: Build
         run: npm run build
+        env:
+          CI: true
         
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
+          enable_jekyll: false
+          cname: ${{ vars.CNAME }}
+          
+      - name: Status check
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Deploy successful!"
+          else
+            echo "❌ Deploy failed"
+            exit 1
+          fi
