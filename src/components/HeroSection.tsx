@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import SectionDivider from './SectionDivider';
-import usePageTitle from '@/hooks/usePageTitle';
 
 const ParticleEffect = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
