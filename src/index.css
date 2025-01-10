@@ -13,6 +13,7 @@ html, body, #root {
 /* Main container */
 .snap-container {
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
@@ -42,12 +43,15 @@ html, body, #root {
 
 /* Hero section specific */
 #home {
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
 }
 
 #home > div {
   padding: 0 1rem;
+  min-height: inherit;
 }
 
 /* Mobile/tablet padding adjustments */
