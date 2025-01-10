@@ -353,7 +353,7 @@ const HeroSection = () => {
       </div>
 
       <div className="relative w-full">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pb-0">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pb-0">
           {/* Text Content */}
           <div className="text-left text-white flex flex-col h-full justify-center">
             <div className="space-y-6 md:space-y-8">
@@ -488,14 +488,14 @@ const HeroSection = () => {
 
           {/* Level Progress Display */}
           <div className="relative w-full mx-auto mb-12 md:mb-0">
-            <LevelProgressIndicator className="w-full max-w-[500px] mx-auto md:max-w-none" />
+            <LevelProgressIndicator className="w-full max-w-[400px] mx-auto md:max-w-[450px]" />
             
             {/* Info Box */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.8 }}
-              className="mt-4 md:mt-6 max-w-[500px] mx-auto md:max-w-none"
+              className="mt-4 md:mt-6 max-w-[400px] mx-auto md:max-w-[450px]"
             >
               <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
                 <div className="flex items-center gap-3 p-3 sm:p-4">

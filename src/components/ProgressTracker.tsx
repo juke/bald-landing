@@ -2,8 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Lock } from "lucide-react";
-import { useState } from "react";
+import { Lock, ArrowUp } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -159,33 +159,170 @@ const getLevelProgress = (selectedLevel: number | null, unlockedLevels: number) 
   return 0;
 };
 
+const FloatingArrows = () => {
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Large background arrows - very slow and ethereal */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`bg-${i}`}
+          className="absolute"
+          initial={{
+            x: (dimensions.width / 6) * i + (Math.random() * 100 - 50),
+            y: dimensions.height + 100,
+            opacity: 0,
+          }}
+          animate={{
+            y: -200,
+            opacity: [0, 0.08, 0.08, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            delay: i * 3,
+            ease: "linear",
+          }}
+        >
+          <ArrowUp className="w-40 h-40 text-yellow-400/10" />
+        </motion.div>
+      ))}
+
+      {/* Medium arrows - steady flow */}
+      {[...Array(10)].map((_, i) => {
+        const startX = Math.random() * dimensions.width;
+        const duration = Math.random() * 4 + 12;
+        return (
+          <motion.div
+            key={`med-${i}`}
+            className="absolute"
+            initial={{
+              x: startX,
+              y: dimensions.height + 50,
+              opacity: 0,
+              scale: 0.8,
+            }}
+            animate={{
+              y: -100,
+              opacity: [0, 0.25, 0.25, 0],
+              scale: [0.8, 1, 0.9],
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: i * 1.2,
+              ease: "linear",
+            }}
+          >
+            <ArrowUp className="w-16 h-16 text-yellow-400/20" />
+          </motion.div>
+        );
+      })}
+
+      {/* Small arrows - gentle rise */}
+      {[...Array(12)].map((_, i) => {
+        const startX = Math.random() * dimensions.width;
+        const duration = Math.random() * 3 + 8;
+        return (
+          <motion.div
+            key={`small-${i}`}
+            className="absolute"
+            initial={{
+              x: startX,
+              y: dimensions.height,
+              opacity: 0,
+              scale: 0.6,
+            }}
+            animate={{
+              y: 0,
+              opacity: [0, 0.3, 0.3, 0],
+              scale: [0.6, 0.8, 0.7],
+            }}
+            transition={{
+              duration: duration,
+              repeat: Infinity,
+              delay: i * 0.8,
+              ease: "linear",
+            }}
+          >
+            <ArrowUp className="w-8 h-8 text-yellow-400/30" />
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
+
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [unlockedLevels] = useState(7);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  // Set initial selected level to next unlocked level
+  useEffect(() => {
+    setSelectedLevel(Math.min(unlockedLevels + 1, 10));
+  }, [unlockedLevels]);
+
+  // Scroll to current level on mobile
+  useEffect(() => {
+    if (window.innerWidth <= 768 && selectedLevel) {
+      setTimeout(() => {
+        const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+        const levelCard = viewport?.querySelector(`[data-level="${selectedLevel}"]`);
+        
+        if (viewport && levelCard) {
+          const cardRect = levelCard.getBoundingClientRect();
+          const viewportRect = viewport.getBoundingClientRect();
+          const scrollTop = cardRect.top - viewportRect.top - (viewportRect.height / 2) + (cardRect.height / 2);
+          
+          viewport.scrollTo({
+            top: viewport.scrollTop + scrollTop,
+            behavior: 'smooth'
+          });
+        }
+      }, 100); // Small delay to ensure elements are rendered
+    }
+  }, [selectedLevel]);
 
   const getMarkerPosition = (level: number) => {
     return (level / 10) * 100;
   };
 
   return (
-    <div className="min-h-screen w-full relative flex flex-col">
+    <div className="relative w-full h-full overflow-hidden bg-gray-950 flex flex-col">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift" />
         <motion.div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(250,204,21,0.15),transparent_70%)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,_rgba(250,204,21,0.05),transparent_70%)]"
           animate={{ opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80" />
+        <FloatingArrows />
       </div>
 
       <div className="relative z-10 flex flex-col flex-1 pt-16">
         {/* Header */}
         <motion.div className="text-center mb-6 px-4">
-          <Badge variant="outline" className="bg-yellow-400/10 text-yellow-400 border-yellow-400/20 mb-2">
+          <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
             Progress Tracker
           </Badge>
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 mt-4">
             Your Baldness Journey
           </h2>
           
@@ -302,12 +439,16 @@ const ProgressTracker = () => {
           </div>
 
           {/* Level Cards */}
-          <ScrollArea className="h-[calc(100vh-20rem)] rounded-xl border border-yellow-400/10 bg-black/20 backdrop-blur-sm">
+          <ScrollArea 
+            ref={scrollAreaRef}
+            className="h-[calc(100vh-20rem)] rounded-xl border border-yellow-400/10 bg-black/20 backdrop-blur-sm"
+          >
             <div className="p-3 sm:p-4">
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 max-w-[1400px] mx-auto">
+              <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 max-w-[1400px] mx-auto">
                 {[...Array(10)].map((_, idx) => (
                   <div 
                     key={idx + 1} 
+                    data-level={idx + 1}
                     className={cn(
                       "w-full",
                       selectedLevel === idx + 1 && "ring-2 ring-yellow-400/50"
