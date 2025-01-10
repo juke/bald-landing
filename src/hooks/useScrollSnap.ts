@@ -23,7 +23,7 @@ export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
     window.addEventListener('resize', handleResize);
 
     let isScrolling = false;
-    let scrollTimeout: NodeJS.Timeout;
+    let scrollTimeout: ReturnType<typeof setTimeout>;
     let lastScrollTime = Date.now();
     const scrollCooldown = 100; // ms between scroll events
 

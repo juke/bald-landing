@@ -7,12 +7,6 @@ import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-interface LevelDetailsProps {
-  level: number;
-  isUnlocked: boolean;
-  unlockedLevels: number;
-}
-
 const levelDescriptions = [
   "Full head of hair. The journey of enlightenment begins here.",
   "Subtle changes emerge. The hairline whispers of things to come.",
@@ -42,22 +36,12 @@ const getLevelAmount = (level: number) => {
   }
 };
 
-const getPreviousLevelAmount = (level: number) => {
-  return getLevelAmount(level - 1);
-};
-
 const getAmountInNumber = (amount: string) => {
   const num = amount.replace(/[^0-9.]/g, '');
   const multiplier = amount.includes('K') ? 1000 : 
                     amount.includes('M') ? 1000000 : 
                     amount.includes('B') ? 1000000000 : 1;
   return parseFloat(num) * multiplier;
-};
-
-const calculateTotalProgress = (unlockedLevels: number) => {
-  const currentAmount = getAmountInNumber(getLevelAmount(unlockedLevels));
-  const totalAmount = getAmountInNumber('1B');
-  return (currentAmount / totalAmount) * 100;
 };
 
 interface LevelCardProps {
@@ -264,7 +248,6 @@ const FloatingArrows = () => {
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [unlockedLevels] = useState(7);
-  const gridRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   // Update the scroll effect for horizontal scrolling on mobile/tablet
@@ -310,10 +293,6 @@ const ProgressTracker = () => {
       // Remove this effect or update it if needed for other functionality
     }
   }, [selectedLevel]);
-
-  const getMarkerPosition = (level: number) => {
-    return (level / 10) * 100;
-  };
 
   return (
     <div className="relative w-full min-h-screen bg-gray-950" id="progress">

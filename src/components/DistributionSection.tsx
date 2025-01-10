@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { PieChart, Wallet, Lock, Users, ArrowUp } from "lucide-react";
+import { PieChart, Wallet, Lock, ArrowUp } from "lucide-react";
 import SectionDivider from './SectionDivider';
 
 const DistributionSection = () => {

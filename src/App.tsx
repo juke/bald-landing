@@ -8,7 +8,7 @@ import { useActiveSection } from '@/hooks/useActiveSection';
 import { useEffect } from 'react';
 
 function App() {
-  const { activeSection, setActiveSection } = useActiveSection();
+  const { setActiveSection } = useActiveSection();
   useScrollSnap({ onSectionChange: setActiveSection });
 
   // Handle initial scroll

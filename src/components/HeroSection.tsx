@@ -6,15 +6,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Progress } from "@/components/ui/progress";
-import SectionDivider from './SectionDivider';
-import React from "react";
-import { cn } from "@/lib/utils";
-import { TooltipPrimitive } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import React from "react";
+import { cn } from "@/lib/utils";
+import SectionDivider from './SectionDivider';
 
 const getLevelAmount = (level: number) => {
   switch(level) {
@@ -41,33 +38,24 @@ const getAmountInNumber = (amount: string) => {
 };
 
 const ClickTooltip = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & {
+  React.ElementRef<typeof TooltipContent>,
+  React.ComponentPropsWithoutRef<typeof TooltipContent> & {
     trigger: React.ReactNode;
-    content: React.ReactNode;
+    children: React.ReactNode;
   }
->(({ className, trigger, content, ...props }, ref) => {
+>(({ className, trigger, children, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
-  const tooltipRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      // If clicking the button, toggle the tooltip
       if (buttonRef.current?.contains(e.target as Node)) {
         e.preventDefault();
         e.stopPropagation();
         setOpen(prev => !prev);
         return;
       }
-
-      // If clicking outside both the button and tooltip, close the tooltip
-      if (
-        !tooltipRef.current?.contains(e.target as Node) && 
-        !buttonRef.current?.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
+      setOpen(false);
     };
 
     document.addEventListener('click', handleClick);
@@ -78,8 +66,8 @@ const ClickTooltip = React.forwardRef<
     <TooltipProvider>
       <Tooltip 
         open={open}
-        disableHoverableContent
-        modal={true}
+        onOpenChange={setOpen}
+        disableHoverableContent={true}
       >
         <TooltipTrigger asChild>
           <motion.button
@@ -91,20 +79,14 @@ const ClickTooltip = React.forwardRef<
           </motion.button>
         </TooltipTrigger>
         <TooltipContent
-          ref={(node) => {
-            // Handle both refs
-            if (typeof ref === 'function') ref(node);
-            else if (ref) ref.current = node;
-            tooltipRef.current = node;
-          }}
+          ref={ref}
           className={cn(
             "bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px] z-50",
             className
           )}
-          onEscapeKeyDown={() => setOpen(false)}
           {...props}
         >
-          {content}
+          {children}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -365,10 +347,20 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
     }
   }, [unlockedLevels]);
 
-  const currentAmount = "325M";
-  const nextAmount = getLevelAmount(unlockedLevels + 1);
+  const currentAmount = getLevelAmount(unlockedLevels);
   const nextLevelAmount = "500M";
   const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextLevelAmount)) * 100).toFixed(1);
+
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  useEffect(() => {
+    if (tooltipOpen) {
+      const timer = setTimeout(() => {
+        setTooltipOpen(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [tooltipOpen]);
 
   return (
     <div className={className}>
@@ -467,7 +459,18 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
   );
 };
 
-const HeroSection = () => {
+export default function HeroSection() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      const timer = setTimeout(() => {
+        setOpen(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
   return (
     <div className="relative w-full min-h-screen bg-gray-950" id="home">
       {/* Background elements */}
@@ -563,31 +566,30 @@ const HeroSection = () => {
                       </span>
                     </motion.span>
                   }
-                  content={
-                    <div className="space-y-2">
-                      <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center gap-2">
-                          <div className="px-1.5 py-0.5 bg-yellow-400/10 rounded-md">
-                            <span className="text-yellow-400 text-xs font-medium tracking-wide">BRIAN ARMSTRONG</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
-                            <span className="text-yellow-400/80 text-xs">COINBASE CEO</span>
-                          </div>
-                          <span className="text-yellow-400/50">•</span>
-                          <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
-                            <span className="text-yellow-400/80 text-xs">$11.5B</span>
-                          </div>
+                >
+                  <div className="space-y-2">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2">
+                        <div className="px-1.5 py-0.5 bg-yellow-400/10 rounded-md">
+                          <span className="text-yellow-400 text-xs font-medium tracking-wide">BRIAN ARMSTRONG</span>
                         </div>
                       </div>
-                      <p className="text-sm leading-relaxed text-gray-300">
-                        Built Coinbase from zero to America's largest crypto exchange. His iconic baldness 
-                        journey perfectly matches our path to $1B 👨‍🦲
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                          <span className="text-yellow-400/80 text-xs">COINBASE CEO</span>
+                        </div>
+                        <span className="text-yellow-400/50">•</span>
+                        <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                          <span className="text-yellow-400/80 text-xs">$11.5B</span>
+                        </div>
+                      </div>
                     </div>
-                  }
-                />
+                    <p className="text-sm leading-relaxed text-gray-300">
+                      Built Coinbase from zero to America's largest crypto exchange. His iconic baldness 
+                      journey perfectly matches our path to $1B 👨‍🦲
+                    </p>
+                  </div>
+                </ClickTooltip>
                 journey to peak baldness. Each milestone unlocks a new level, from full head of hair to{" "}
                 <motion.span 
                   className="text-yellow-400 font-medium"
@@ -688,6 +690,4 @@ const HeroSection = () => {
       </div>
     </div>
   );
-};
-
-export default HeroSection;
+}

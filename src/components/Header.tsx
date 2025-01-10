@@ -2,7 +2,6 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Menu, X } from "lucide-react";
-import { TwitterIcon, TelegramIcon, DiscordIcon } from "@/components/icons/SocialIcons";
 import { useState, useEffect } from "react";
 
 const Header = () => {
