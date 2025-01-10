@@ -61,23 +61,23 @@ const DistributionSection = () => {
       />
 
       {/* Content container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-8 py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-16"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.8 }}
         >
           <motion.div 
-            className="inline-block bg-yellow-400/10 rounded-lg px-4 py-2 mb-6 border border-yellow-400/20"
+            className="inline-block bg-yellow-400/10 rounded-lg px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 border border-yellow-400/20"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="text-yellow-400">Tokenomics</span>
+            <span className="text-yellow-400 text-sm sm:text-base">Tokenomics</span>
           </motion.div>
           
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6 text-white"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-white"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false, amount: 0.3 }}
@@ -87,7 +87,7 @@ const DistributionSection = () => {
           </motion.h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8">
           {[
             {
               icon: <PieChart className="w-8 h-8" />,
@@ -112,7 +112,7 @@ const DistributionSection = () => {
           ].map((item, index) => (
             <motion.div
               key={index}
-              className="bg-black/40 backdrop-blur-sm border border-yellow-400/20 rounded-2xl p-8 text-center"
+              className="bg-black/40 backdrop-blur-sm border border-yellow-400/20 rounded-xl sm:rounded-2xl p-4 sm:p-8 text-center"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.3 }}
@@ -120,12 +120,12 @@ const DistributionSection = () => {
               whileHover={{ scale: 1.02 }}
             >
               <div
-                className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-yellow-400/10 text-yellow-400 mb-6 relative transition-transform hover:rotate-12 duration-300"
+                className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-lg sm:rounded-xl bg-yellow-400/10 text-yellow-400 mb-4 sm:mb-6 relative transition-transform hover:rotate-12 duration-300"
               >
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-              <p className="text-gray-400">{item.description}</p>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-2">{item.title}</h3>
+              <p className="text-sm sm:text-base text-gray-400">{item.description}</p>
             </motion.div>
           ))}
         </div>

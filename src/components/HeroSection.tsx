@@ -11,6 +11,31 @@ import SectionDivider from './SectionDivider';
 import React from "react";
 import { cn } from "@/lib/utils";
 import { TooltipPrimitive } from "@/components/ui/tooltip";
+import { useActiveSection } from "@/hooks/useActiveSection";
+
+const getLevelAmount = (level: number) => {
+  switch(level) {
+    case 1: return '0';
+    case 2: return '100K';
+    case 3: return '1M';
+    case 4: return '5M';
+    case 5: return '10M';
+    case 6: return '50M';
+    case 7: return '153M';
+    case 8: return '250M';
+    case 9: return '500M';
+    case 10: return '1B';
+    default: return '0';
+  }
+};
+
+const getAmountInNumber = (amount: string) => {
+  const num = amount.replace(/[^0-9.]/g, '');
+  const multiplier = amount.includes('K') ? 1000 : 
+                    amount.includes('M') ? 1000000 : 
+                    amount.includes('B') ? 1000000000 : 1;
+  return parseFloat(num) * multiplier;
+};
 
 const ClickTooltip = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
@@ -196,6 +221,7 @@ const ContractForm = () => {
 
 const LevelProgressIndicator = ({ className }: { className?: string }) => {
   const [unlockedLevels, setUnlockedLevels] = useState(3);
+  const { setActiveSection } = useActiveSection();
 
   useEffect(() => {
     if (unlockedLevels < 10) {
@@ -206,8 +232,9 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
     }
   }, [unlockedLevels]);
 
-  const previousLevel = Math.max(1, unlockedLevels - 1);
-  const nextLevel = Math.min(10, unlockedLevels + 1);
+  const currentAmount = getLevelAmount(unlockedLevels);
+  const nextAmount = getLevelAmount(unlockedLevels + 1);
+  const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextAmount)) * 100).toFixed(1);
 
   return (
     <div className={className}>
@@ -240,132 +267,66 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
               className="w-full h-full object-cover"
             />
 
-            {/* Level Indicator */}
-            <div className="absolute inset-0 flex flex-col items-center justify-end p-4">
-              <div className="flex flex-col items-center gap-4">
+            {/* Level Info Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+              <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 space-y-2">
+                <div className="flex justify-between items-end">
+                  <div>
+                    <div className="text-xs sm:text-sm text-yellow-400/90">Current Level</div>
+                    <div className="text-xl sm:text-2xl font-bold text-yellow-400">
+                      Level {unlockedLevels}
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5">
+                      {unlockedLevels < 10 ? 'Next Level:' : 'Max Level Reached'} {unlockedLevels < 10 ? `$${nextAmount}` : ''}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs sm:text-sm text-yellow-400/90">Market Cap</div>
+                    <div className="text-lg sm:text-xl font-bold text-yellow-400">
+                      ${currentAmount}
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5">
+                      {unlockedLevels < 10 ? `${progress}% to Next` : 'Enlightened'}
+                    </div>
+                  </div>
+                </div>
+                
+                {unlockedLevels < 10 && (
+                  <div className="space-y-1">
+                    <div className="relative h-1.5 bg-yellow-400/10 rounded-full overflow-hidden">
+                      <motion.div
+                        className="absolute inset-y-0 left-0 bg-yellow-400 rounded-full"
+                        style={{ width: `${progress}%` }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 1 }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Track Progress Button */}
                 <motion.button
                   onClick={(e) => {
                     e.preventDefault();
-                    const element = document.getElementById('progress-tracker');
+                    const element = document.getElementById('progress');
                     if (element) {
+                      window.history.pushState(null, '', '#progress');
+                      setActiveSection('progress');
                       element.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className="relative bg-black/60 backdrop-blur-sm px-4 py-2 rounded-xl group hover:bg-black/70 transition-colors overflow-hidden"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="mt-2 text-xs text-yellow-400/80 hover:text-yellow-400 transition-colors flex items-center justify-center gap-1.5 group"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <motion.div
-                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-400 via-purple-500 to-yellow-400"
-                    animate={{
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    style={{ backgroundSize: '200% 100%' }}
-                  />
-                  <div className="absolute inset-[1px] rounded-[10px] bg-black/60 backdrop-blur-sm" />
-                  <div className="relative text-sm text-yellow-400 text-center flex items-center gap-2">
-                    <span>Track Progress</span>
-                    <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                  </div>
+                  <span>View Full Progress</span>
+                  <span className="group-hover:translate-x-0.5 transition-transform">→</span>
                 </motion.button>
-
-                <div className="bg-black/60 backdrop-blur-sm px-4 py-2 rounded-xl border border-yellow-400/20">
-                  <div className="text-2xl font-bold text-yellow-400 text-center">
-                    Level {unlockedLevels}
-                  </div>
-                  <div className="text-sm text-gray-400 mt-0.5">
-                    Current Baldness Stage
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </motion.div>
-      </motion.div>
-
-      {/* Progress Section - Now in a separate box */}
-      <motion.div
-        className="mt-6 rounded-2xl bg-black/20 backdrop-blur-sm border border-yellow-400/10 p-4"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <div className="relative flex items-center justify-center min-h-[50px]">
-          {/* Previous Level */}
-          <div className="absolute left-0 w-[50px] group">
-            <motion.div 
-              className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-800"
-              whileHover={{ scale: 1.4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            >
-              <img
-                src={`/bald-landing/levels/${previousLevel}.jpg`}
-                alt={`Level ${previousLevel}`}
-                className="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-300"
-              />
-            </motion.div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="w-full mx-[60px]">
-            <div className="flex justify-between mb-1 text-sm">
-              <span className="text-gray-400">Progress</span>
-              <span className="text-yellow-400 font-medium">
-                {unlockedLevels === 1 && "$0"}
-                {unlockedLevels === 2 && "$100K"}
-                {unlockedLevels === 3 && "$1M"}
-                {unlockedLevels === 4 && "$5M"}
-                {unlockedLevels === 5 && "$10M"}
-                {unlockedLevels === 6 && "$50M"}
-                {unlockedLevels === 7 && "$100M"}
-                {unlockedLevels === 8 && "$250M"}
-                {unlockedLevels === 9 && "$500M"}
-                {unlockedLevels === 10 && "$1B"}
-              </span>
-            </div>
-            <Progress 
-              value={unlockedLevels * 10} 
-              className="h-1.5 bg-gray-800"
-              indicatorClassName="bg-yellow-400 transition-all duration-1000"
-            />
-            <div className="flex justify-between mt-1 text-xs text-gray-400">
-              <span>Level {previousLevel}</span>
-              <span>Level {nextLevel}</span>
-            </div>
-          </div>
-
-          {/* Next Level Preview */}
-          <div className="absolute right-0 w-[50px] group">
-            <motion.div 
-              className="relative aspect-square rounded-lg overflow-hidden border-2 border-yellow-400/20"
-              whileHover={{ scale: 1.4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            >
-              <img
-                src={`/bald-landing/levels/${nextLevel}.jpg`}
-                alt={`Level ${nextLevel}`}
-                className="w-full h-full object-cover opacity-50 group-hover:opacity-75 transition-opacity"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:opacity-50 transition-opacity" />
-            </motion.div>
-            <motion.div
-              className="absolute -inset-1 bg-yellow-400/10 rounded-lg z-[-1]"
-              animate={{
-                opacity: [0.1, 0.2, 0.1]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          </div>
-        </div>
       </motion.div>
     </div>
   );
@@ -392,10 +353,10 @@ const HeroSection = () => {
       </div>
 
       <div className="relative w-full">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8 pt-20 pb-12 md:pb-0">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pb-0">
           {/* Text Content */}
           <div className="text-left text-white flex flex-col h-full justify-center">
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               <motion.div
                 className="space-y-3"
                 initial={{ opacity: 0, y: -50 }}
@@ -520,71 +481,75 @@ const HeroSection = () => {
               {/* Contract Form */}
               <ContractForm />
 
-              {/* Info Box - Directly under buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-              >
-                <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
-                  <div className="flex items-center gap-3 p-4">
-                    <div className="h-8 w-8 shrink-0 rounded-full bg-yellow-400/10 flex items-center justify-center">
-                      <motion.div
-                        animate={{
-                          rotate: [0, 10, 0],
-                          scale: [1, 1.1, 1],
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      >
-                        🚀
-                      </motion.div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-yellow-400">
-                        Level-Based Evolution
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        Watch Brian Armstrong transform as market cap grows to $1B
-                      </div>
-                    </div>
-                  </div>
-                  <motion.div 
-                    className="h-[2px] bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"
-                    animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-                  <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
-                    <div className="p-2 text-center">
-                      <div className="text-xs font-medium text-yellow-400">Built on</div>
-                      <div className="text-[11px] text-gray-400">Base</div>
-                    </div>
-                    <div className="p-2 text-center">
-                      <div className="text-xs font-medium text-yellow-400">Levels</div>
-                      <div className="text-[11px] text-gray-400">10 Stages</div>
-                    </div>
-                    <div className="p-2 text-center">
-                      <div className="text-xs font-medium text-yellow-400">Goal</div>
-                      <div className="text-[11px] text-gray-400">$1B MC</div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+              {/* Remove the old info box that was here */}
+
             </div>
           </div>
 
           {/* Level Progress Display */}
-          <div className="relative w-full max-w-md mx-auto mb-12 md:mb-0">
-            <LevelProgressIndicator className="w-full" />
+          <div className="relative w-full mx-auto mb-12 md:mb-0">
+            <LevelProgressIndicator className="w-full max-w-[500px] mx-auto md:max-w-none" />
+            
+            {/* Info Box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              className="mt-4 md:mt-6 max-w-[500px] mx-auto md:max-w-none"
+            >
+              <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
+                <div className="flex items-center gap-3 p-3 sm:p-4">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                    <motion.div
+                      animate={{
+                        rotate: [0, 10, 0],
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      🚀
+                    </motion.div>
+                  </div>
+                  <div>
+                    <div className="text-xs sm:text-sm font-medium text-yellow-400">
+                      Level-Based Evolution
+                    </div>
+                    <div className="text-[10px] sm:text-xs text-gray-400">
+                      Watch Brian Armstrong transform as market cap grows to $1B
+                    </div>
+                  </div>
+                </div>
+                <motion.div 
+                  className="h-[1px] sm:h-[2px] bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+                <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
+                  <div className="p-2 sm:p-3 text-center">
+                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Built on</div>
+                    <div className="text-[9px] sm:text-[11px] text-gray-400">Base</div>
+                  </div>
+                  <div className="p-2 sm:p-3 text-center">
+                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Levels</div>
+                    <div className="text-[9px] sm:text-[11px] text-gray-400">10 Stages</div>
+                  </div>
+                  <div className="p-2 sm:p-3 text-center">
+                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Goal</div>
+                    <div className="text-[9px] sm:text-[11px] text-gray-400">$1B MC</div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>

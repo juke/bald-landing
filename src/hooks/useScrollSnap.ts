@@ -6,6 +6,9 @@ interface UseScrollSnapProps {
 
 export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
   useEffect(() => {
+    // Only apply scroll snap on desktop
+    if (window.innerWidth < 1024) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

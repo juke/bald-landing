@@ -2,130 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .drop-shadow-glow {
-    filter: drop-shadow(0 0 0.5rem rgba(250, 204, 21, 0.3));
-  }
-
-  .text-mobile-title {
-    @apply text-2xl md:text-4xl font-bold;
-  }
-  
-  .text-mobile-subtitle {
-    @apply text-lg md:text-xl font-medium;
-  }
-  
-  .text-mobile-body {
-    @apply text-sm md:text-base;
-  }
-}
-
-@keyframes gradientShift {
-  0% { background-position: 50% 100% }
-  50% { background-position: 50% 0% }
-  100% { background-position: 50% 100% }
-}
-
-.animate-gradient-shift {
-  animation: gradientShift 15s ease infinite;
-}
-
-@keyframes glow {
-  0%, 100% {
-    text-shadow: 
-      0 0 7px rgba(250,204,21,0.3),
-      0 0 10px rgba(250,204,21,0.2),
-      0 0 21px rgba(250,204,21,0.1),
-      0 0 42px rgba(250,204,21,0.1);
-  }
-  50% {
-    text-shadow: 
-      0 0 14px rgba(250,204,21,0.4),
-      0 0 20px rgba(250,204,21,0.3),
-      0 0 42px rgba(250,204,21,0.2),
-      0 0 84px rgba(250,204,21,0.2);
-  }
-}
-
-@layer utilities {
-  .animate-glow {
-    animation: glow 3s ease-in-out infinite;
-  }
-}
-
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 /* Base styles */
 html, body, #root {
   height: 100%;
@@ -144,8 +20,6 @@ html, body, #root {
   z-index: 0;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
 }
 
 /* Section styles */
@@ -153,8 +27,6 @@ html, body, #root {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .section-content > div {
@@ -165,110 +37,112 @@ html, body, #root {
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding: 2rem;
-  padding-top: calc(64px + 2rem); /* Header height + padding */
-}
-
-/* Progress section */
-#progress.section-content > div {
-  min-height: 100vh;
-  padding-top: calc(64px + 2rem);
-}
-
-/* Progress details sticky container */
-#progress .details-container {
-  position: sticky;
-  top: 80px; /* Header height + padding */
-  z-index: 10;
-}
-
-@media (max-width: 1023px) {
-  #progress .details-container {
-    top: 64px;
-    margin-bottom: 1rem;
-  }
+  padding-top: calc(64px + 1rem); /* Header height + padding */
 }
 
 /* Desktop styles */
 @media (min-width: 1024px) {
+  .snap-container {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
   .section-content {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
 }
 
-/* Animation states */
-body.is-scrolling {
-  pointer-events: none;
+/* Mobile styles */
+@media (max-width: 1023px) {
+  html, body, #root {
+    overflow: visible;
+  }
+
+  .snap-container {
+    height: auto;
+    overflow: visible;
+  }
+
+  .section-content > div {
+    padding: 1rem;
+    padding-top: calc(64px + 1rem);
+  }
+  
+  /* Progress section specific */
+  #progress .scroll-area {
+    margin: 0 -1rem; /* Negative margin to extend full width */
+    width: calc(100% + 2rem);
+  }
 }
 
-body.is-scrolling .section-content > * {
-  transition: none !important;
-  animation-play-state: paused !important;
+/* Progress section base styles */
+#progress {
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-/* Progress grid container */
+/* ScrollArea styles */
+#progress [data-radix-scroll-area-viewport] {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100%;
+}
+
 #progress .scroll-area {
   scrollbar-width: thin;
   scrollbar-color: rgba(250, 204, 21, 0.3) transparent;
 }
 
-/* Mobile horizontal scroll styles */
-@media (max-width: 767px) {
-  #progress [data-radix-scroll-area-viewport] {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
-  }
+#progress .scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
 
-  #progress .scroll-area {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
+#progress .scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  #progress .scroll-area::-webkit-scrollbar {
-    display: none;
-  }
+#progress .scroll-area::-webkit-scrollbar-thumb {
+  background-color: rgba(250, 204, 21, 0.3);
+  border-radius: 3px;
+}
 
-  /* Subtle coverflow effect - mobile only */
-  #progress .flex > div {
-    transition: transform 0.3s ease, opacity 0.2s ease;
-    will-change: transform;
+/* Mobile styles */
+@media (max-width: 639px) {
+  #progress .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
-
-  #progress .flex > div:hover {
-    z-index: 2;
+  
+  #progress .p-4 {
+    padding: 0.75rem;
   }
 }
 
-/* Tablet and Desktop styles */
-@media (min-width: 768px) {
-  #progress [data-radix-scroll-area-viewport] {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: 100%;
-    padding-right: 16px;
-  }
-  
-  #progress .scroll-area {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(250, 204, 21, 0.3) transparent;
-  }
-
-  #progress .flex {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-  
-  #progress .flex > div {
-    width: 100% !important;
-    margin-left: 0 !important;
+/* Tablet styles */
+@media (min-width: 640px) and (max-width: 1023px) {
+  #progress .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
   }
 }
 
-/* Add these utility classes */
+/* Desktop styles */
+@media (min-width: 1024px) {
+  #progress .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1280px) {
+  #progress .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Utility classes */
 @layer utilities {
   .perspective-\[1000px\] {
     perspective: 1000px;
@@ -283,9 +157,51 @@ body.is-scrolling .section-content > * {
   }
 }
 
-/* Add these styles for the navigation */
+/* Navigation styles */
 @layer components {
   .nav-link {
     @apply relative py-2;
+  }
+}
+
+/* Mobile styles for Progress section */
+@media (max-width: 1023px) {
+  #progress .perspective-[1000px] {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  #progress .scroll-container {
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    transform-style: preserve-3d;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  #progress .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  #progress .scroll-container > * {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    scroll-snap-align: center;
+    will-change: transform;
+  }
+}
+
+/* Add these styles for the hero section */
+@media (min-width: 768px) {
+  .level-indicator-button {
+    @apply absolute top-4 right-4 z-10;
+  }
+}
+
+@media (max-width: 767px) {
+  .level-indicator-button {
+    @apply relative mb-4;
   }
 }

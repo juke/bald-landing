@@ -31,7 +31,7 @@ const PublicGoodSection = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-transparent to-gray-950" />
       
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-12 sm:py-20">
         <motion.div
           className="text-left"
           initial={{ opacity: 0, x: -50 }}
@@ -39,12 +39,12 @@ const PublicGoodSection = () => {
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-block bg-yellow-400/10 rounded-lg px-4 py-2 mb-6 border border-yellow-400/20 hover:scale-105 transition-transform">
-            <span className="text-yellow-400">Public Good</span>
+          <div className="inline-block bg-yellow-400/10 rounded-lg px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6 border border-yellow-400/20 hover:scale-105 transition-transform">
+            <span className="text-yellow-400 text-sm sm:text-base">Public Good</span>
           </div>
           
           <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-200"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-200"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: false, amount: 0.3 }}
@@ -53,7 +53,7 @@ const PublicGoodSection = () => {
           </motion.h2>
           
           <motion.p 
-            className="text-xl text-gray-300 mb-8 leading-relaxed"
+            className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 leading-relaxed"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: false, amount: 0.3 }}
@@ -64,7 +64,7 @@ const PublicGoodSection = () => {
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {[
             { label: "Community Members", value: "10K+" },
             { label: "Total Supply", value: "1M" },
