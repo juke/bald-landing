@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { PieChart, Wallet, Lock, Users } from "lucide-react";
+import { PieChart, Wallet, Lock, Users, ArrowUp } from "lucide-react";
 import SectionDivider from './SectionDivider';
 
 const DistributionSection = () => {
@@ -91,23 +91,23 @@ const DistributionSection = () => {
           {[
             {
               icon: <PieChart className="w-8 h-8" />,
-              title: "50% Liquidity Pool",
+              title: "50% Liquidity",
               description: "Added at $42k market cap",
             },
             {
-              icon: <Users className="w-8 h-8" />,
-              title: "50% Community",
-              description: "Airdropped to original holders",
-            },
-            {
               icon: <Lock className="w-8 h-8" />,
-              title: "Locked Liquidity",
-              description: "100% locked forever",
+              title: "Locked Forever",
+              description: "100% locked liquidity",
             },
             {
               icon: <Wallet className="w-8 h-8" />,
               title: "Zero Tax",
               description: "No hidden fees",
+            },
+            {
+              icon: <ArrowUp className="w-8 h-8" />,
+              title: "Peak Baldness",
+              description: "$1B market cap goal",
             },
           ].map((item, index) => (
             <motion.div

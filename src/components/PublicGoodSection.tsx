@@ -61,13 +61,6 @@ const PublicGoodSection = () => {
             $BALD exists as a public good with a single purpose: to bootstrap new liquidity 
             for the original $BALD token. No roadmap, no promises - just pure community power.
           </motion.p>
-          
-          <div className="flex gap-4">
-            <button className="group flex items-center gap-2 bg-yellow-400 text-black px-6 py-3 rounded-xl font-bold hover:bg-yellow-300 transition-all hover:scale-105">
-              Join Community
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
         </motion.div>
 
         {/* Stats Grid */}

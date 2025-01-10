@@ -6,6 +6,18 @@
   .drop-shadow-glow {
     filter: drop-shadow(0 0 0.5rem rgba(250, 204, 21, 0.3));
   }
+
+  .text-mobile-title {
+    @apply text-2xl md:text-4xl font-bold;
+  }
+  
+  .text-mobile-subtitle {
+    @apply text-lg md:text-xl font-medium;
+  }
+  
+  .text-mobile-body {
+    @apply text-sm md:text-base;
+  }
 }
 
 @keyframes gradientShift {
@@ -16,6 +28,29 @@
 
 .animate-gradient-shift {
   animation: gradientShift 15s ease infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 
+      0 0 7px rgba(250,204,21,0.3),
+      0 0 10px rgba(250,204,21,0.2),
+      0 0 21px rgba(250,204,21,0.1),
+      0 0 42px rgba(250,204,21,0.1);
+  }
+  50% {
+    text-shadow: 
+      0 0 14px rgba(250,204,21,0.4),
+      0 0 20px rgba(250,204,21,0.3),
+      0 0 42px rgba(250,204,21,0.2),
+      0 0 84px rgba(250,204,21,0.2);
+  }
+}
+
+@layer utilities {
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite;
+  }
 }
 
 @layer base {
@@ -91,78 +126,166 @@
   }
 }
 
-html {
-  height: 100%;
-  overflow: hidden;
-  scroll-behavior: auto;
-}
-
-body {
+/* Base styles */
+html, body, #root {
   height: 100%;
   margin: 0;
+  padding: 0;
   overflow: hidden;
 }
 
-#root {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
+/* Main container */
 .snap-container {
   height: 100vh;
   width: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
   position: relative;
   z-index: 0;
-  will-change: scroll-position;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-  scroll-behavior: auto;
   overscroll-behavior: none;
-  scroll-snap-type: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
 }
 
-@media (min-width: 768px) {
-  .snap-container {
-    scroll-snap-type: y mandatory;
-    -webkit-overflow-scrolling: auto;
-  }
-}
-
+/* Section styles */
 .section-content {
   min-height: 100vh;
   width: 100%;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
-  will-change: transform;
-  backface-visibility: hidden;
-  scroll-snap-align: none;
-  scroll-snap-stop: normal;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .section-content > div {
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
   min-height: 100vh;
-  padding-top: 4rem;
-  will-change: transform, opacity;
+  padding: 2rem;
+  padding-top: calc(64px + 2rem); /* Header height + padding */
 }
 
-@media (min-width: 768px) {
+/* Progress section */
+#progress.section-content > div {
+  min-height: 100vh;
+  padding-top: calc(64px + 2rem);
+}
+
+/* Progress details sticky container */
+#progress .details-container {
+  position: sticky;
+  top: 80px; /* Header height + padding */
+  z-index: 10;
+}
+
+@media (max-width: 1023px) {
+  #progress .details-container {
+    top: 64px;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
   .section-content {
-    height: 100vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
+  }
+}
+
+/* Animation states */
+body.is-scrolling {
+  pointer-events: none;
+}
+
+body.is-scrolling .section-content > * {
+  transition: none !important;
+  animation-play-state: paused !important;
+}
+
+/* Progress grid container */
+#progress .scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(250, 204, 21, 0.3) transparent;
+}
+
+/* Mobile horizontal scroll styles */
+@media (max-width: 767px) {
+  #progress [data-radix-scroll-area-viewport] {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+  }
+
+  #progress .scroll-area {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  #progress .scroll-area::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Subtle coverflow effect - mobile only */
+  #progress .flex > div {
+    transition: transform 0.3s ease, opacity 0.2s ease;
+    will-change: transform;
+  }
+
+  #progress .flex > div:hover {
+    z-index: 2;
+  }
+}
+
+/* Tablet and Desktop styles */
+@media (min-width: 768px) {
+  #progress [data-radix-scroll-area-viewport] {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100%;
+    padding-right: 16px;
+  }
+  
+  #progress .scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(250, 204, 21, 0.3) transparent;
+  }
+
+  #progress .flex {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  #progress .flex > div {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* Add these utility classes */
+@layer utilities {
+  .perspective-\[1000px\] {
+    perspective: 1000px;
+  }
+  
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+
+  .will-change-transform {
+    will-change: transform;
+  }
+}
+
+/* Add these styles for the navigation */
+@layer components {
+  .nav-link {
+    @apply relative py-2;
   }
 }

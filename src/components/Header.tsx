@@ -6,8 +6,44 @@ import { TwitterIcon, TelegramIcon, DiscordIcon } from "@/components/icons/Socia
 import { useState, useEffect } from "react";
 
 const Header = () => {
-  const activeSection = useActiveSection();
+  const { activeSection, setActiveSection } = useActiveSection();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Add scroll observer to update active section
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+            // Update URL without triggering a new history entry
+            window.history.replaceState(null, '', `#${entry.target.id}`);
+          }
+        });
+      },
+      {
+        rootMargin: '-50% 0px',
+        threshold: 0,
+      }
+    );
+
+    document.querySelectorAll('.section-content').forEach((section) => {
+      observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, [setActiveSection]);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      window.history.pushState(null, '', `#${id}`);
+      setActiveSection(id);
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -38,17 +74,8 @@ const Header = () => {
     { id: 'progress', label: 'Progress' },
   ];
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
-  };
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/10 backdrop-blur-md border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-gradient-to-b from-black/20 to-transparent backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <nav className="flex items-center justify-between h-16">
           <div className="text-xl font-bold text-yellow-400">$BALD</div>
@@ -60,23 +87,17 @@ const Header = () => {
                 key={item.id}
                 href={`#${item.id}`}
                 onClick={(e) => handleNavClick(e, item.id)}
-                className="relative"
+                className={cn(
+                  "relative py-2",
+                  activeSection === item.id 
+                    ? "text-yellow-400" 
+                    : "text-gray-400 hover:text-yellow-400 transition-colors"
+                )}
               >
-                <motion.span
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-yellow-400",
-                    activeSection === item.id 
-                      ? "text-yellow-400" 
-                      : "text-gray-400"
-                  )}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.label}
-                </motion.span>
+                {item.label}
                 {activeSection === item.id && (
                   <motion.div
-                    className="absolute -bottom-[1.5px] left-0 right-0 h-[2px] bg-yellow-400"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400"
                     layoutId="activeSection"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
@@ -85,39 +106,6 @@ const Header = () => {
             ))}
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3 mr-2">
-                <motion.a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-yellow-400 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <TwitterIcon />
-                </motion.a>
-                <motion.a
-                  href="https://telegram.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-yellow-400 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <TelegramIcon />
-                </motion.a>
-                <motion.a
-                  href="https://discord.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-yellow-400 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <DiscordIcon />
-                </motion.a>
-              </div>
-
               <motion.a
                 href="https://app.uniswap.org"
                 target="_blank"
@@ -191,39 +179,6 @@ const Header = () => {
                       {item.label}
                     </a>
                   ))}
-
-                  <div className="flex items-center gap-6 mt-6">
-                    <motion.a
-                      href="https://twitter.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-yellow-400 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <TwitterIcon />
-                    </motion.a>
-                    <motion.a
-                      href="https://telegram.org"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-yellow-400 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <TelegramIcon />
-                    </motion.a>
-                    <motion.a
-                      href="https://discord.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-yellow-400 transition-colors"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <DiscordIcon />
-                    </motion.a>
-                  </div>
 
                   <div className="flex flex-col w-full gap-4 mt-6">
                     <motion.a

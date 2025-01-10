@@ -8,6 +8,81 @@ import {
 } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import SectionDivider from './SectionDivider';
+import React from "react";
+import { cn } from "@/lib/utils";
+import { TooltipPrimitive } from "@/components/ui/tooltip";
+
+const ClickTooltip = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> & {
+    trigger: React.ReactNode;
+    content: React.ReactNode;
+  }
+>(({ className, trigger, content, ...props }, ref) => {
+  const [open, setOpen] = React.useState(false);
+  const tooltipRef = React.useRef<HTMLDivElement>(null);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      // If clicking the button, toggle the tooltip
+      if (buttonRef.current?.contains(e.target as Node)) {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(prev => !prev);
+        return;
+      }
+
+      // If clicking outside both the button and tooltip, close the tooltip
+      if (
+        !tooltipRef.current?.contains(e.target as Node) && 
+        !buttonRef.current?.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+
+  return (
+    <TooltipProvider>
+      <Tooltip 
+        open={open}
+        disableHoverableContent
+        modal={true}
+      >
+        <TooltipTrigger asChild>
+          <motion.button
+            ref={buttonRef}
+            className="inline-flex items-center px-2 py-0 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1"
+            whileTap={{ scale: 0.95 }}
+          >
+            {trigger}
+          </motion.button>
+        </TooltipTrigger>
+        <TooltipContent
+          ref={(node) => {
+            // Handle both refs
+            if (typeof ref === 'function') ref(node);
+            else if (ref) ref.current = node;
+            tooltipRef.current = node;
+          }}
+          className={cn(
+            "bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px] z-50",
+            className
+          )}
+          onEscapeKeyDown={() => setOpen(false)}
+          {...props}
+        >
+          {content}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+});
+ClickTooltip.displayName = "ClickTooltip";
 
 const ParticleEffect = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -222,7 +297,7 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
       >
         <div className="relative flex items-center justify-center min-h-[50px]">
           {/* Previous Level */}
-          <div className="absolute left-4 w-[50px] group">
+          <div className="absolute left-0 w-[50px] group">
             <motion.div 
               className="relative aspect-square rounded-lg overflow-hidden border-2 border-gray-800"
               whileHover={{ scale: 1.4 }}
@@ -237,20 +312,35 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full mx-[80px]">
+          <div className="w-full mx-[60px]">
+            <div className="flex justify-between mb-1 text-sm">
+              <span className="text-gray-400">Progress</span>
+              <span className="text-yellow-400 font-medium">
+                {unlockedLevels === 1 && "$0"}
+                {unlockedLevels === 2 && "$100K"}
+                {unlockedLevels === 3 && "$1M"}
+                {unlockedLevels === 4 && "$5M"}
+                {unlockedLevels === 5 && "$10M"}
+                {unlockedLevels === 6 && "$50M"}
+                {unlockedLevels === 7 && "$100M"}
+                {unlockedLevels === 8 && "$250M"}
+                {unlockedLevels === 9 && "$500M"}
+                {unlockedLevels === 10 && "$1B"}
+              </span>
+            </div>
             <Progress 
               value={unlockedLevels * 10} 
               className="h-1.5 bg-gray-800"
               indicatorClassName="bg-yellow-400 transition-all duration-1000"
             />
-            <div className="flex justify-between mt-2 text-xs text-gray-400">
+            <div className="flex justify-between mt-1 text-xs text-gray-400">
               <span>Level {previousLevel}</span>
               <span>Level {nextLevel}</span>
             </div>
           </div>
 
           {/* Next Level Preview */}
-          <div className="absolute right-4 w-[50px] group">
+          <div className="absolute right-0 w-[50px] group">
             <motion.div 
               className="relative aspect-square rounded-lg overflow-hidden border-2 border-yellow-400/20"
               whileHover={{ scale: 1.4 }}
@@ -304,63 +394,66 @@ const HeroSection = () => {
       <div className="relative w-full">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-8 pt-20 pb-12 md:pb-0">
           {/* Text Content */}
-          <div className="text-left text-white">
-            <motion.div
-              className="inline-block"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-            >
-              <div className="space-y-2">
+          <div className="text-left text-white flex flex-col h-full justify-center">
+            <div className="space-y-8">
+              <motion.div
+                className="space-y-3"
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+              >
                 <motion.h1 
-                  className="text-7xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-400 animate-text-shine tracking-tight relative"
+                  className="relative text-7xl md:text-8xl font-bold tracking-tight"
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  $BALD
                   <motion.span
-                    className="absolute -inset-1 bg-yellow-400/20 blur-lg rounded-lg"
-                    animate={{
-                      opacity: [0.2, 0.5, 0.2],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                  />
+                    className={`
+                      relative 
+                      text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-300
+                      [text-shadow:0_0_7px_rgba(250,204,21,0.3),0_0_10px_rgba(250,204,21,0.2),0_0_21px_rgba(250,204,21,0.1),0_0_42px_rgba(250,204,21,0.1)]
+                      motion-safe:animate-glow
+                    `}
+                  >
+                    $BALD
+                  </motion.span>
                 </motion.h1>
                 <motion.p 
-                  className="text-2xl md:text-3xl font-semibold text-yellow-400/80"
-                  animate={{
-                    opacity: [0.7, 1, 0.7],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  className="text-2xl md:text-3xl font-medium tracking-wide text-gray-400/80"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  A Memecoin Revolution
+                  <motion.span
+                    className="inline-block"
+                    animate={{ 
+                      opacity: [0.6, 1, 0.6],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      times: [0, 0.5, 1],
+                    }}
+                  >
+                    The Evolution of Baldness
+                  </motion.span>
                 </motion.p>
-              </div>
-            </motion.div>
-            <motion.p
-              className="text-xl mt-8 mb-8 text-gray-200 max-w-xl leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
-              Witness{" "}
-              <TooltipProvider delayDuration={0}>
-                <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
-                  <TooltipTrigger asChild onClick={() => setTooltipOpen(!tooltipOpen)}>
+              </motion.div>
+
+              <motion.p
+                className="text-xl text-gray-200 max-w-xl leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.2 }}
+              >
+                Track{" "}
+                <ClickTooltip 
+                  side="top" 
+                  sideOffset={5}
+                  trigger={
                     <motion.span
-                      className="inline-flex items-center px-2 py-0 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1"
-                      whileHover={{ 
-                        scale: 1.05,
-                        backgroundColor: "rgba(250, 204, 21, 0.2)",
-                      }}
-                      whileTap={{ scale: 0.95 }}
+                      className="relative z-10 font-semibold tracking-wide"
                     >
                       <motion.span
                         className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-yellow-400/10 to-transparent skew-x-12"
@@ -374,47 +467,119 @@ const HeroSection = () => {
                           repeatDelay: 3,
                         }}
                       />
-                      <span className="relative z-10 font-semibold tracking-wide">
-                        Brian Armstrong
+                      <span className="relative z-10">
+                        Brian Armstrong's
                       </span>
                     </motion.span>
-                  </TooltipTrigger>
-                  <TooltipContent 
-                    side="top"
-                    className="bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px] z-50"
-                    sideOffset={5}
-                  >
+                  }
+                  content={
                     <div className="space-y-2">
-                      <p className="font-semibold text-gray-200">Brian Armstrong</p>
-                      <p className="text-sm leading-relaxed text-gray-400">
-                        CEO and co-founder of Coinbase, one of the world's largest cryptocurrency 
-                        exchanges. Known for his iconic bald head and pioneering work in making 
-                        crypto accessible to everyone.
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className="px-1.5 py-0.5 bg-yellow-400/10 rounded-md">
+                            <span className="text-yellow-400 text-xs font-medium tracking-wide">BRIAN ARMSTRONG</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                            <span className="text-yellow-400/80 text-xs">COINBASE CEO</span>
+                          </div>
+                          <span className="text-yellow-400/50">•</span>
+                          <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                            <span className="text-yellow-400/80 text-xs">$11.5B</span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-sm leading-relaxed text-gray-300">
+                        Built Coinbase from zero to America's largest crypto exchange. His iconic baldness 
+                        journey perfectly matches our path to $1B 👨‍🦲
                       </p>
                     </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>{" "}
-              get progressively{" "}
-              <motion.b 
-                className="text-yellow-400 inline-block"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                  }
+                />
+                journey to peak baldness. Each milestone unlocks a new level, from full head of hair to{" "}
+                <motion.span 
+                  className="text-yellow-400 font-medium"
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  ultimate enlightenment
+                </motion.span>{" "}
+                at{" "}
+                <span className="font-semibold text-yellow-400/90">
+                  $1B market cap
+                </span>.
+              </motion.p>
+              
+              {/* Contract Form */}
+              <ContractForm />
+
+              {/* Info Box - Directly under buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
               >
-                BALDER
-              </motion.b>{" "}
-              as $BALD moonshots to Level 10 baldness!
-            </motion.p>
-            
-            {/* Replace the existing button with ContractForm */}
-            <ContractForm />
+                <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
+                  <div className="flex items-center gap-3 p-4">
+                    <div className="h-8 w-8 shrink-0 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                      <motion.div
+                        animate={{
+                          rotate: [0, 10, 0],
+                          scale: [1, 1.1, 1],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        🚀
+                      </motion.div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-yellow-400">
+                        Level-Based Evolution
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        Watch Brian Armstrong transform as market cap grows to $1B
+                      </div>
+                    </div>
+                  </div>
+                  <motion.div 
+                    className="h-[2px] bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
+                    <div className="p-2 text-center">
+                      <div className="text-xs font-medium text-yellow-400">Built on</div>
+                      <div className="text-[11px] text-gray-400">Base</div>
+                    </div>
+                    <div className="p-2 text-center">
+                      <div className="text-xs font-medium text-yellow-400">Levels</div>
+                      <div className="text-[11px] text-gray-400">10 Stages</div>
+                    </div>
+                    <div className="p-2 text-center">
+                      <div className="text-xs font-medium text-yellow-400">Goal</div>
+                      <div className="text-[11px] text-gray-400">$1B MC</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
 
           {/* Level Progress Display */}
