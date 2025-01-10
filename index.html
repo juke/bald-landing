@@ -5,8 +5,32 @@
     <link rel="icon" type="image/svg+xml" href="/bald-landing/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>$BALD | A Memecoin Revolution</title>
-    <script type="module" crossorigin src="/bald-landing/assets/index-D5MDK8Fy.js"></script>
-    <link rel="stylesheet" crossorigin href="/bald-landing/assets/index-CsjOH2z7.css">
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (max-width: 1023px) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      /* Prevent scroll chaining on iOS */
+      body {
+        overscroll-behavior-y: none;
+      }
+      /* Remove scroll snap on mobile */
+      @media (max-width: 1023px) {
+        .snap-container {
+          scroll-snap-type: none;
+        }
+        .section-content {
+          scroll-snap-align: none;
+          scroll-snap-stop: normal;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/bald-landing/assets/index-CbDnT7Kf.js"></script>
+    <link rel="stylesheet" crossorigin href="/bald-landing/assets/index-DPT9azhq.css">
   </head>
   <body>
     <div id="root"></div>
