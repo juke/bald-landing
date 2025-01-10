@@ -5,6 +5,30 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>$BALD | A Memecoin Revolution</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      @media (max-width: 1023px) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      /* Prevent scroll chaining on iOS */
+      body {
+        overscroll-behavior-y: none;
+      }
+      /* Remove scroll snap on mobile */
+      @media (max-width: 1023px) {
+        .snap-container {
+          scroll-snap-type: none;
+        }
+        .section-content {
+          scroll-snap-align: none;
+          scroll-snap-stop: normal;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

@@ -34,7 +34,7 @@ const getLevelAmount = (level: number) => {
     case 4: return '5M';
     case 5: return '10M';
     case 6: return '50M';
-    case 7: return '153M';
+    case 7: return '100M';
     case 8: return '250M';
     case 9: return '500M';
     case 10: return '1B';
@@ -69,72 +69,67 @@ interface LevelCardProps {
 }
 
 const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: LevelCardProps) => {
-  const currentAmount = isUnlocked ? getAmountInNumber(getLevelAmount(level)) : 0;
-  const targetAmount = getAmountInNumber(getLevelAmount(level));
-  const progress = (currentAmount / targetAmount) * 100;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ 
         duration: 0.4,
-        delay: level * 0.05, // Reduced delay for better UX
+        delay: level * 0.05,
       }}
+      className="h-full"
     >
       <Card 
         className={cn(
-          "relative group bg-black/40 border-yellow-400/20 backdrop-blur-sm cursor-pointer overflow-hidden transition-all duration-300",
-          isSelected && "ring-2 ring-yellow-400",
+          "relative group bg-black/40 backdrop-blur-sm cursor-pointer h-full",
+          "overflow-hidden transition-all duration-300",
+          isSelected ? "border-yellow-400/50 border-2" : "border-yellow-400/20 border",
           !isUnlocked && "opacity-70",
           isUnlocked && "hover:border-yellow-400/40 hover:bg-black/60"
         )}
         onClick={onClick}
       >
-        <CardContent className="p-2 sm:p-3">
-          <div className="relative">
-            {/* Image Container */}
-            <div className="aspect-square rounded-lg overflow-hidden mb-2 relative">
-              <img 
-                src={`/bald-landing/levels/${level}.jpg`}
-                alt={`Level ${level} baldness`}
-                className={cn(
-                  "w-full h-full object-cover transition-transform duration-300",
-                  isUnlocked && "group-hover:scale-110",
-                  !isUnlocked && "grayscale"
-                )}
-              />
-              {!isUnlocked && (
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                  <Lock className="w-6 h-6 text-yellow-400/50" />
-                </div>
+        <CardContent className="p-3 h-full flex flex-col">
+          {/* Image Container */}
+          <div className="aspect-square rounded-lg overflow-hidden relative flex-shrink-0">
+            <img 
+              src={`/bald-landing/levels/${level}.jpg`}
+              alt={`Level ${level} baldness`}
+              className={cn(
+                "w-full h-full object-cover transition-transform duration-300",
+                isUnlocked && "group-hover:scale-110",
+                !isUnlocked && "grayscale"
               )}
-            </div>
-
-            {/* Level Info */}
-            <div className="space-y-1">
-              <div className="flex items-baseline justify-between">
-                <div className="text-sm font-medium text-yellow-400">
-                  Level {level}
-                </div>
-                <div className="text-xs text-yellow-400/60">
-                  ${getLevelAmount(level)}
-                </div>
+            />
+            {!isUnlocked && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                <Lock className="w-6 h-6 text-yellow-400/50" />
               </div>
+            )}
+          </div>
 
-              {/* Progress Bar */}
-              <Progress 
-                value={isUnlocked ? 100 : Math.min(
-                  ((getAmountInNumber(getLevelAmount(unlockedLevels)) / 
-                    getAmountInNumber(getLevelAmount(level))) * 100
-                  ), 100)} 
-                className="h-1 w-full overflow-hidden rounded-full bg-gray-900/20"
-                indicatorClassName={cn(
-                  "h-full w-full flex-1 transition-all duration-700",
-                  isUnlocked ? "bg-yellow-400" : "bg-yellow-400/30"
-                )}
-              />
+          {/* Level Info */}
+          <div className="mt-auto flex flex-col justify-end gap-1.5">
+            <div className="flex items-baseline justify-between">
+              <div className="text-sm font-medium text-yellow-400">
+                Level {level}
+              </div>
+              <div className="text-xs text-yellow-400/60">
+                ${getLevelAmount(level)}
+              </div>
             </div>
+
+            <Progress 
+              value={isUnlocked ? 100 : Math.min(
+                ((getAmountInNumber(getLevelAmount(unlockedLevels)) / 
+                  getAmountInNumber(getLevelAmount(level))) * 100
+                ), 100)} 
+              className="h-1 w-full overflow-hidden rounded-full bg-gray-900/20"
+              indicatorClassName={cn(
+                "h-full w-full flex-1 transition-all duration-700",
+                isUnlocked ? "bg-yellow-400" : "bg-yellow-400/30"
+              )}
+            />
           </div>
         </CardContent>
       </Card>
@@ -272,29 +267,47 @@ const ProgressTracker = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  // Set initial selected level to next unlocked level
+  // Update the scroll effect for horizontal scrolling on mobile/tablet
   useEffect(() => {
-    setSelectedLevel(Math.min(unlockedLevels + 1, 10));
-  }, [unlockedLevels]);
-
-  // Scroll to current level on mobile
-  useEffect(() => {
-    if (window.innerWidth <= 768 && selectedLevel) {
-      setTimeout(() => {
+    if (window.innerWidth < 1024 && selectedLevel) {
+      const scrollToSelectedCard = () => {
         const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
         const levelCard = viewport?.querySelector(`[data-level="${selectedLevel}"]`);
         
         if (viewport && levelCard) {
-          const cardRect = levelCard.getBoundingClientRect();
-          const viewportRect = viewport.getBoundingClientRect();
-          const scrollTop = cardRect.top - viewportRect.top - (viewportRect.height / 2) + (cardRect.height / 2);
+          // Get the card's position relative to the container
+          const cardOffset = (levelCard as HTMLElement).offsetLeft;
+          const cardWidth = (levelCard as HTMLElement).offsetWidth;
+          const viewportWidth = viewport.clientWidth;
           
+          // Calculate scroll position to center the card
+          const targetScroll = cardOffset - (viewportWidth - cardWidth) / 2;
+          
+          // Animate scroll
           viewport.scrollTo({
-            top: viewport.scrollTop + scrollTop,
+            left: targetScroll,
             behavior: 'smooth'
           });
         }
-      }, 100); // Small delay to ensure elements are rendered
+      };
+
+      // Ensure DOM is ready and handle initial scroll
+      requestAnimationFrame(() => {
+        scrollToSelectedCard();
+      });
+    }
+  }, [selectedLevel]);
+
+  // Set initial selected level and scroll into view
+  useEffect(() => {
+    const nextLevel = Math.min(unlockedLevels + 1, 10);
+    setSelectedLevel(nextLevel);
+  }, []); // Only run once on mount
+
+  // Remove the vertical scroll effect since we don't need it
+  useEffect(() => {
+    if (window.innerWidth <= 768 && selectedLevel) {
+      // Remove this effect or update it if needed for other functionality
     }
   }, [selectedLevel]);
 
@@ -303,7 +316,7 @@ const ProgressTracker = () => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-gray-950 flex flex-col">
+    <div className="relative w-full min-h-screen bg-gray-950" id="progress">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift" />
@@ -316,19 +329,47 @@ const ProgressTracker = () => {
         <FloatingArrows />
       </div>
 
-      <div className="relative z-10 flex flex-col flex-1 items-center justify-center h-screen">
-        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Content */}
+      <div className="relative w-full min-h-screen flex flex-col justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col">
           {/* Header */}
-          <motion.div className="text-center mb-6">
+          <motion.div 
+            className="text-center mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.4 }}
+          >
             <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
               Progress Tracker
             </Badge>
-            <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 mt-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 mt-2">
               Your Baldness Journey
             </h2>
             
-            {/* Total Progress Bar */}
-            <div className="max-w-md mx-auto w-full mb-8">
+            {/* Current Value Card */}
+            <Card className="inline-flex bg-black/20 backdrop-blur-sm border-yellow-400/10 mb-3">
+              <CardContent className="flex items-center gap-4 py-3 px-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Current Value</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold text-yellow-400">$325M</span>
+                    <span className="text-sm text-yellow-400/60">USD</span>
+                  </div>
+                </div>
+                <div className="h-8 w-px bg-yellow-400/10" />
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Level</p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold text-yellow-400">8</span>
+                    <span className="text-sm text-yellow-400/60">/ 10</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Progress Bar Container */}
+            <div className="max-w-md mx-auto w-full mb-3">
               <div className="flex justify-between mb-2 text-sm">
                 <span className="text-gray-400">
                   {selectedLevel ? (
@@ -404,80 +445,80 @@ const ProgressTracker = () => {
             </div>
           </motion.div>
 
-          {/* Content */}
-          <div className="space-y-4">
-            {/* Info Box */}
-            <div className="bg-black/20 backdrop-blur-sm border border-yellow-400/10 rounded-xl w-full max-w-xl mx-auto">
-              <AnimatePresence mode="wait">
-                {selectedLevel ? (
-                  <div className="p-4 flex items-center gap-4 min-h-[6rem]">
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
-                      <img
-                        src={`/bald-landing/levels/${selectedLevel}.jpg`}
-                        alt={`Level ${selectedLevel}`}
-                        className={cn(
-                          "w-full h-full object-cover",
-                          selectedLevel > unlockedLevels && "grayscale opacity-50"
-                        )}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0 -mt-1">
-                      <div className="flex items-baseline justify-between mb-1">
-                        <h3 className="text-yellow-400 font-bold">Level {selectedLevel}</h3>
-                        <span className="text-sm text-yellow-400/60">${getLevelAmount(selectedLevel)}</span>
-                      </div>
-                      <p className="text-sm text-gray-400 line-clamp-2">
-                        {levelDescriptions[selectedLevel - 1]}
-                      </p>
-                    </div>
+          {/* Info Box */}
+          <motion.div 
+            className="bg-black/20 backdrop-blur-sm border border-yellow-400/10 rounded-xl w-full max-w-2xl mx-auto flex-shrink-0 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <AnimatePresence mode="wait">
+              {selectedLevel ? (
+                <div className="p-4 md:p-5 flex items-center gap-4 min-h-[6rem]">
+                  <div className="relative w-10 h-14 md:w-14 md:h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
+                    <img
+                      src={`/bald-landing/levels/${selectedLevel}.jpg`}
+                      alt={`Level ${selectedLevel}`}
+                      className={cn(
+                        "w-full h-full object-cover",
+                        selectedLevel > unlockedLevels && "grayscale opacity-50"
+                      )}
+                    />
                   </div>
-                ) : (
-                  <div className="p-4 flex items-center justify-center min-h-[6rem]">
-                    <span className="text-sm text-gray-400">Select a level to view details</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-yellow-400 font-bold md:text-lg">Level {selectedLevel}</h3>
+                      <Badge variant="outline" className="text-xs md:text-sm text-yellow-400/80 border-yellow-400/20">
+                        ${getLevelAmount(selectedLevel)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm md:text-base text-gray-400 mt-1 line-clamp-2">
+                      {levelDescriptions[selectedLevel - 1]}
+                    </p>
                   </div>
-                )}
-              </AnimatePresence>
-            </div>
+                </div>
+              ) : (
+                <div className="p-4 md:p-5 flex items-center justify-center min-h-[6rem]">
+                  <span className="text-sm md:text-base text-gray-400">Select a level to view details</span>
+                </div>
+              )}
+            </AnimatePresence>
+          </motion.div>
 
-            {/* Level Cards */}
+          {/* Level Cards Grid - Add negative margins to counteract parent padding */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="w-full grid-container -mx-4 sm:-mx-6 lg:-mx-8"
+          >
             <ScrollArea 
               ref={scrollAreaRef}
-              className="rounded-xl border border-yellow-400/10 bg-black/20 backdrop-blur-sm"
-              style={{
-                height: window.innerWidth <= 768 ? 'calc(100vh - 20rem)' : 'fit-content',
-                maxHeight: window.innerWidth <= 768 ? 'calc(100vh - 20rem)' : '50vh'
-              }}
+              className="w-full"
             >
-              <div className="p-3 sm:p-4">
-                <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 max-w-[1400px] mx-auto">
+              <div className="scroll-area-inner">
+                <div className="grid">
                   {[...Array(10)].map((_, idx) => (
                     <div 
-                      key={idx + 1} 
+                      key={idx + 1}
                       data-level={idx + 1}
-                      className={cn(
-                        "w-full",
-                        selectedLevel === idx + 1 && "ring-2 ring-yellow-400/50"
-                      )}
+                      className="h-full"
                     >
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      >
-                        <LevelCard
-                          level={idx + 1}
-                          isUnlocked={idx + 1 <= unlockedLevels}
-                          onClick={() => setSelectedLevel(idx + 1)}
-                          isSelected={selectedLevel === idx + 1}
-                          unlockedLevels={unlockedLevels}
-                        />
-                      </motion.div>
+                      <LevelCard
+                        level={idx + 1}
+                        isUnlocked={idx + 1 <= unlockedLevels}
+                        onClick={() => setSelectedLevel(idx + 1)}
+                        isSelected={selectedLevel === idx + 1}
+                        unlockedLevels={unlockedLevels}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
             </ScrollArea>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

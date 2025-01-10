@@ -12,6 +12,9 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { TooltipPrimitive } from "@/components/ui/tooltip";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 const getLevelAmount = (level: number) => {
   switch(level) {
@@ -21,7 +24,7 @@ const getLevelAmount = (level: number) => {
     case 4: return '5M';
     case 5: return '10M';
     case 6: return '50M';
-    case 7: return '153M';
+    case 7: return '100M';
     case 8: return '250M';
     case 9: return '500M';
     case 10: return '1B';
@@ -215,12 +218,142 @@ const ContractForm = () => {
           CHART
         </motion.a>
       </div>
+
+      {/* Live Updates Tracker */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <Card className="bg-black/20 backdrop-blur-sm border-yellow-400/20 overflow-hidden">
+          <CardContent className="p-0">
+            {/* Header */}
+            <div className="p-3 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <div className="h-2 w-2 rounded-full bg-green-500" />
+                  <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
+                </div>
+                <span className="text-xs font-medium text-yellow-400/90">LIVE UPDATES</span>
+              </div>
+              <Badge 
+                variant="outline" 
+                className="text-[10px] border-yellow-400/20 bg-yellow-400/5"
+              >
+                <motion.span
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="text-yellow-400"
+                >
+                  REAL-TIME
+                </motion.span>
+              </Badge>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
+              <div className="p-3 space-y-1 relative group">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
+                  animate={{
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0,
+                  }}
+                />
+                <div className="text-xs text-gray-400">24h Volume</div>
+                <motion.div 
+                  className="text-sm font-bold text-yellow-400"
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  $1.2M
+                </motion.div>
+              </div>
+              <div className="p-3 space-y-1 relative group">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
+                  animate={{
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                />
+                <div className="text-xs text-gray-400">Holders</div>
+                <motion.div 
+                  className="text-sm font-bold text-yellow-400"
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                >
+                  5,234
+                </motion.div>
+              </div>
+              <div className="p-3 space-y-1 relative group">
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
+                  animate={{
+                    opacity: [0, 1, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2,
+                  }}
+                />
+                <div className="text-xs text-gray-400">Market Cap</div>
+                <motion.div 
+                  className="text-sm font-bold text-yellow-400"
+                  animate={{
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 1,
+                  }}
+                >
+                  $325M
+                </motion.div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </motion.div>
   );
 };
 
 const LevelProgressIndicator = ({ className }: { className?: string }) => {
-  const [unlockedLevels, setUnlockedLevels] = useState(3);
+  const [unlockedLevels, setUnlockedLevels] = useState(7);
   const { setActiveSection } = useActiveSection();
 
   useEffect(() => {
@@ -232,9 +365,10 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
     }
   }, [unlockedLevels]);
 
-  const currentAmount = getLevelAmount(unlockedLevels);
+  const currentAmount = "325M";
   const nextAmount = getLevelAmount(unlockedLevels + 1);
-  const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextAmount)) * 100).toFixed(1);
+  const nextLevelAmount = "500M";
+  const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextLevelAmount)) * 100).toFixed(1);
 
   return (
     <div className={className}>
@@ -277,11 +411,11 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
                       Level {unlockedLevels}
                     </div>
                     <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5">
-                      {unlockedLevels < 10 ? 'Next Level:' : 'Max Level Reached'} {unlockedLevels < 10 ? `$${nextAmount}` : ''}
+                      {unlockedLevels < 10 ? 'Next Level:' : 'Max Level Reached'} {unlockedLevels < 10 ? `$${nextLevelAmount}` : ''}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs sm:text-sm text-yellow-400/90">Market Cap</div>
+                    <div className="text-xs sm:text-sm text-yellow-400/90">Current Value</div>
                     <div className="text-lg sm:text-xl font-bold text-yellow-400">
                       ${currentAmount}
                     </div>
@@ -291,6 +425,7 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
                   </div>
                 </div>
                 
+                {/* Progress Bar */}
                 {unlockedLevels < 10 && (
                   <div className="space-y-1">
                     <div className="relative h-1.5 bg-yellow-400/10 rounded-full overflow-hidden">
@@ -333,29 +468,24 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
 };
 
 const HeroSection = () => {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-
   return (
-    <div className="relative w-full h-full overflow-hidden bg-gray-950 flex items-center">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
-      
-      {/* Gradient overlay for extra depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-      {/* Particle effect */}
-      <ParticleEffect />
-
-      {/* Animated background circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-yellow-400/5 rounded-full blur-3xl animate-blob" />
-        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-600/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
+    <div className="relative w-full min-h-screen bg-gray-950" id="home">
+      {/* Background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <ParticleEffect />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-yellow-400/5 rounded-full blur-3xl animate-blob" />
+          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-purple-600/5 rounded-full blur-3xl animate-blob animation-delay-2000" />
+        </div>
       </div>
 
-      <div className="relative w-full">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 pt-20 pb-12 md:pb-0">
+      {/* Content */}
+      <div className="relative w-full min-h-screen flex items-center">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 md:py-10">
           {/* Text Content */}
-          <div className="text-left text-white flex flex-col h-full justify-center">
+          <div className="flex flex-col justify-center">
             <div className="space-y-6 md:space-y-8">
               <motion.div
                 className="space-y-3"
@@ -480,81 +610,82 @@ const HeroSection = () => {
               
               {/* Contract Form */}
               <ContractForm />
-
-              {/* Remove the old info box that was here */}
-
             </div>
           </div>
 
           {/* Level Progress Display */}
-          <div className="relative w-full mx-auto mb-12 md:mb-0">
-            <LevelProgressIndicator className="w-full max-w-[400px] mx-auto md:max-w-[450px]" />
-            
-            {/* Info Box */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              className="mt-4 md:mt-6 max-w-[400px] mx-auto md:max-w-[450px]"
-            >
-              <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
-                <div className="flex items-center gap-3 p-3 sm:p-4">
-                  <div className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 rounded-full bg-yellow-400/10 flex items-center justify-center">
-                    <motion.div
-                      animate={{
-                        rotate: [0, 10, 0],
-                        scale: [1, 1.1, 1],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      🚀
-                    </motion.div>
-                  </div>
-                  <div>
-                    <div className="text-xs sm:text-sm font-medium text-yellow-400">
-                      Level-Based Evolution
+          <div className="flex flex-col md:min-h-[700px] justify-center">
+            <div className="w-full max-w-[400px] mx-auto md:max-w-[450px] flex flex-col gap-4 md:gap-6">
+              <LevelProgressIndicator className="w-full" />
+              
+              {/* Info Box */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
+                <div className="rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
+                  <div className="flex items-center gap-3 p-3 sm:p-4">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                      <motion.div
+                        animate={{
+                          rotate: [0, 10, 0],
+                          scale: [1, 1.1, 1],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        🚀
+                      </motion.div>
                     </div>
-                    <div className="text-[10px] sm:text-xs text-gray-400">
-                      Watch Brian Armstrong transform as market cap grows to $1B
+                    <div>
+                      <div className="text-xs sm:text-sm font-medium text-yellow-400">
+                        Level-Based Evolution
+                      </div>
+                      <div className="text-[10px] sm:text-xs text-gray-400">
+                        Watch Brian Armstrong transform as market cap grows to $1B
+                      </div>
+                    </div>
+                  </div>
+                  <motion.div 
+                    className="h-[1px] sm:h-[2px] bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
+                    <div className="p-2 sm:p-3 text-center">
+                      <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Built on</div>
+                      <div className="text-[9px] sm:text-[11px] text-gray-400">Base</div>
+                    </div>
+                    <div className="p-2 sm:p-3 text-center">
+                      <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Levels</div>
+                      <div className="text-[9px] sm:text-[11px] text-gray-400">10 Stages</div>
+                    </div>
+                    <div className="p-2 sm:p-3 text-center">
+                      <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Goal</div>
+                      <div className="text-[9px] sm:text-[11px] text-gray-400">$1B MC</div>
                     </div>
                   </div>
                 </div>
-                <motion.div 
-                  className="h-[1px] sm:h-[2px] bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-                <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
-                  <div className="p-2 sm:p-3 text-center">
-                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Built on</div>
-                    <div className="text-[9px] sm:text-[11px] text-gray-400">Base</div>
-                  </div>
-                  <div className="p-2 sm:p-3 text-center">
-                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Levels</div>
-                    <div className="text-[9px] sm:text-[11px] text-gray-400">10 Stages</div>
-                  </div>
-                  <div className="p-2 sm:p-3 text-center">
-                    <div className="text-[10px] sm:text-xs font-medium text-yellow-400">Goal</div>
-                    <div className="text-[9px] sm:text-[11px] text-gray-400">$1B MC</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
-      <SectionDivider />
+      {/* Divider */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <SectionDivider />
+      </div>
     </div>
   );
 };
