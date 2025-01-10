@@ -316,162 +316,168 @@ const ProgressTracker = () => {
         <FloatingArrows />
       </div>
 
-      <div className="relative z-10 flex flex-col flex-1 pt-16">
-        {/* Header */}
-        <motion.div className="text-center mb-6 px-4">
-          <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
-            Progress Tracker
-          </Badge>
-          <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 mt-4">
-            Your Baldness Journey
-          </h2>
-          
-          {/* Total Progress Bar */}
-          <div className="max-w-md mx-auto w-full">
-            <div className="flex justify-between mb-2 text-sm">
-              <span className="text-gray-400">
-                {selectedLevel ? (
-                  selectedLevel <= unlockedLevels ? 
-                    'Level Unlocked' : 
-                    `Progress Needed: $${getLevelAmount(selectedLevel)}`
-                ) : (
-                  'Current Progress'
-                )}
-              </span>
-              <span className="text-yellow-400 font-medium">
-                {selectedLevel ? (
-                  selectedLevel <= unlockedLevels ? 
-                    '100%' : 
-                    `${getLevelAmount(unlockedLevels)}`
-                ) : (
-                  `$${getLevelAmount(unlockedLevels)}`
-                )}
-              </span>
-            </div>
-            <div className="relative">
-              <Progress 
-                value={getLevelProgress(selectedLevel, unlockedLevels)} 
-                className="h-3 w-full overflow-hidden rounded-full bg-black/40 backdrop-blur-sm border border-yellow-400/10"
-                indicatorClassName={cn(
-                  "h-full w-full flex-1 transition-all duration-700",
-                  selectedLevel && selectedLevel <= unlockedLevels 
-                    ? "bg-green-400" 
-                    : "bg-gradient-to-r from-yellow-400/80 via-yellow-400 to-yellow-400/80"
-                )}
-              />
-              
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 overflow-hidden rounded-full">
-                <motion.div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(to right, transparent, rgba(250,204,21,0.2), transparent)',
-                    width: '50%',
-                    transform: 'translateX(-100%)',
-                  }}
-                  animate={{
-                    transform: ['translateX(-100%)', 'translateX(200%)'],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
+      <div className="relative z-10 flex flex-col flex-1 items-center justify-center h-screen">
+        <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <motion.div className="text-center mb-6">
+            <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
+              Progress Tracker
+            </Badge>
+            <h2 className="text-2xl md:text-4xl font-bold text-white mb-4 mt-4">
+              Your Baldness Journey
+            </h2>
+            
+            {/* Total Progress Bar */}
+            <div className="max-w-md mx-auto w-full mb-8">
+              <div className="flex justify-between mb-2 text-sm">
+                <span className="text-gray-400">
+                  {selectedLevel ? (
+                    selectedLevel <= unlockedLevels ? 
+                      'Level Unlocked' : 
+                      `Progress Needed: $${getLevelAmount(selectedLevel)}`
+                  ) : (
+                    'Current Progress'
+                  )}
+                </span>
+                <span className="text-yellow-400 font-medium">
+                  {selectedLevel ? (
+                    selectedLevel <= unlockedLevels ? 
+                      '100%' : 
+                      `${getLevelAmount(unlockedLevels)}`
+                  ) : (
+                    `$${getLevelAmount(unlockedLevels)}`
+                  )}
+                </span>
+              </div>
+              <div className="relative">
+                <Progress 
+                  value={getLevelProgress(selectedLevel, unlockedLevels)} 
+                  className="h-3 w-full overflow-hidden rounded-full bg-black/40 backdrop-blur-sm border border-yellow-400/10"
+                  indicatorClassName={cn(
+                    "h-full w-full flex-1 transition-all duration-700",
+                    selectedLevel && selectedLevel <= unlockedLevels 
+                      ? "bg-green-400" 
+                      : "bg-gradient-to-r from-yellow-400/80 via-yellow-400 to-yellow-400/80"
+                  )}
                 />
+                
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 overflow-hidden rounded-full">
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(to right, transparent, rgba(250,204,21,0.2), transparent)',
+                      width: '50%',
+                      transform: 'translateX(-100%)',
+                    }}
+                    animate={{
+                      transform: ['translateX(-100%)', 'translateX(200%)'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between mt-1 text-xs text-gray-400">
+                <span>
+                  {selectedLevel ? (
+                    selectedLevel <= unlockedLevels ? 
+                      'Maximum Level Reached' : 
+                      'Keep Growing'
+                  ) : (
+                    `Level ${unlockedLevels}`
+                  )}
+                </span>
+                <span>
+                  {selectedLevel ? (
+                    selectedLevel <= unlockedLevels ? 
+                      'Completed' : 
+                      `${getLevelProgress(selectedLevel, unlockedLevels).toFixed(1)}%`
+                  ) : (
+                    'Next Level Loading...'
+                  )}
+                </span>
               </div>
             </div>
-            <div className="flex justify-between mt-1 text-xs text-gray-400">
-              <span>
-                {selectedLevel ? (
-                  selectedLevel <= unlockedLevels ? 
-                    'Maximum Level Reached' : 
-                    'Keep Growing'
-                ) : (
-                  `Level ${unlockedLevels}`
-                )}
-              </span>
-              <span>
-                {selectedLevel ? (
-                  selectedLevel <= unlockedLevels ? 
-                    'Completed' : 
-                    `${getLevelProgress(selectedLevel, unlockedLevels).toFixed(1)}%`
-                ) : (
-                  'Next Level Loading...'
-                )}
-              </span>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Content - Add max-width container */}
-        <div className="flex flex-col flex-1 px-4 sm:px-6 lg:px-8 pb-4 gap-4 mx-auto w-full max-w-7xl">
-          {/* Info Box - Fixed height to prevent layout shifts */}
-          <div className="bg-black/20 backdrop-blur-sm border border-yellow-400/10 rounded-xl w-full max-w-3xl mx-auto">
-            <AnimatePresence mode="wait">
-              {selectedLevel ? (
-                <div className="p-4 flex items-start gap-4 min-h-[6rem]">
-                  <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
-                    <img
-                      src={`/bald-landing/levels/${selectedLevel}.jpg`}
-                      alt={`Level ${selectedLevel}`}
-                      className={cn(
-                        "w-full h-full object-cover",
-                        selectedLevel > unlockedLevels && "grayscale opacity-50"
-                      )}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline justify-between mb-2">
-                      <h3 className="text-yellow-400 font-bold">Level {selectedLevel}</h3>
-                      <span className="text-sm text-yellow-400/60">${getLevelAmount(selectedLevel)}</span>
-                    </div>
-                    <p className="text-sm text-gray-400 line-clamp-2">
-                      {levelDescriptions[selectedLevel - 1]}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-4 flex items-center justify-center min-h-[6rem]">
-                  <span className="text-sm text-gray-400">Select a level to view details</span>
-                </div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Level Cards */}
-          <ScrollArea 
-            ref={scrollAreaRef}
-            className="h-[calc(100vh-20rem)] rounded-xl border border-yellow-400/10 bg-black/20 backdrop-blur-sm"
-          >
-            <div className="p-3 sm:p-4">
-              <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 max-w-[1400px] mx-auto">
-                {[...Array(10)].map((_, idx) => (
-                  <div 
-                    key={idx + 1} 
-                    data-level={idx + 1}
-                    className={cn(
-                      "w-full",
-                      selectedLevel === idx + 1 && "ring-2 ring-yellow-400/50"
-                    )}
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    >
-                      <LevelCard
-                        level={idx + 1}
-                        isUnlocked={idx + 1 <= unlockedLevels}
-                        onClick={() => setSelectedLevel(idx + 1)}
-                        isSelected={selectedLevel === idx + 1}
-                        unlockedLevels={unlockedLevels}
+          {/* Content */}
+          <div className="space-y-4">
+            {/* Info Box */}
+            <div className="bg-black/20 backdrop-blur-sm border border-yellow-400/10 rounded-xl w-full max-w-xl mx-auto">
+              <AnimatePresence mode="wait">
+                {selectedLevel ? (
+                  <div className="p-4 flex items-center gap-4 min-h-[6rem]">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
+                      <img
+                        src={`/bald-landing/levels/${selectedLevel}.jpg`}
+                        alt={`Level ${selectedLevel}`}
+                        className={cn(
+                          "w-full h-full object-cover",
+                          selectedLevel > unlockedLevels && "grayscale opacity-50"
+                        )}
                       />
-                    </motion.div>
+                    </div>
+                    <div className="flex-1 min-w-0 -mt-1">
+                      <div className="flex items-baseline justify-between mb-1">
+                        <h3 className="text-yellow-400 font-bold">Level {selectedLevel}</h3>
+                        <span className="text-sm text-yellow-400/60">${getLevelAmount(selectedLevel)}</span>
+                      </div>
+                      <p className="text-sm text-gray-400 line-clamp-2">
+                        {levelDescriptions[selectedLevel - 1]}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
+                ) : (
+                  <div className="p-4 flex items-center justify-center min-h-[6rem]">
+                    <span className="text-sm text-gray-400">Select a level to view details</span>
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
-          </ScrollArea>
+
+            {/* Level Cards */}
+            <ScrollArea 
+              ref={scrollAreaRef}
+              className="rounded-xl border border-yellow-400/10 bg-black/20 backdrop-blur-sm"
+              style={{
+                height: window.innerWidth <= 768 ? 'calc(100vh - 20rem)' : 'fit-content',
+                maxHeight: window.innerWidth <= 768 ? 'calc(100vh - 20rem)' : '50vh'
+              }}
+            >
+              <div className="p-3 sm:p-4">
+                <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 max-w-[1400px] mx-auto">
+                  {[...Array(10)].map((_, idx) => (
+                    <div 
+                      key={idx + 1} 
+                      data-level={idx + 1}
+                      className={cn(
+                        "w-full",
+                        selectedLevel === idx + 1 && "ring-2 ring-yellow-400/50"
+                      )}
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      >
+                        <LevelCard
+                          level={idx + 1}
+                          isUnlocked={idx + 1 <= unlockedLevels}
+                          onClick={() => setSelectedLevel(idx + 1)}
+                          isSelected={selectedLevel === idx + 1}
+                          unlockedLevels={unlockedLevels}
+                        />
+                      </motion.div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </div>
     </div>

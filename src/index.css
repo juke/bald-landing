@@ -37,7 +37,8 @@ html, body, #root {
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: calc(64px + 1rem); /* Header height + padding */
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 /* Desktop styles */
@@ -50,6 +51,12 @@ html, body, #root {
   .section-content {
     scroll-snap-align: start;
     scroll-snap-stop: always;
+  }
+
+  .section-content > div {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 10vh;
   }
 }
 
@@ -65,13 +72,16 @@ html, body, #root {
   }
 
   .section-content > div {
-    padding: 1rem;
-    padding-top: calc(64px + 1rem);
+    padding-top: 4rem;
+  }
+  
+  #home.section-content > div {
+    padding-top: 3rem;
   }
   
   /* Progress section specific */
   #progress .scroll-area {
-    margin: 0 -1rem; /* Negative margin to extend full width */
+    margin: 0 -1rem;
     width: calc(100% + 2rem);
   }
 }
