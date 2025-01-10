@@ -472,7 +472,7 @@ export default function HeroSection() {
   }, [open]);
 
   return (
-    <div className="relative w-full min-h-screen h-full flex items-center bg-gray-950" id="home">
+    <div className="relative w-full h-screen bg-gray-950" id="home">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
@@ -485,7 +485,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative w-full min-h-screen flex items-center">
+      <div className="relative h-full flex items-center">
         <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 py-20 md:py-10">
           {/* Text Content */}
           <div className="flex flex-col justify-center">
@@ -685,9 +685,7 @@ export default function HeroSection() {
       </div>
 
       {/* Divider */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <SectionDivider />
-      </div>
+      <SectionDivider />
     </div>
   );
 }

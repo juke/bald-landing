@@ -25,8 +25,8 @@ html, body, #root {
 
 /* Base section styles */
 .section-content {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   width: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
@@ -43,20 +43,19 @@ html, body, #root {
 
 /* Hero section specific */
 #home {
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  align-items: center;
+  height: 100vh;
+  height: 100dvh;
+  position: relative;
+  overflow: hidden;
 }
 
-#home > div {
-  padding: 0 1rem;
-  min-height: inherit;
+#home > div:not(:first-child) {
+  height: 100%;
 }
 
 /* Mobile/tablet padding adjustments */
 @media (max-width: 768px) {
-  #home > div {
+  #home .max-w-7xl {
     padding-top: max(4rem, env(safe-area-inset-top));
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }

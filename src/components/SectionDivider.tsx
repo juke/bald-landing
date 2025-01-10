@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const SectionDivider = () => {
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none">
+    <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none">
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
       <motion.div 
         className="absolute inset-0"
@@ -14,6 +14,7 @@ const SectionDivider = () => {
             transparent 2px,
             transparent 20px
           )`,
+          transform: 'translateY(1px)',
         }}
         animate={{
           backgroundPosition: ['0px 0px', '20px 20px'],
