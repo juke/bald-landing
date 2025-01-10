@@ -472,7 +472,7 @@ export default function HeroSection() {
   }, [open]);
 
   return (
-    <div className="relative w-full h-screen bg-gray-950" id="home">
+    <div className="absolute inset-0 bg-gray-950" id="home">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
@@ -685,7 +685,9 @@ export default function HeroSection() {
       </div>
 
       {/* Divider */}
-      <SectionDivider />
+      <div className="absolute bottom-0 left-0 right-0">
+        <SectionDivider />
+      </div>
     </div>
   );
 }

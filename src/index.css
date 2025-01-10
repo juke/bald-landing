@@ -13,7 +13,6 @@ html, body, #root {
 /* Main container */
 .snap-container {
   height: 100vh;
-  height: 100dvh;
   width: 100vw;
   overflow-y: auto;
   overflow-x: hidden;
@@ -26,36 +25,30 @@ html, body, #root {
 /* Base section styles */
 .section-content {
   height: 100vh;
-  height: 100dvh;
   width: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
+  overflow: hidden;
 }
 
 .section-content > div {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  position: absolute;
+  inset: 0;
 }
 
 /* Hero section specific */
 #home {
-  height: 100vh;
-  height: 100dvh;
-  position: relative;
-  overflow: hidden;
-}
-
-#home > div:not(:first-child) {
   height: 100%;
+  width: 100%;
+  position: absolute;
+  inset: 0;
 }
 
 /* Mobile/tablet padding adjustments */
 @media (max-width: 768px) {
-  #home .max-w-7xl {
+  #home > div {
     padding-top: max(4rem, env(safe-area-inset-top));
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
