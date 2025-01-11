@@ -320,7 +320,7 @@ const ProgressTracker = () => {
         <div className="w-full max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 flex flex-col py-safe">
           {/* Header */}
           <motion.div 
-            className="text-center mt-6 md:mt-0"
+            className="text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
@@ -338,7 +338,7 @@ const ProgressTracker = () => {
             </motion.div>
             
             <motion.h2 
-              className="text-2xl md:text-3xl font-bold text-white mb-6 mt-3"
+              className="text-2xl md:text-3xl font-bold text-white mb-4 mt-2"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
@@ -354,7 +354,7 @@ const ProgressTracker = () => {
               viewport={{ once: false }}
               transition={{ duration: 0.4, delay: 0.3 }}
             >
-              <Card className="inline-flex bg-black/20 backdrop-blur-sm border-yellow-400/10 mb-6">
+              <Card className="inline-flex bg-black/20 backdrop-blur-sm border-yellow-400/10 mb-4">
                 <CardContent className="flex items-center gap-4 py-4 px-6">
                   <motion.div
                     initial={{ opacity: 0, x: -10 }}

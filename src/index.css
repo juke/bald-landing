@@ -24,7 +24,7 @@ html, body, #root {
 
 /* Base section styles */
 .section-content {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
@@ -59,8 +59,8 @@ html, body, #root {
 .py-safe {
   margin-top: 0;
   margin-bottom: 0;
-  padding-top: max(5rem, env(safe-area-inset-top));
-  padding-bottom: max(3.5rem, env(safe-area-inset-bottom));
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
 
 /* Mobile adjustments */
@@ -93,8 +93,8 @@ html, body, #root {
   }
 
   .py-safe {
-    padding-top: 5rem;
-    padding-bottom: 4rem;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -104,14 +104,28 @@ html, body, #root {
     padding-right: 1.5rem;
   }
 
+  .section-content {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: visible;
+  }
+
   .section-content > div:not(:last-child) {
-    padding-left: clamp(1.25rem, 4vw, 2rem);
-    padding-right: clamp(1.25rem, 4vw, 2rem);
+    min-height: 100vh;
+    height: auto;
+    padding: 3rem 0;
   }
 
   #progress > div:not(:last-child) {
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+/* Progress section specific mobile adjustments */
+@media (max-width: 768px) {
+  #progress > div {
+    padding-top: 3.5rem;
   }
 }
 
