@@ -1,20 +1,36 @@
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
 const SectionDivider = () => {
   const { activeSection, setActiveSection } = useActiveSection();
   
-  const scrollToNextSection = () => {
-    const sections = Array.from(document.querySelectorAll('.section-content'));
-    const currentIndex = sections.findIndex(section => section.id === activeSection);
-    
-    if (currentIndex !== -1 && currentIndex < sections.length - 1) {
-      const nextSection = sections[currentIndex + 1];
-      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setActiveSection(nextSection.id);
+  const handleClick = () => {
+    const sections = ['home', 'public-good', 'distribution', 'progress'];
+    const currentIndex = sections.indexOf(activeSection);
+    const isLastSection = currentIndex === sections.length - 1;
+
+    if (isLastSection) {
+      // Scroll to home section
+      const element = document.getElementById('home');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setActiveSection('home');
+        window.history.pushState(null, '', '#home');
+      }
+    } else {
+      // Scroll to next section
+      const nextSectionId = sections[currentIndex + 1];
+      const element = document.getElementById(nextSectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setActiveSection(nextSectionId);
+        window.history.pushState(null, '', `#${nextSectionId}`);
+      }
     }
   };
+
+  const isLastSection = activeSection === 'progress';
 
   return (
     <>
@@ -24,11 +40,21 @@ const SectionDivider = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.8 }}
         transition={{ duration: 0.8 }}
-        onClick={scrollToNextSection}
+        onClick={handleClick}
         whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9 }}
       >
-        <ChevronDown className="w-6 h-6 text-yellow-400/50 animate-bounce hover:text-yellow-400/80 transition-colors" />
+        {isLastSection ? (
+          <ChevronUp 
+            className="w-6 h-6 text-yellow-400/50 animate-bounce hover:text-yellow-400/80 transition-colors"
+            aria-label="Scroll to top"
+          />
+        ) : (
+          <ChevronDown 
+            className="w-6 h-6 text-yellow-400/50 animate-bounce hover:text-yellow-400/80 transition-colors"
+            aria-label="Scroll to next section"
+          />
+        )}
       </motion.div>
       <motion.div 
         className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent"

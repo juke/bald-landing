@@ -500,6 +500,11 @@ const ProgressTracker = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Add the SectionDivider component */}
+      <div className="absolute bottom-0 left-0 right-0 h-16">
+        <SectionDivider />
+      </div>
     </div>
   );
 };
