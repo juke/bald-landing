@@ -157,12 +157,11 @@ const ContractForm = () => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(contractAddress);
-    // You could add a toast notification here
   };
 
   return (
     <motion.div
-      className="flex flex-col gap-3 sm:gap-4 w-full max-w-xl mx-auto mt-6 sm:mt-8"
+      className="flex flex-col gap-3 sm:gap-4 w-full max-w-2xl mx-auto mt-6 sm:mt-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
@@ -207,25 +206,25 @@ const ContractForm = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="relative mt-1 sm:mt-2"
+        className="relative mt-2 sm:mt-3"
       >
         <Card className="bg-black/20 backdrop-blur-sm border-yellow-400/20 overflow-hidden">
           <CardContent className="p-0">
             {/* Header */}
-            <div className="px-5 py-4 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
-              <div className="flex items-center gap-3">
+            <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <div className="relative flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                  <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-green-500" />
                   <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-semibold text-yellow-400/90 tracking-wide uppercase">Live Market Data</span>
-                  <span className="text-[10px] text-gray-400/80">Last updated: Just now</span>
+                <div className="flex flex-col gap-0.5 ml-1">
+                  <span className="text-[10px] sm:text-xs font-semibold text-yellow-400/90 tracking-wide uppercase">Live Market Data</span>
+                  <span className="text-[8px] sm:text-[10px] text-gray-400/80">Last updated: Just now</span>
                 </div>
               </div>
               <Badge 
                 variant="outline" 
-                className="text-[10px] border-yellow-400/20 bg-yellow-400/5 px-3 py-1"
+                className="text-[8px] sm:text-[10px] border-yellow-400/20 bg-yellow-400/5 px-2 sm:px-3 py-0.5 sm:py-1"
               >
                 <motion.span
                   animate={{
@@ -287,7 +286,7 @@ const ContractForm = () => {
                       delay: index * 0.5,
                     }}
                   />
-                  <div className="px-5 py-4 sm:p-6 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-center gap-4 sm:gap-5 group-hover:bg-yellow-400/5 transition-colors duration-300">
+                  <div className="px-4 sm:px-5 py-3 sm:py-4 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-center gap-3 sm:gap-4 group-hover:bg-yellow-400/5 transition-colors duration-300">
                     <div className="flex items-start gap-3 sm:gap-4">
                       <div className="h-12 w-12 sm:h-10 sm:w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center sm:mt-0.5">
                         <stat.icon className="h-6 w-6 sm:h-5 sm:w-5 text-yellow-400/70" />
@@ -313,9 +312,9 @@ const ContractForm = () => {
                         </motion.div>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end sm:items-center gap-1.5 sm:mt-1 w-auto">
+                    <div className="flex flex-col items-end sm:items-center gap-1.5">
                       <div className={`
-                        flex items-center gap-1.5 px-2.5 py-1 rounded-md min-w-[80px] justify-center mx-auto
+                        flex items-center gap-1.5 px-2.5 py-1 rounded-md min-w-[80px] justify-center
                         ${stat.trend === 'up' ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'}
                       `}>
                         <motion.span 
@@ -342,7 +341,7 @@ const ContractForm = () => {
                           </svg>
                         )}
                       </div>
-                      <span className="text-[10px] text-gray-400/60 text-center w-full">{stat.subtitle}</span>
+                      <span className="text-[10px] text-gray-400/60 text-center">{stat.subtitle}</span>
                     </div>
                   </div>
                 </div>
@@ -620,7 +619,7 @@ export default function HeroSection() {
           {/* Level Progress Display */}
           <div className="flex flex-col justify-center pb-8 md:pb-0">
             <div className="w-full max-w-[400px] mx-auto md:max-w-[450px] flex flex-col gap-3 sm:gap-4 md:gap-8">
-              <div className="aspect-[3/4] md:aspect-square w-full">
+              <div className="aspect-[3/4] md:aspect-square w-full pt-6 sm:pt-8 md:pt-0 pb-8 sm:pb-10 md:pb-0">
                 <LevelProgressIndicator className="w-full h-full" />
               </div>
               
