@@ -28,16 +28,17 @@ html, body, #root {
   width: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
+  display: flex;
+  align-items: center;
 }
 
+/* Content container styles */
 .section-content > div:not(:last-child) {
-  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: clamp(1.5rem, 5vw, 3rem);
-  padding-right: clamp(1.5rem, 5vw, 3rem);
+  padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 5vw, 3rem);
 }
 
 /* Hero section specific */
@@ -57,8 +58,6 @@ html, body, #root {
 
 /* Safe area utilities */
 .py-safe {
-  margin-top: 0;
-  margin-bottom: 0;
   padding-top: max(1rem, env(safe-area-inset-top));
   padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
@@ -93,10 +92,8 @@ html, body, #root {
   }
 
   .py-safe {
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-    margin-top: 0;
-    margin-bottom: 0;
+    padding-top: max(5rem, env(safe-area-inset-top));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
 
   #home .px-6 {
@@ -105,15 +102,15 @@ html, body, #root {
   }
 
   .section-content {
-    height: auto;
     min-height: 100vh;
+    height: auto;
     overflow-y: visible;
   }
 
   .section-content > div:not(:last-child) {
     min-height: 100vh;
     height: auto;
-    padding: 3rem 0;
+    padding: clamp(5rem, 10vh, 6rem) clamp(1rem, 5vw, 2rem);
   }
 
   #progress > div:not(:last-child) {
@@ -122,12 +119,6 @@ html, body, #root {
   }
 }
 
-/* Progress section specific mobile adjustments */
-@media (max-width: 768px) {
-  #progress > div {
-    padding-top: 3.5rem;
-  }
-}
 
 /* Desktop view */
 @media (min-width: 769px) {
@@ -139,6 +130,15 @@ html, body, #root {
   #home > div:not(:last-child) {
     height: 100%;
     padding-bottom: 4rem;
+  }
+
+  .section-content {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .section-content > div:not(:last-child) {
+    height: 100%;
   }
 }
 
@@ -157,25 +157,15 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-/* Progress grid styles */
-#progress .grid-container {
-  width: 100%;
-  overflow: hidden;
 }
 
 /* Desktop layout */
 @media (min-width: 1024px) {
   #progress .grid {
-    display: grid !important;
+    display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: clamp(1rem, 2vh, 1.5rem);
-    grid-auto-rows: min-content;
     width: 100%;
-    padding: 0 var(--content-padding, 4rem);
   }
 
   #progress [data-radix-scroll-area-viewport] {
@@ -198,42 +188,24 @@ html, body, #root {
 
 /* Mobile/Tablet layout */
 @media (max-width: 1023px) {
-
-
-  #progress .text-center {
-    margin-bottom: 1rem; /* Reduce margin */
-  }
-
-  /* Adjust the viewport height for cards */
   #progress [data-radix-scroll-area-viewport] {
-    overflow-x: scroll !important;
+    overflow-x: auto !important;
     overflow-y: hidden !important;
-    /* Adjust the height calculation to be more compact */
-    min-height: min(260px, calc(100vh - 24rem)) !important;
+    min-height: min(220px, calc(100vh - 24rem)) !important;
     scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch;
-    padding: 0 2rem;
   }
 
-  /* ScrollArea inner padding */
-  #progress .scroll-area-inner {
-    padding: 0.5rem 0;
+  #progress [data-radix-scroll-area-viewport] .grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(140px, 1fr));
+    gap: 0.75rem;
+    padding-bottom: 1rem;
   }
 
-  /* Grid layout for mobile */
-  #progress .grid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    gap: clamp(0.5rem, 2vw, 0.75rem);
-    width: fit-content;
-    height: auto;
-    padding-right: 2rem;
-  }
-
-  #progress .grid > div {
-    flex: 0 0 clamp(200px, 60vw, 240px);
-    height: auto;
-    min-width: 0;
+  #progress [data-radix-scroll-area-viewport] .grid > div {
+    min-width: 140px;
+    height: 100%;
   }
 
   /* Hide scrollbar but keep functionality */
@@ -244,12 +216,6 @@ html, body, #root {
   #progress [data-radix-scroll-area-viewport] {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  #progress .grid-container {
-    margin-left: -2rem;
-    margin-right: -2rem;
-    width: calc(100% + 4rem);
   }
 }
 
@@ -269,21 +235,6 @@ html, body, #root {
 
   #progress .text-center {
     margin-bottom: 0.5rem;
-  }
-
-  #progress .grid {
-    height: 180px; /* Slightly smaller in landscape */
-  }
-
-  #progress .grid > div {
-    flex: 0 0 200px;
-  }
-
-  .py-safe {
-    padding-top: max(4rem, env(safe-area-inset-top));
-    padding-bottom: max(2rem, env(safe-area-inset-bottom));
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 

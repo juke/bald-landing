@@ -448,9 +448,9 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative w-full h-screen flex items-center">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 lg:gap-16 px-8 sm:px-12 lg:px-16 py-safe">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 lg:gap-16">
           {/* Text Content */}
-          <div className="flex flex-col justify-center pt-24 md:pt-0">
+          <div className="flex flex-col justify-center pt-16 md:pt-0">
             <div className="space-y-4 sm:space-y-6 md:space-y-12">
               <motion.div
                 className="space-y-3"
