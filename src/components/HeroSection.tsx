@@ -460,19 +460,8 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
 };
 
 export default function HeroSection() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      const timer = setTimeout(() => {
-        setOpen(false);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [open]);
-
   return (
-    <div className="absolute inset-0 bg-gray-950" id="home">
+    <div className="relative w-full h-screen bg-gray-950" id="home">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
@@ -485,11 +474,11 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative h-full flex items-center">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 py-20 md:py-10">
+      <div className="relative w-full h-[calc(100vh-4rem)] flex items-center">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 px-4 sm:px-6 lg:px-8 py-safe">
           {/* Text Content */}
-          <div className="flex flex-col justify-center">
-            <div className="space-y-6 md:space-y-8">
+          <div className="flex flex-col justify-center pt-16 md:pt-0">
+            <div className="space-y-4 sm:space-y-6 md:space-y-8">
               <motion.div
                 className="space-y-3"
                 initial={{ opacity: 0, y: -50 }}
@@ -616,8 +605,8 @@ export default function HeroSection() {
           </div>
 
           {/* Level Progress Display */}
-          <div className="flex flex-col md:min-h-[700px] justify-center">
-            <div className="w-full max-w-[400px] mx-auto md:max-w-[450px] flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col justify-center pb-20 md:pb-0">
+            <div className="w-full max-w-[400px] mx-auto md:max-w-[450px] flex flex-col gap-3 sm:gap-4 md:gap-6">
               <LevelProgressIndicator className="w-full" />
               
               {/* Info Box */}
@@ -685,7 +674,7 @@ export default function HeroSection() {
       </div>
 
       {/* Divider */}
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute bottom-0 left-0 right-0 h-16 z-10">
         <SectionDivider />
       </div>
     </div>
