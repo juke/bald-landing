@@ -75,7 +75,7 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
       >
         <CardContent className="p-3 h-full flex flex-col">
           {/* Image Container */}
-          <div className="aspect-square rounded-lg overflow-hidden relative flex-shrink-0">
+          <div className="aspect-[4/3] rounded-lg overflow-hidden relative flex-shrink-0">
             <img 
               src={`/bald-landing/levels/${level}.jpg`}
               alt={`Level ${level} baldness`}
@@ -93,7 +93,7 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
           </div>
 
           {/* Level Info */}
-          <div className="mt-auto flex flex-col justify-end gap-1.5">
+          <div className="mt-2 flex flex-col justify-end gap-1">
             <div className="flex items-baseline justify-between">
               <div className="text-sm font-medium text-yellow-400">
                 Level {level}
@@ -245,6 +245,55 @@ const FloatingArrows = () => {
   );
 };
 
+const SubtleDivider = () => (
+  <div className="relative w-full h-6 mt-6 flex items-center justify-center">
+    {/* Main horizontal line */}
+    <div className="absolute w-full flex items-center justify-center">
+      <motion.div 
+        className="h-[1px] bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent"
+        initial={{ width: "0%" }}
+        whileInView={{ width: "60%" }}
+        viewport={{ once: false }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+      />
+    </div>
+  </div>
+);
+
+const GradientDivider = () => (
+  <div className="relative w-full h-[2px] my-8">
+    {/* Base gradient line */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
+    
+    {/* Animated glow effect */}
+    <motion.div
+      className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent"
+      animate={{
+        opacity: [0.3, 0.6, 0.3],
+      }}
+      transition={{
+        duration: 2,
+        ease: "easeInOut",
+        repeat: Infinity,
+      }}
+    />
+    
+    {/* Center dot */}
+    <motion.div 
+      className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-yellow-400"
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.5, 0.8, 0.5],
+      }}
+      transition={{
+        duration: 2,
+        ease: "easeInOut",
+        repeat: Infinity,
+      }}
+    />
+  </div>
+);
+
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [unlockedLevels] = useState(7);
@@ -295,7 +344,7 @@ const ProgressTracker = () => {
   }, [selectedLevel]);
 
   return (
-    <div className="relative w-full min-h-screen bg-gray-950" id="progress">
+    <div className="relative w-full min-h-[calc(100vh-3.5rem)] flex items-center bg-gray-950 safe-top" id="progress">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift" />
@@ -309,47 +358,84 @@ const ProgressTracker = () => {
       </div>
 
       {/* Content */}
-      <div className="relative w-full min-h-screen flex flex-col justify-center">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col">
+      <div className="relative w-full h-full flex flex-col justify-center">
+        <div className="w-full max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 flex flex-col py-safe">
           {/* Header */}
           <motion.div 
-            className="text-center mb-4"
+            className="text-center mt-6 md:mt-0"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
             transition={{ duration: 0.4 }}
           >
-            <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
-              Progress Tracker
-            </Badge>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 mt-2">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <Badge className="rounded-md px-3 py-1.5 text-xs font-semibold bg-yellow-400/10 text-yellow-400 border-yellow-400/20 hover:bg-yellow-400/20 transition-colors">
+                Progress Tracker
+              </Badge>
+            </motion.div>
+            
+            <motion.h2 
+              className="text-2xl md:text-3xl font-bold text-white mb-6 mt-3"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
               Your Baldness Journey
-            </h2>
+            </motion.h2>
             
             {/* Current Value Card */}
-            <Card className="inline-flex bg-black/20 backdrop-blur-sm border-yellow-400/10 mb-3">
-              <CardContent className="flex items-center gap-4 py-3 px-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Current Value</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-yellow-400">$325M</span>
-                    <span className="text-sm text-yellow-400/60">USD</span>
-                  </div>
-                </div>
-                <div className="h-8 w-px bg-yellow-400/10" />
-                <div>
-                  <p className="text-sm font-medium text-gray-400">Level</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-yellow-400">8</span>
-                    <span className="text-sm text-yellow-400/60">/ 10</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              <Card className="inline-flex bg-black/20 backdrop-blur-sm border-yellow-400/10 mb-6">
+                <CardContent className="flex items-center gap-4 py-4 px-6">
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
+                    <p className="text-sm font-medium text-gray-400">Current Value</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-yellow-400">$325M</span>
+                      <span className="text-sm text-yellow-400/60">USD</span>
+                    </div>
+                  </motion.div>
+                  <div className="h-8 w-px bg-yellow-400/10" />
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: false }}
+                    transition={{ duration: 0.4, delay: 0.4 }}
+                  >
+                    <p className="text-sm font-medium text-gray-400">Level</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-bold text-yellow-400">8</span>
+                      <span className="text-sm text-yellow-400/60">/ 10</span>
+                    </div>
+                  </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
             
             {/* Progress Bar Container */}
-            <div className="max-w-md mx-auto w-full mb-3">
-              <div className="flex justify-between mb-2 text-sm">
+            <motion.div 
+              className="max-w-md mx-auto w-full"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+            >
+              <div className="flex justify-between mb-3 text-sm">
                 <span className="text-gray-400">
                   {selectedLevel ? (
                     selectedLevel <= unlockedLevels ? 
@@ -421,12 +507,14 @@ const ProgressTracker = () => {
                   )}
                 </span>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
+
+          <SubtleDivider />
 
           {/* Info Box */}
           <motion.div 
-            className="bg-black/20 backdrop-blur-sm border border-yellow-400/10 rounded-xl w-full max-w-2xl mx-auto flex-shrink-0 mb-4"
+            className="w-fit max-w-2xl mx-auto flex-shrink-0"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
@@ -434,44 +522,81 @@ const ProgressTracker = () => {
           >
             <AnimatePresence mode="wait">
               {selectedLevel ? (
-                <div className="p-4 md:p-5 flex items-center gap-4 min-h-[6rem]">
-                  <div className="relative w-10 h-14 md:w-14 md:h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
-                    <img
+                <motion.div 
+                  key={selectedLevel}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="p-4 md:p-5 flex items-start gap-4 h-[120px] min-w-[280px] sm:min-w-[320px]"
+                >
+                  <div className="relative w-14 h-16 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
+                    <motion.img
                       src={`/bald-landing/levels/${selectedLevel}.jpg`}
                       alt={`Level ${selectedLevel}`}
                       className={cn(
                         "w-full h-full object-cover",
                         selectedLevel > unlockedLevels && "grayscale opacity-50"
                       )}
+                      initial={{ scale: 1.1 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 max-w-lg">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-yellow-400 font-bold md:text-lg">Level {selectedLevel}</h3>
-                      <Badge variant="outline" className="text-xs md:text-sm text-yellow-400/80 border-yellow-400/20">
-                        ${getLevelAmount(selectedLevel)}
-                      </Badge>
+                      <motion.h3 
+                        className="text-yellow-400 font-bold md:text-lg drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                      >
+                        Level {selectedLevel}
+                      </motion.h3>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                      >
+                        <Badge variant="outline" className="text-xs md:text-sm text-yellow-400/80 border-yellow-400/20 shadow-[0_2px_3px_rgba(0,0,0,0.3)]">
+                          ${getLevelAmount(selectedLevel)}
+                        </Badge>
+                      </motion.div>
                     </div>
-                    <p className="text-sm md:text-base text-gray-400 mt-1 line-clamp-2">
+                    <motion.p 
+                      className="text-sm md:text-base text-gray-400 mt-1 line-clamp-3 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.3 }}
+                    >
                       {levelDescriptions[selectedLevel - 1]}
-                    </p>
+                    </motion.p>
                   </div>
-                </div>
+                </motion.div>
               ) : (
-                <div className="p-4 md:p-5 flex items-center justify-center min-h-[6rem]">
-                  <span className="text-sm md:text-base text-gray-400">Select a level to view details</span>
-                </div>
+                <motion.div 
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="p-4 md:p-5 flex items-center justify-center h-[120px] min-w-[280px]"
+                >
+                  <span className="text-sm md:text-base text-gray-400 drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
+                    Select a level to view details
+                  </span>
+                </motion.div>
               )}
             </AnimatePresence>
           </motion.div>
 
-          {/* Level Cards Grid - Add negative margins to counteract parent padding */}
+
+          {/* Level Cards Grid */}
           <motion.div
+            className="w-full grid-container pb-2"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
             transition={{ duration: 0.4, delay: 0.4 }}
-            className="w-full grid-container -mx-4 sm:-mx-6 lg:-mx-8"
           >
             <ScrollArea 
               ref={scrollAreaRef}

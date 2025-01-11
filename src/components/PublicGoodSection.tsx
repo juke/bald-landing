@@ -102,7 +102,7 @@ const PublicGoodSection = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-12 sm:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-12 sm:py-20">
         <motion.div
           className="text-left"
           initial={{ opacity: 0, x: -50 }}

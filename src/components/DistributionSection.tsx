@@ -61,7 +61,7 @@ const DistributionSection = () => {
       />
 
       {/* Content container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-8 sm:px-12 lg:px-16 py-12 sm:py-20">
         <motion.div
           className="text-center mb-8 sm:mb-16"
           initial={{ opacity: 0, y: 50 }}
@@ -87,7 +87,7 @@ const DistributionSection = () => {
           </motion.h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-8">
           {[
             {
               icon: <PieChart className="w-8 h-8" />,

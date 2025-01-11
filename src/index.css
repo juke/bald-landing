@@ -31,12 +31,13 @@ html, body, #root {
 }
 
 .section-content > div:not(:last-child) {
-  height: calc(100% - 4rem);
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 1rem;
+  padding-left: clamp(1.5rem, 5vw, 3rem);
+  padding-right: clamp(1.5rem, 5vw, 3rem);
 }
 
 /* Hero section specific */
@@ -51,35 +52,79 @@ html, body, #root {
   width: 100%;
   display: flex;
   align-items: center;
-  padding-bottom: 4rem;
+  justify-content: center;
 }
 
 /* Safe area utilities */
 .py-safe {
-  padding-top: max(1.5rem, env(safe-area-inset-top));
-  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: max(5rem, env(safe-area-inset-top));
+  padding-bottom: max(3.5rem, env(safe-area-inset-bottom));
 }
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .py-safe {
-    padding-top: max(4rem, env(safe-area-inset-top));
-    padding-bottom: max(4rem, env(safe-area-inset-bottom));
+  #home {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+    position: relative;
+  }
+
+  #home > div:not(:last-child) {
+    min-height: 100%;
+    height: auto;
+    padding-bottom: 0;
   }
 
   #home .grid {
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   #home .space-y-4 > * + * {
     margin-top: 1rem;
   }
+
+  #home .pt-16 {
+    padding-top: 0.5rem;
+  }
+
+  .py-safe {
+    padding-top: 5rem;
+    padding-bottom: 4rem;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  #home .px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .section-content > div:not(:last-child) {
+    padding-left: clamp(1.25rem, 4vw, 2rem);
+    padding-right: clamp(1.25rem, 4vw, 2rem);
+  }
+
+  #progress > div:not(:last-child) {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 /* Desktop view */
 @media (min-width: 769px) {
-  #home > div {
-    padding: 0;
+  #home {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #home > div:not(:last-child) {
+    height: 100%;
+    padding-bottom: 4rem;
   }
 }
 
@@ -88,6 +133,8 @@ html, body, #root {
   min-height: 100vh;
   min-height: 100dvh;
   background-color: rgb(3, 7, 18);
+  display: flex;
+  flex-direction: column;
 }
 
 #progress > div {
@@ -96,7 +143,8 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: max(1rem, env(safe-area-inset-top)) 0 max(1rem, env(safe-area-inset-bottom));
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Progress grid styles */
@@ -110,53 +158,67 @@ html, body, #root {
   #progress .grid {
     display: grid !important;
     grid-template-columns: repeat(5, 1fr);
-    gap: 1rem;
-    grid-auto-rows: minmax(180px, 1fr);
+    gap: clamp(1rem, 2vh, 1.5rem);
+    grid-auto-rows: min-content;
+    width: 100%;
+    padding: 0 var(--content-padding, 4rem);
   }
 
   #progress [data-radix-scroll-area-viewport] {
     height: auto !important;
-    max-height: calc(100vh - 32rem);
+  }
+
+  /* Make cards more responsive to viewport height */
+  #progress .card {
+    font-size: clamp(0.75rem, 1.5vh, 1rem);
+  }
+
+  #progress .card h3 {
+    font-size: clamp(0.875rem, 1.75vh, 1.125rem);
+  }
+
+  #progress .card .badge {
+    font-size: clamp(0.75rem, 1.5vh, 0.875rem);
   }
 }
 
 /* Mobile/Tablet layout */
 @media (max-width: 1023px) {
-  #progress > div {
-    padding-top: max(1rem, env(safe-area-inset-top));
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
-  }
+
 
   #progress .text-center {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Reduce margin */
   }
 
+  /* Adjust the viewport height for cards */
   #progress [data-radix-scroll-area-viewport] {
     overflow-x: scroll !important;
     overflow-y: hidden !important;
-    min-height: 260px !important;
+    /* Adjust the height calculation to be more compact */
+    min-height: min(260px, calc(100vh - 24rem)) !important;
     scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch;
+    padding: 0 2rem;
   }
 
   /* ScrollArea inner padding */
   #progress .scroll-area-inner {
-    padding: 0.5rem 1.25rem;
+    padding: 0.5rem 0;
   }
 
   /* Grid layout for mobile */
   #progress .grid {
     display: flex !important;
     flex-wrap: nowrap !important;
-    gap: 0.75rem;
+    gap: clamp(0.5rem, 2vw, 0.75rem);
     width: fit-content;
-    height: 270px;
-    padding-right: 1.25rem;
+    height: auto;
+    padding-right: 2rem;
   }
 
   #progress .grid > div {
-    flex: 0 0 240px;
-    height: 100%;
+    flex: 0 0 clamp(200px, 60vw, 240px);
+    height: auto;
     min-width: 0;
   }
 
@@ -169,21 +231,45 @@ html, body, #root {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  #progress .grid-container {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    width: calc(100% + 4rem);
+  }
 }
 
 /* Landscape adjustments */
 @media (max-width: 1023px) and (orientation: landscape) {
   #progress > div {
-    padding-top: max(1rem, env(safe-area-inset-top));
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  #progress .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #progress .text-center {
+    margin-bottom: 0.5rem;
   }
 
   #progress .grid {
-    height: 190px;
+    height: 180px; /* Slightly smaller in landscape */
   }
 
   #progress .grid > div {
     flex: 0 0 200px;
+  }
+
+  .py-safe {
+    padding-top: max(4rem, env(safe-area-inset-top));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -198,4 +284,40 @@ html, body, #root {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
+}
+
+/* Remove height-specific media queries since we're using fluid sizing */
+
+/* Add these to your existing styles */
+@media (max-width: 640px) {
+  #progress .info-box {
+    font-size: 0.875rem;
+  }
+  
+  #progress .info-box h3 {
+    font-size: 1rem;
+  }
+  
+  #progress .info-box p {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}
+
+/* Smooth animation transitions */
+#progress .info-box {
+  transition: all 0.3s ease-in-out;
+}
+
+#progress .info-box img {
+  transition: transform 0.3s ease-in-out;
+}
+
+#progress .info-box:hover img {
+  transform: scale(1.05);
+}
+
+/* Add these styles for the safe area handling */
+.safe-top {
+  padding-top: max(5em, env(safe-area-inset-top));
 }

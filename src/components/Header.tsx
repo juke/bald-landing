@@ -76,7 +76,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14">
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-transparent backdrop-blur-[2px]" />
-      <div className="relative max-w-7xl mx-auto px-4 md:px-8">
+      <div className="relative max-w-7xl mx-auto px-6 md:px-12">
         <nav className="flex items-center justify-between h-14">
           <div className="text-xl font-bold text-yellow-400">$BALD</div>
           

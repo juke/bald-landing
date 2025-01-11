@@ -6,14 +6,15 @@ interface UseScrollSnapProps {
 
 export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
   useEffect(() => {
-    // Only apply scroll snap on larger desktop screens
     if (typeof window === 'undefined' || window.innerWidth < 1280) {
       return;
     }
 
     let isScrolling = false;
     let lastScrollTime = Date.now();
-    const scrollCooldown = 500; // Increased cooldown to prevent rapid scrolling
+    let accumulatedDelta = 0;
+    const scrollCooldown = 800;
+    const deltaThreshold = 50; // Threshold for touchpad scrolling
     const sections = Array.from(document.querySelectorAll('.section-content'));
 
     const getCurrentSectionIndex = () => {
@@ -33,6 +34,7 @@ export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
       
       lastScrollTime = now;
       isScrolling = true;
+      accumulatedDelta = 0; // Reset accumulated delta
 
       const section = sections[index];
       section.scrollIntoView({ behavior: 'smooth' });
@@ -41,29 +43,23 @@ export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
         onSectionChange(section.id);
       }
 
-      // Update URL without adding to history
       window.history.replaceState(null, '', `#${section.id}`);
       
-      // Reset scrolling flag after animation
       setTimeout(() => {
         isScrolling = false;
       }, scrollCooldown);
     };
 
-    const handleScroll = () => {
-      if (!isScrolling) {
-        const currentIndex = getCurrentSectionIndex();
-        if (currentIndex !== -1) {
-          scrollToSection(currentIndex);
-        }
-      }
-    };
-
     const handleWheel = (e: WheelEvent) => {
-      if (isScrolling) {
-        e.preventDefault();
-        return;
-      }
+      e.preventDefault();
+      
+      if (isScrolling) return;
+
+      // Accumulate delta values
+      accumulatedDelta += Math.abs(e.deltaY);
+
+      // Only trigger scroll after reaching threshold
+      if (accumulatedDelta < deltaThreshold) return;
 
       const currentIndex = getCurrentSectionIndex();
       if (currentIndex === -1) return;
@@ -72,7 +68,6 @@ export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
       const nextIndex = currentIndex + direction;
       
       if (nextIndex >= 0 && nextIndex < sections.length) {
-        e.preventDefault();
         scrollToSection(nextIndex);
       }
     };
@@ -110,15 +105,12 @@ export const useScrollSnap = ({ onSectionChange }: UseScrollSnapProps) => {
       }
     };
 
-    // Use passive: false for wheel events to prevent scrolling
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('scroll', handleScroll);
     };
   }, [onSectionChange]);
 }; 
