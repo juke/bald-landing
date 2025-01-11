@@ -7,19 +7,15 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 /* Main container */
 .snap-container {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  position: relative;
-  z-index: 0;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 /* Base section styles */
@@ -237,16 +233,32 @@ html, body, #root {
   }
 }
 
-/* Ensure proper scroll snap on desktop */
+/* Desktop scroll snap */
 @media (min-width: 1280px) {
   .snap-container {
     scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
+    scroll-padding: 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .section-content {
     scroll-snap-align: start;
     scroll-snap-stop: always;
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+  }
+}
+
+/* Disable scroll snap on mobile */
+@media (max-width: 1279px) {
+  .snap-container {
+    scroll-snap-type: none;
+  }
+  
+  .section-content {
+    scroll-snap-align: none;
+    min-height: 100vh;
   }
 }
 
@@ -284,4 +296,31 @@ html, body, #root {
 /* Add these styles for the safe area handling */
 .safe-top {
   padding-top: max(5em, env(safe-area-inset-top));
+}
+
+/* Update the scroll snap styles */
+@media (min-width: 768px) {
+  .snap-container {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .section-content {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* Add these styles to ensure proper container setup */
+.snap-container {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 0;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }

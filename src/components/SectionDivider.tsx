@@ -1,29 +1,25 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
 const SectionDivider = () => {
+  const { activeSection, setActiveSection } = useActiveSection();
+  
   const scrollToNextSection = () => {
     const sections = Array.from(document.querySelectorAll('.section-content'));
-    const viewportMiddle = window.innerHeight / 2;
+    const currentIndex = sections.findIndex(section => section.id === activeSection);
     
-    const currentIndex = sections.findIndex(section => {
-      const rect = section.getBoundingClientRect();
-      const sectionMiddle = rect.top + rect.height / 2;
-      return Math.abs(sectionMiddle - viewportMiddle) < rect.height / 2;
-    });
-
     if (currentIndex !== -1 && currentIndex < sections.length - 1) {
-      sections[currentIndex + 1].scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
+      const nextSection = sections[currentIndex + 1];
+      nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveSection(nextSection.id);
     }
   };
 
   return (
     <>
       <motion.div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:block cursor-pointer z-10"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer z-10"
         initial={{ opacity: 0, y: -10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.8 }}

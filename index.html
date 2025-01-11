@@ -9,17 +9,20 @@
       html {
         scroll-behavior: smooth;
       }
-      @media (max-width: 1023px) {
+      
+      /* Update media query to target mobile only */
+      @media (max-width: 767px) {
         html {
           scroll-behavior: auto;
         }
       }
-      /* Prevent scroll chaining on iOS */
+      
       body {
         overscroll-behavior-y: none;
       }
-      /* Remove scroll snap on mobile */
-      @media (max-width: 1023px) {
+      
+      /* Update media query to target mobile only */
+      @media (max-width: 767px) {
         .snap-container {
           scroll-snap-type: none;
         }

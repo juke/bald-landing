@@ -6,6 +6,7 @@ import ProgressTracker from "@/components/ProgressTracker";
 import { useScrollSnap } from "@/hooks/useScrollSnap";
 import { useActiveSection } from '@/hooks/useActiveSection';
 import { useEffect } from 'react';
+import SectionDivider from "@/components/SectionDivider";
 
 function App() {
   const { setActiveSection } = useActiveSection();
@@ -25,19 +26,28 @@ function App() {
   }, []);
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden bg-black text-white">
+    <div className="relative min-h-screen w-full bg-black text-white">
       <Header />
       <div className="snap-container">
-        <section id="home" className="section-content">
+        <section id="home" className="section-content relative">
           <HeroSection />
+          <div className="absolute bottom-0 left-0 right-0 h-16">
+            <SectionDivider />
+          </div>
         </section>
-        <section id="public-good" className="section-content">
+        <section id="public-good" className="section-content relative">
           <PublicGoodSection />
+          <div className="absolute bottom-0 left-0 right-0 h-16">
+            <SectionDivider />
+          </div>
         </section>
-        <section id="distribution" className="section-content">
+        <section id="distribution" className="section-content relative">
           <DistributionSection />
+          <div className="absolute bottom-0 left-0 right-0 h-16">
+            <SectionDivider />
+          </div>
         </section>
-        <section id="progress" className="section-content">
+        <section id="progress" className="section-content relative">
           <ProgressTracker />
         </section>
       </div>
