@@ -10,18 +10,18 @@
         scroll-behavior: smooth;
       }
       
-      /* Update media query to target mobile only */
       @media (max-width: 767px) {
         html {
           scroll-behavior: auto;
         }
+        
+        /* Ensure content doesn't bounce on iOS */
+        body {
+          overscroll-behavior-y: none;
+        }
       }
       
-      body {
-        overscroll-behavior-y: none;
-      }
-      
-      /* Update media query to target mobile only */
+      /* Remove snap points on mobile */
       @media (max-width: 767px) {
         .snap-container {
           scroll-snap-type: none;

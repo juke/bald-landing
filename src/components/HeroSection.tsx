@@ -162,19 +162,19 @@ const ContractForm = () => {
 
   return (
     <motion.div
-      className="flex flex-col gap-4 w-full max-w-xl mx-auto mt-8"
+      className="flex flex-col gap-3 sm:gap-4 w-full max-w-xl mx-auto mt-6 sm:mt-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
     >
       {/* Contract Address Display */}
       <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm p-2 rounded-xl border border-yellow-400/20 overflow-hidden">
-        <div className="flex-1 px-4 py-2 text-yellow-400 font-mono text-sm md:text-base overflow-x-auto">
+        <div className="flex-1 px-3 sm:px-4 py-2 text-yellow-400 font-mono text-sm md:text-base overflow-x-auto">
           {contractAddress}
         </div>
         <motion.button
           onClick={handleCopy}
-          className="bg-yellow-400 text-black px-4 md:px-6 py-2 rounded-lg font-bold hover:bg-yellow-300 transition-colors shrink-0 z-10"
+          className="bg-yellow-400 text-black px-3 sm:px-4 md:px-6 py-2 rounded-lg font-bold hover:bg-yellow-300 transition-colors shrink-0 z-10"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -183,10 +183,10 @@ const ContractForm = () => {
       </div>
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
         <motion.a
           href="#"
-          className="bg-yellow-400 text-black px-6 py-3 rounded-xl font-bold hover:bg-yellow-300 transition-colors text-center"
+          className="bg-yellow-400 text-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:bg-yellow-300 transition-colors text-center text-sm sm:text-base"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -194,7 +194,7 @@ const ContractForm = () => {
         </motion.a>
         <motion.a
           href="#"
-          className="bg-black/20 backdrop-blur-sm text-yellow-400 px-6 py-3 rounded-xl font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors text-center"
+          className="bg-black/20 backdrop-blur-sm text-yellow-400 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors text-center text-sm sm:text-base"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -207,21 +207,25 @@ const ContractForm = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
+        className="relative mt-1 sm:mt-2"
       >
         <Card className="bg-black/20 backdrop-blur-sm border-yellow-400/20 overflow-hidden">
           <CardContent className="p-0">
             {/* Header */}
-            <div className="p-3 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <div className="h-2 w-2 rounded-full bg-green-500" />
+            <div className="px-5 py-4 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
+              <div className="flex items-center gap-3">
+                <div className="relative flex items-center">
+                  <div className="h-2.5 w-2.5 rounded-full bg-green-500" />
                   <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
                 </div>
-                <span className="text-xs font-medium text-yellow-400/90">LIVE UPDATES</span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-semibold text-yellow-400/90 tracking-wide uppercase">Live Market Data</span>
+                  <span className="text-[10px] text-gray-400/80">Last updated: Just now</span>
+                </div>
               </div>
               <Badge 
                 variant="outline" 
-                className="text-[10px] border-yellow-400/20 bg-yellow-400/5"
+                className="text-[10px] border-yellow-400/20 bg-yellow-400/5 px-3 py-1"
               >
                 <motion.span
                   animate={{
@@ -232,38 +236,44 @@ const ContractForm = () => {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="text-yellow-400"
+                  className="text-yellow-400 tracking-wider uppercase font-medium"
                 >
-                  REAL-TIME
+                  Real-Time
                 </motion.span>
               </Badge>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-3 divide-x divide-yellow-400/10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-yellow-400/10">
               {[
                 { 
                   label: "24h Volume", 
                   value: "$1.2M",
                   icon: TrendingUp,
-                  change: '+12.5% vs 24h ago'
+                  change: '+12.5%',
+                  trend: 'up',
+                  subtitle: 'vs. previous day'
                 },
                 { 
                   label: "Holders", 
                   value: "5,234",
                   icon: Users,
-                  change: '+156 today'
+                  change: '+156',
+                  trend: 'up',
+                  subtitle: 'new today'
                 },
                 { 
                   label: "Market Cap", 
                   value: "$325M",
                   icon: Wallet,
-                  change: '+2.3% vs 24h ago'
+                  change: '+2.3%',
+                  trend: 'up',
+                  subtitle: 'vs. previous day'
                 },
               ].map((stat, index) => (
                 <div 
                   key={stat.label} 
-                  className="p-3 flex flex-col justify-between h-full relative group hover:bg-yellow-400/5 transition-colors duration-300"
+                  className="relative group"
                 >
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
@@ -274,36 +284,66 @@ const ContractForm = () => {
                       duration: 3,
                       repeat: Infinity,
                       ease: "easeInOut",
-                      delay: index,
+                      delay: index * 0.5,
                     }}
                   />
-                  <div className="flex flex-col justify-between h-full gap-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <stat.icon className="h-3.5 w-3.5 text-yellow-400/70" />
-                      <div className="text-[10px] font-medium uppercase tracking-wider text-gray-400/80">
-                        {stat.label}
+                  <div className="px-5 py-4 sm:p-6 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-center gap-4 sm:gap-5 group-hover:bg-yellow-400/5 transition-colors duration-300">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="h-12 w-12 sm:h-10 sm:w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center sm:mt-0.5">
+                        <stat.icon className="h-6 w-6 sm:h-5 sm:w-5 text-yellow-400/70" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-medium uppercase tracking-wider text-gray-400/80">
+                          {stat.label}
+                        </div>
+                        <motion.div 
+                          className="text-lg sm:text-xl font-bold text-yellow-400 mt-1"
+                          animate={{
+                            opacity: [0.7, 1, 0.7],
+                            scale: [1, 1.02, 1],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.3,
+                          }}
+                        >
+                          {stat.value}
+                        </motion.div>
                       </div>
                     </div>
-                    <motion.div 
-                      className="flex flex-col"
-                      animate={{
-                        opacity: [0.7, 1, 0.7],
-                        scale: [1, 1.02, 1],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: index * 0.5,
-                      }}
-                    >
-                      <span className="text-sm font-bold text-yellow-400">
-                        {stat.value}
-                      </span>
-                      <span className="text-[10px] font-normal text-gray-400/60">
-                        {stat.change}
-                      </span>
-                    </motion.div>
+                    <div className="flex flex-col items-end sm:items-center gap-1.5 sm:mt-1 w-auto">
+                      <div className={`
+                        flex items-center gap-1.5 px-2.5 py-1 rounded-md min-w-[80px] justify-center mx-auto
+                        ${stat.trend === 'up' ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'}
+                      `}>
+                        <motion.span 
+                          className="text-xs font-medium"
+                          animate={{
+                            opacity: [0.7, 1, 0.7],
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.2,
+                          }}
+                        >
+                          {stat.change}
+                        </motion.span>
+                        {stat.trend === 'up' ? (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                          </svg>
+                        ) : (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-gray-400/60 text-center w-full">{stat.subtitle}</span>
+                    </div>
                   </div>
                 </div>
               ))}

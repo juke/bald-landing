@@ -35,19 +35,19 @@ function App() {
             <SectionDivider />
           </div>
         </section>
-        <section id="public-good" className="section-content relative">
+        <section id="public-good" className="section-content relative overflow-hidden">
           <PublicGoodSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider />
           </div>
         </section>
-        <section id="distribution" className="section-content relative">
+        <section id="distribution" className="section-content relative overflow-hidden">
           <DistributionSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider />
           </div>
         </section>
-        <section id="progress" className="section-content relative">
+        <section id="progress" className="section-content relative overflow-hidden">
           <ProgressTracker />
         </section>
       </div>
