@@ -4,13 +4,16 @@ import { ChevronDown } from "lucide-react";
 const SectionDivider = () => {
   const scrollToNextSection = () => {
     const sections = Array.from(document.querySelectorAll('.section-content'));
-    const currentSection = sections.findIndex((section) => {
+    const viewportMiddle = window.innerHeight / 2;
+    
+    const currentIndex = sections.findIndex(section => {
       const rect = section.getBoundingClientRect();
-      return rect.top >= -100 && rect.top <= 100;
+      const sectionMiddle = rect.top + rect.height / 2;
+      return Math.abs(sectionMiddle - viewportMiddle) < rect.height / 2;
     });
 
-    if (currentSection !== -1 && currentSection < sections.length - 1) {
-      sections[currentSection + 1].scrollIntoView({
+    if (currentIndex !== -1 && currentIndex < sections.length - 1) {
+      sections[currentIndex + 1].scrollIntoView({
         behavior: 'smooth',
         block: 'start'
       });
