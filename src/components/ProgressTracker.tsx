@@ -302,7 +302,7 @@ const ProgressTracker = () => {
   }, [selectedLevel]);
 
   return (
-    <div className="relative w-full min-h-[calc(100vh-3.5rem)] flex items-center bg-gray-950 safe-top" id="progress">
+    <div className="relative w-full h-screen flex items-center bg-gray-950 safe-top section-content" id="progress">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift" />

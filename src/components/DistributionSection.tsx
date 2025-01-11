@@ -4,7 +4,7 @@ import SectionDivider from './SectionDivider';
 
 const DistributionSection = () => {
   return (
-    <div className="relative w-full min-h-full overflow-hidden bg-gray-950 flex items-center py-20 md:py-0">
+    <div className="relative w-full h-screen overflow-hidden bg-gray-950 flex items-center section-content" id="distribution">
       {/* Base gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
       
