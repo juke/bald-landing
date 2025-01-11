@@ -248,49 +248,7 @@ const FloatingArrows = () => {
 const SubtleDivider = () => (
   <div className="relative w-full h-6 mt-6 flex items-center justify-center">
     {/* Main horizontal line */}
-    <div className="absolute w-full flex items-center justify-center">
-      <motion.div 
-        className="h-[1px] bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent"
-        initial={{ width: "0%" }}
-        whileInView={{ width: "60%" }}
-        viewport={{ once: false }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-      />
-    </div>
-  </div>
-);
-
-const GradientDivider = () => (
-  <div className="relative w-full h-[2px] my-8">
-    {/* Base gradient line */}
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
-    
-    {/* Animated glow effect */}
-    <motion.div
-      className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent"
-      animate={{
-        opacity: [0.3, 0.6, 0.3],
-      }}
-      transition={{
-        duration: 2,
-        ease: "easeInOut",
-        repeat: Infinity,
-      }}
-    />
-    
-    {/* Center dot */}
-    <motion.div 
-      className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-yellow-400"
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.5, 0.8, 0.5],
-      }}
-      transition={{
-        duration: 2,
-        ease: "easeInOut",
-        repeat: Infinity,
-      }}
-    />
+    <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent" />
   </div>
 );
 
