@@ -283,12 +283,10 @@ const TotalProgressBar = () => {
         if (entry.isIntersecting) {
           setIsInView(true);
         } else {
-          setIsInView(false); // Reset when out of view
+          setIsInView(false);
         }
       },
-      {
-        threshold: 0.2
-      }
+      { threshold: 0.2 }
     );
 
     if (progressRef.current) {
@@ -298,56 +296,63 @@ const TotalProgressBar = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Define key milestone values
-  const levelAmounts = [0, 100000, 1000000, 5000000, 10000000, 50000000, 100000000, 250000000, 325000000, 500000000, 1000000000];
+  // Update milestones to include all values up to 1B
+  const milestones = [
+    { value: 0, label: '$0' },
+    { value: 100000, label: '$100K' },
+    { value: 1000000, label: '$1M' },
+    { value: 5000000, label: '$5M' },
+    { value: 10000000, label: '$10M' },
+    { value: 50000000, label: '$50M' },
+    { value: 100000000, label: '$100M' },
+    { value: 250000000, label: '$250M' },
+    { value: 500000000, label: '$500M' },
+    { value: 1000000000, label: '$1B' }
+  ];
+
   const currentAmount = 325000000;
-  
-  const formatValue = (value: number) => {
-    if (value >= 1000000000) return `${value / 1000000000}B`;
-    if (value >= 1000000) return `${value / 1000000}M`;
-    if (value >= 1000) return `${value / 1000}K`;
-    return value.toString();
-  };
 
-  // Calculate positions with even spacing between markers
-  const getCurrentPosition = (_: number, index: number) => {
-    if (index === 0) return 0; // First marker
-    if (index === levelAmounts.length - 1) return 100; // Last marker
-    return (index / (levelAmounts.length - 1)) * 100; // Even spacing
-  };
+  // Calculate the position percentage for any value
+  const getPositionPercentage = (value: number) => {
+    // Find the surrounding milestones
+    let lowerMilestone = milestones[0];
+    let upperMilestone = milestones[milestones.length - 1];
 
-  // Calculate progress position using the same scale
-  const getProgressPosition = (amount: number) => {
-    // Find the two markers that bound the current amount
-    let lowerIndex = 0;
-    let upperIndex = levelAmounts.length - 1;
-    
-    for (let i = 0; i < levelAmounts.length - 1; i++) {
-      if (amount >= levelAmounts[i] && amount <= levelAmounts[i + 1]) {
-        lowerIndex = i;
-        upperIndex = i + 1;
+    for (let i = 0; i < milestones.length - 1; i++) {
+      if (value >= milestones[i].value && value <= milestones[i + 1].value) {
+        lowerMilestone = milestones[i];
+        upperMilestone = milestones[i + 1];
         break;
       }
     }
 
-    // Calculate the progress position between the two markers
-    const lowerPos = getCurrentPosition(levelAmounts[lowerIndex], lowerIndex);
-    const upperPos = getCurrentPosition(levelAmounts[upperIndex], upperIndex);
-    const progress = (amount - levelAmounts[lowerIndex]) / (levelAmounts[upperIndex] - levelAmounts[lowerIndex]);
-    
-    return lowerPos + (upperPos - lowerPos) * progress;
+    // Calculate the percentage within the segment
+    const segmentProgress = (value - lowerMilestone.value) / (upperMilestone.value - lowerMilestone.value);
+    const lowerPosition = (milestones.indexOf(lowerMilestone) / (milestones.length - 1)) * 100;
+    const upperPosition = (milestones.indexOf(upperMilestone) / (milestones.length - 1)) * 100;
+
+    return lowerPosition + (segmentProgress * (upperPosition - lowerPosition));
   };
 
-  const progressPosition = getProgressPosition(currentAmount);
+  const currentPosition = getPositionPercentage(currentAmount);
+
+  // Add this helper function to get mobile milestones
+  const getMobileMilestones = () => [
+    { value: 0, label: '$0' },
+    { value: 1000000, label: '$1M' },
+    { value: 100000000, label: '$100M' },
+    { value: 500000000, label: '$500M' },
+    { value: 1000000000, label: '$1B' }
+  ];
 
   return (
     <div ref={progressRef} className="w-full space-y-4 mt-6 progress-container">
-      {/* Desktop Progress Bar - Removed px-8 padding */}
+      {/* Desktop Progress Bar */}
       <div className="hidden md:block relative w-full max-w-2xl mx-auto mb-12">
         {/* Current Value Indicator */}
         <div 
           className="absolute bottom-full mb-0 w-0.5"
-          style={{ left: `${progressPosition}%` }}
+          style={{ left: `${currentPosition}%` }}
         >
           <div className="relative">
             <div className="absolute bottom-[-0.5rem] w-0.5 h-5 bg-yellow-300" />
@@ -356,7 +361,7 @@ const TotalProgressBar = () => {
                 variant="outline" 
                 className="bg-black/40 backdrop-blur-sm border-yellow-400/20 text-yellow-300 font-medium shadow-lg hover:bg-black/60"
               >
-                Current: ${formatValue(currentAmount)}
+                Current: $325M
               </Badge>
             </div>
           </div>
@@ -365,10 +370,10 @@ const TotalProgressBar = () => {
         {/* Progress Bar */}
         <div className="h-2 bg-gray-800 w-full">
           <motion.div
-            key={isInView ? "visible" : "hidden"} // Force re-render when visibility changes
+            key={isInView ? "visible" : "hidden"}
             className="progress-bar absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
             initial={{ width: 0 }}
-            animate={{ width: isInView ? `${progressPosition}%` : 0 }}
+            animate={{ width: isInView ? `${currentPosition}%` : 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <div className="absolute inset-0 bg-[rgba(255,255,255,0.2)] animate-pulse"></div>
@@ -378,17 +383,17 @@ const TotalProgressBar = () => {
         {/* Level Markers */}
         <div className="absolute top-0 left-0 w-full progress-markers">
           <div className="relative h-2">
-            {levelAmounts.map((_, index) => {
-              const position = getCurrentPosition(_, index);
+            {milestones.map((milestone, index) => {
+              const position = (index / (milestones.length - 1)) * 100;
               return (
                 <div
                   key={index}
                   className="absolute"
-                  style={{ left: `calc(${position}% - 0.5px)` }}
+                  style={{ left: `${position}%` }}
                 >
                   <div className="h-2 w-[1px] bg-gray-600" />
                   <div className="mt-1 text-xs text-gray-400 whitespace-nowrap" style={{ marginLeft: '-50%' }}>
-                    ${formatValue(_)}
+                    {milestone.label}
                   </div>
                 </div>
               );
@@ -397,13 +402,13 @@ const TotalProgressBar = () => {
         </div>
       </div>
 
-      {/* Mobile Progress Bar - No padding */}
+      {/* Mobile Progress Bar */}
       <div className="md:hidden space-y-4">
-        {/* Current Value Indicator */}
         <div className="relative">
+          {/* Current Value Indicator */}
           <div 
             className="absolute bottom-full mb-0 w-0.5"
-            style={{ left: `${progressPosition}%` }}
+            style={{ left: `${currentPosition}%` }}
           >
             <div className="relative">
               <div className="absolute bottom-[-0.5rem] w-0.5 h-5 bg-yellow-300" />
@@ -412,32 +417,35 @@ const TotalProgressBar = () => {
                   variant="outline" 
                   className="bg-black/40 backdrop-blur-sm border-yellow-400/20 text-yellow-300 font-medium shadow-lg hover:bg-black/60"
                 >
-                  Current: ${formatValue(currentAmount)}
+                  Current: $325M
                 </Badge>
               </div>
             </div>
           </div>
+
+          {/* Progress Bar */}
           <div className="h-2 bg-gray-800 w-full">
             <motion.div
-              className="absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
-              style={{ width: `${progressPosition}%` }}
+              key={isInView ? "visible" : "hidden"}
+              className="progress-bar absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
               initial={{ width: 0 }}
-              animate={{ width: `${progressPosition}%` }}
+              animate={{ width: isInView ? `${currentPosition}%` : 0 }}
               transition={{ duration: 1, ease: "easeOut" }}
             >
               <div className="absolute inset-0 bg-[rgba(255,255,255,0.2)] animate-pulse"></div>
             </motion.div>
           </div>
-          {/* Level Markers for Mobile */}
+
+          {/* Level Markers - Show fewer markers on mobile */}
           <div className="absolute top-0 left-0 w-full">
             <div className="relative h-2">
-              {[0, 100000, 10000000, 100000000, 1000000000].map((_, index) => {
-                const position = (index / 4) * 100; // Even spacing for mobile markers
+              {getMobileMilestones().map((milestone, index) => {
+                const position = (index / (getMobileMilestones().length - 1)) * 100;
                 return (
                   <div
                     key={index}
                     className="absolute"
-                    style={{ left: `calc(${position}% - 0.5px)` }}
+                    style={{ left: `${position}%` }}
                   >
                     <div className="h-2 w-[1px] bg-gray-600" />
                   </div>
@@ -446,14 +454,16 @@ const TotalProgressBar = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile Value Labels */}
         <div className="overflow-x-auto hide-scrollbar">
-          <div className="flex justify-between min-w-[300px] px-2">
-            {[0, 100000, 10000000, 100000000, 1000000000].map((amount, index) => (
+          <div className="flex justify-between min-w-[300px] px-2"> {/* Reduced min-width */}
+            {getMobileMilestones().map((milestone, index) => (
               <div
                 key={index}
                 className="text-xs text-gray-400 whitespace-nowrap"
               >
-                ${formatValue(amount)}
+                {milestone.label}
               </div>
             ))}
           </div>
