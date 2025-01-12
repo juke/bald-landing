@@ -89,7 +89,6 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels, cur
           "relative group bg-black/40 backdrop-blur-sm cursor-pointer h-full",
           "overflow-hidden transition-all duration-300",
           isSelected ? "border-yellow-400/50 border-2" : "border-yellow-400/20 border",
-          !isUnlocked && "opacity-70",
           isUnlocked && "hover:border-yellow-400/40 hover:bg-black/60"
         )}
         onClick={onClick}
@@ -640,17 +639,55 @@ const ProgressTracker = () => {
                   className="p-4 sm:p-5 flex items-start gap-4 sm:gap-5 h-[140px]"
                 >
                   <div className="relative w-20 h-24 sm:w-24 sm:h-28 rounded-lg overflow-hidden border border-yellow-400/20 shrink-0">
-                    <motion.img
-                      src={`/bald-landing/levels/${selectedLevel}.jpg`}
-                      alt={`Level ${selectedLevel}`}
-                      className={cn(
-                        "w-full h-full object-cover",
-                        selectedLevel > unlockedLevels && "grayscale opacity-50"
-                      )}
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                    {selectedLevel === unlockedLevels + 1 ? (
+                      <div className="relative w-full h-full">
+                        {/* Grayscale base */}
+                        <img
+                          src={`/bald-landing/levels/${selectedLevel}.jpg`}
+                          alt={`Level ${selectedLevel}`}
+                          className="absolute inset-0 w-full h-full object-cover grayscale"
+                        />
+                        
+                        {/* Colored overlay with clip-path */}
+                        <img 
+                          src={`/bald-landing/levels/${selectedLevel}.jpg`}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+                          style={{
+                            clipPath: `polygon(0 0, ${
+                              ((getAmountInNumber(currentAmount) - getAmountInNumber(getLevelAmount(selectedLevel - 1))) / 
+                              (getAmountInNumber(getLevelAmount(selectedLevel)) - getAmountInNumber(getLevelAmount(selectedLevel - 1)))) * 100
+                            }% 0, ${
+                              ((getAmountInNumber(currentAmount) - getAmountInNumber(getLevelAmount(selectedLevel - 1))) / 
+                              (getAmountInNumber(getLevelAmount(selectedLevel)) - getAmountInNumber(getLevelAmount(selectedLevel - 1)))) * 100
+                            }% 100%, 0 100%)`
+                          }}
+                        />
+                        
+                        {/* Progress line */}
+                        <div 
+                          className="absolute inset-y-0 w-0.5 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)] transition-all duration-300"
+                          style={{ 
+                            left: `${
+                              ((getAmountInNumber(currentAmount) - getAmountInNumber(getLevelAmount(selectedLevel - 1))) / 
+                              (getAmountInNumber(getLevelAmount(selectedLevel)) - getAmountInNumber(getLevelAmount(selectedLevel - 1)))) * 100
+                            }%` 
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <motion.img
+                        src={`/bald-landing/levels/${selectedLevel}.jpg`}
+                        alt={`Level ${selectedLevel}`}
+                        className={cn(
+                          "w-full h-full object-cover",
+                          selectedLevel > unlockedLevels && "grayscale opacity-50"
+                        )}
+                        initial={{ scale: 1.1 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
