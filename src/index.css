@@ -35,7 +35,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 5vw, 3rem);
+  padding: clamp(2rem, 4vh, 4rem) clamp(1.5rem, 5vw, 3rem);
 }
 
 /* Hero section specific */
@@ -98,18 +98,25 @@ html, body, #root {
   .section-content {
     min-height: 100vh;
     height: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
   }
 
   .section-content > div:not(:last-child) {
-    min-height: 100vh;
+    min-height: auto;
     height: auto;
-    padding: clamp(5rem, 10vh, 6rem) clamp(1rem, 5vw, 2rem);
+    padding: clamp(3rem, 5vh, 4rem) clamp(1rem, 5vw, 2rem);
+  }
+
+  #progress {
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-y: auto;
   }
 
   #progress > div:not(:last-child) {
     padding-left: 0;
     padding-right: 0;
+    padding-top: clamp(2rem, 4vh, 3rem);
   }
 
   /* Special handling for home section */
@@ -123,20 +130,21 @@ html, body, #root {
   .section-content:not(#home) {
     min-height: 100vh;
     min-height: 100dvh;
-    height: 100vh;
-    height: 100dvh;
+    height: auto;
     overflow: hidden;
   }
 
   /* Adjust content padding for better mobile display */
   .section-content > div:not(:last-child) {
-    padding: clamp(5rem, 10vh, 6rem) clamp(1rem, 5vw, 2rem);
+    padding: clamp(3rem, 5vh, 4rem) clamp(1rem, 5vw, 2rem);
+    padding-bottom: 3rem;
   }
 
   /* Special handling for home section content */
   #home > div:not(:last-child) {
     min-height: 100%;
     height: auto;
+    padding-top: clamp(2rem, 4vh, 3rem);
     padding-bottom: 0;
   }
 
@@ -144,6 +152,34 @@ html, body, #root {
   #home .absolute.bottom-0 {
     bottom: 0;
     position: absolute;
+  }
+
+  /* Override overflow for #progress to ensure SectionDivider is visible */
+  #progress.section-content {
+    overflow: visible;
+  }
+
+  /* Optionally, adjust the height if necessary */
+  #progress.section-content {
+    min-height: auto;
+    height: auto;
+  }
+
+  /* Adjust padding for better mobile display */
+  #progress > div {
+    min-height: auto;
+    height: auto;
+    padding-bottom: calc(env(safe-area-inset-bottom, 2rem) + 3rem);
+  }
+
+  /* Ensure content is properly spaced on mobile */
+  #progress .flex-col.gap-8 {
+    gap: 2rem;
+  }
+
+  /* Add extra space before the section divider */
+  #progress .absolute.bottom-0 {
+    margin-top: 4rem;
   }
 }
 
@@ -157,6 +193,7 @@ html, body, #root {
 
   #home > div:not(:last-child) {
     height: 100%;
+    padding-top: clamp(2rem, 4vh, 3rem);
     padding-bottom: 4rem;
   }
 
@@ -167,6 +204,7 @@ html, body, #root {
 
   .section-content > div:not(:last-child) {
     height: 100%;
+    padding: clamp(2rem, 4vh, 4rem) clamp(1.5rem, 5vw, 3rem);
   }
 }
 

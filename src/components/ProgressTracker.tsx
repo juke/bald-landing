@@ -552,8 +552,8 @@ const ProgressTracker = () => {
         <FloatingArrows />
       </div>
 
-      {/* Content - Update padding classes for better mobile spacing */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full py-12 md:py-0 pb-[calc(2rem+env(safe-area-inset-bottom,0px)+4rem)] flex flex-col justify-start md:justify-center">
+      {/* Content - Adjust padding classes for better mobile spacing */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full py-16 md:py-0 pb-[calc(2rem + env(safe-area-inset-bottom,0px) + 4rem)] flex flex-col justify-start md:justify-center">
         <div className="flex flex-col gap-6 sm:gap-8"> {/* Adjusted gap for better mobile spacing */}
           {/* Header */}
           <motion.div 

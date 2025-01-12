@@ -31,7 +31,7 @@ const SectionDivider = ({ isLastSection, nextSection }: {
   return (
     <>
       <motion.div 
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 cursor-pointer z-10"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 cursor-pointer z-20"
         initial={{ opacity: 0, y: -10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.8 }}
