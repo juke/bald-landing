@@ -6,9 +6,26 @@ const DistributionSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: -1000, y: -1000 });
   const [sectionRef, setSectionRef] = useState<HTMLDivElement | null>(null);
   const [isMouseInside, setIsMouseInside] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
-    if (!sectionRef) return;
+    // Check if device is touch-enabled
+    const checkTouchDevice = () => {
+      setIsTouchDevice(
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(hover: none)').matches
+      );
+    };
+
+    checkTouchDevice();
+    window.addEventListener('resize', checkTouchDevice);
+    
+    return () => window.removeEventListener('resize', checkTouchDevice);
+  }, []);
+
+  useEffect(() => {
+    if (!sectionRef || isTouchDevice) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!isMouseInside) setIsMouseInside(true);
@@ -39,17 +56,17 @@ const DistributionSection = () => {
         sectionRef.removeEventListener('mouseenter', handleMouseEnter);
       }
     };
-  }, [sectionRef, isMouseInside]);
+  }, [sectionRef, isMouseInside, isTouchDevice]);
 
   // Effect to smoothly move cursor position off-screen when mouse leaves
   useEffect(() => {
-    if (!isMouseInside) {
+    if (!isMouseInside && !isTouchDevice) {
       const timer = setTimeout(() => {
         setMousePosition({ x: -1000, y: -1000 });
-      }, 300); // Delay moving cursor off-screen until fade completes
+      }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isMouseInside]);
+  }, [isMouseInside, isTouchDevice]);
 
   return (
     <div 
@@ -74,10 +91,10 @@ const DistributionSection = () => {
           }}
         />
 
-        {/* Interactive dots */}
-        {sectionRef && (
+        {/* Interactive dots - Only show on non-touch devices */}
+        {sectionRef && !isTouchDevice && (
           <motion.div 
-            className="absolute inset-0"
+            className="absolute inset-0 hidden md:block"
             animate={{
               opacity: isMouseInside ? 1 : 0
             }}
