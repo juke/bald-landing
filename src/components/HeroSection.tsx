@@ -30,33 +30,37 @@ const ClickTooltip = React.forwardRef<
   }
 >(({ className, trigger, children, ...props }, ref) => {
   const [open, setOpen] = React.useState(false);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
   React.useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (buttonRef.current?.contains(e.target as Node)) {
-        e.preventDefault();
-        e.stopPropagation();
-        setOpen(prev => !prev);
-        return;
-      }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handle clicks outside
+  React.useEffect(() => {
+    const handleClickOutside = () => {
       setOpen(false);
     };
 
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  }, []);
+    if (open) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [open]);
 
   return (
     <TooltipProvider>
-      <Tooltip 
-        open={open}
-        onOpenChange={setOpen}
-        disableHoverableContent={true}
-      >
+      <Tooltip open={open}>
         <TooltipTrigger asChild>
           <motion.button
-            ref={buttonRef}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the click from bubbling up
+              setOpen(!open);
+            }}
             className="inline-flex items-center px-2 py-0 bg-yellow-400/10 rounded-lg border border-yellow-400/20 cursor-pointer relative overflow-hidden align-baseline mx-1 mr-2.5"
             whileTap={{ scale: 0.95 }}
           >
@@ -65,13 +69,51 @@ const ClickTooltip = React.forwardRef<
         </TooltipTrigger>
         <TooltipContent
           ref={ref}
+          side="bottom"
+          align={isMobile ? "center" : "start"}
+          sideOffset={5}
+          alignOffset={isMobile ? -40 : 0}
           className={cn(
-            "bg-gray-900/95 border border-gray-700 shadow-xl px-4 py-3 rounded-lg max-w-[250px] z-50",
+            "z-[60] animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+            "bg-black/95 backdrop-blur-sm border border-yellow-400/20",
+            "shadow-[0_0_15px_rgba(250,204,21,0.1)] rounded-xl",
+            "p-4",
+            isMobile ? "max-w-[calc(100vw-2rem)] mx-4" : "max-w-[300px]",
             className
           )}
           {...props}
         >
-          {children}
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.2 }}
+          >
+            {children}
+          </motion.div>
+          
+          {/* Decorative elements */}
+          <div className="absolute -z-10 inset-0 bg-gradient-to-b from-yellow-400/5 to-transparent rounded-xl" />
+          <motion.div 
+            className="absolute -z-10 inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(250,204,21,0.1),transparent_70%)]"
+            animate={{
+              opacity: [0.5, 0.8, 0.5]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          
+          {/* Arrow with glow effect */}
+          <div className={cn(
+            "absolute w-3 h-3",
+            isMobile ? "-top-1.5 left-1/2 -translate-x-1/2" : "-top-1.5 left-6"
+          )}>
+            <div className="absolute w-3 h-3 bg-black/95 border-t border-l border-yellow-400/20 rotate-45 transform origin-center" />
+            <div className="absolute w-3 h-3 bg-gradient-to-t from-yellow-400/5 to-transparent rotate-45 transform origin-center" />
+          </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -516,8 +558,6 @@ export default function HeroSection() {
               >
                 Track{" "}
                 <ClickTooltip 
-                  side="top" 
-                  sideOffset={5}
                   trigger={
                     <motion.span
                       className="relative z-10 font-semibold tracking-wide"
@@ -540,19 +580,19 @@ export default function HeroSection() {
                     </motion.span>
                   }
                 >
-                  <div className="space-y-2">
-                    <div className="flex flex-col gap-1.5">
+                  <div className="space-y-3">
+                    <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2">
-                        <div className="px-1.5 py-0.5 bg-yellow-400/10 rounded-md">
+                        <div className="px-2 py-1 bg-yellow-400/10 rounded-md">
                           <span className="text-yellow-400 text-xs font-medium tracking-wide">BRIAN ARMSTRONG</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                        <div className="px-2 py-1 bg-yellow-400/5 rounded-md">
                           <span className="text-yellow-400/80 text-xs">COINBASE CEO</span>
                         </div>
                         <span className="text-yellow-400/50">•</span>
-                        <div className="px-1.5 py-0.5 bg-yellow-400/5 rounded-md">
+                        <div className="px-2 py-1 bg-yellow-400/5 rounded-md">
                           <span className="text-yellow-400/80 text-xs">$11.5B</span>
                         </div>
                       </div>
@@ -561,6 +601,31 @@ export default function HeroSection() {
                       Built Coinbase from zero to America's largest crypto exchange. His iconic baldness 
                       journey perfectly matches our path to $1B 👨‍🦲
                     </p>
+                    
+                    {/* Add a subtle divider */}
+                    <motion.div 
+                      className="h-px bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0"
+                      animate={{
+                        opacity: [0.3, 0.6, 0.3],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                    />
+                    
+                    {/* Add some stats */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div className="text-center p-2 rounded-lg bg-yellow-400/5">
+                        <div className="text-[10px] text-yellow-400/70">Net Worth</div>
+                        <div className="text-sm font-medium text-yellow-400">$11.5B</div>
+                      </div>
+                      <div className="text-center p-2 rounded-lg bg-yellow-400/5">
+                        <div className="text-[10px] text-yellow-400/70">Founded</div>
+                        <div className="text-sm font-medium text-yellow-400">2012</div>
+                      </div>
+                    </div>
                   </div>
                 </ClickTooltip>
                 journey to peak baldness. Each milestone unlocks a new level, from full head of hair to{" "}

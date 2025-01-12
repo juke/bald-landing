@@ -74,9 +74,8 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
         )}
         onClick={onClick}
       >
-        <CardContent className="p-2 sm:p-3 h-full flex flex-col">
-          {/* Image Container */}
-          <div className="aspect-[5/4] rounded-lg overflow-hidden relative flex-shrink-0">
+        <CardContent className="p-1.5 sm:p-2 h-full flex flex-col">
+          <div className="aspect-[4/3] rounded-lg overflow-hidden relative flex-shrink-0">
             <img 
               src={`/bald-landing/levels/${level}.jpg`}
               alt={`Level ${level} baldness`}
@@ -88,18 +87,17 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
             />
             {!isUnlocked && (
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                <Lock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400/50" />
+                <Lock className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400/50" />
               </div>
             )}
           </div>
 
-          {/* Level Info */}
-          <div className="mt-2 flex flex-col justify-end gap-1">
+          <div className="mt-1.5 flex flex-col justify-end gap-0.5">
             <div className="flex items-baseline justify-between">
-              <div className="text-xs sm:text-sm font-medium text-yellow-400">
+              <div className="text-[11px] sm:text-xs font-medium text-yellow-400">
                 Level {level}
               </div>
-              <div className="text-[10px] sm:text-xs text-yellow-400/60">
+              <div className="text-[10px] sm:text-[11px] text-yellow-400/60">
                 ${getLevelAmount(level)}
               </div>
             </div>
@@ -109,7 +107,7 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
                 ((getAmountInNumber(getLevelAmount(unlockedLevels)) / 
                   getAmountInNumber(getLevelAmount(level))) * 100
                 ), 100)} 
-              className="h-1 w-full overflow-hidden rounded-full bg-gray-900/20"
+              className="h-0.5 w-full overflow-hidden rounded-full bg-gray-900/20"
               indicatorClassName={cn(
                 "h-full w-full flex-1 transition-all duration-700",
                 isUnlocked ? "bg-yellow-400" : "bg-yellow-400/30"
@@ -640,8 +638,8 @@ const ProgressTracker = () => {
               ref={scrollAreaRef}
               className="w-full"
             >
-              <div className="px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:grid-flow-row lg:auto-rows-fr">
+              <div className="px-3 sm:px-4 lg:px-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 lg:grid-flow-row lg:auto-rows-fr">
                   {[...Array(10)].map((_, idx) => (
                     <div 
                       key={idx + 1}
