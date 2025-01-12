@@ -167,7 +167,7 @@ const PublicGoodSection = () => {
         </div>
       </div>
 
-      <SectionDivider />
+      <SectionDivider nextSection="roadmap" />
     </div>
   );
 };

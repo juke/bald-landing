@@ -726,7 +726,7 @@ export default function HeroSection() {
 
       {/* Section Divider */}
       <div className="absolute bottom-0 left-0 right-0 h-16">
-        <SectionDivider />
+        <SectionDivider nextSection="distribution" />
       </div>
     </div>
   );

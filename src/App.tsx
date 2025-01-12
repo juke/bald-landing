@@ -33,8 +33,7 @@ function App() {
           <HeroSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
-              isLastSection={false} 
-              currentSection="home"
+              isLastSection={false}
               nextSection="public-good"
             />
           </div>
@@ -43,8 +42,7 @@ function App() {
           <PublicGoodSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
-              isLastSection={false} 
-              currentSection="public-good"
+              isLastSection={false}
               nextSection="distribution"
             />
           </div>
@@ -53,8 +51,7 @@ function App() {
           <DistributionSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
-              isLastSection={false} 
-              currentSection="distribution"
+              isLastSection={false}
               nextSection="progress"
             />
           </div>
@@ -64,7 +61,6 @@ function App() {
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
               isLastSection={true}
-              currentSection="progress"
               nextSection="home"
             />
           </div>

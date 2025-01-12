@@ -6,7 +6,6 @@ import { Lock, ArrowUp } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import SectionDivider from './SectionDivider';
 
 const levelDescriptions = [
   "Full head of hair. The journey of enlightenment begins here.",
@@ -439,7 +438,7 @@ const TotalProgressBar = () => {
           {/* Level Markers - Show fewer markers on mobile */}
           <div className="absolute top-0 left-0 w-full">
             <div className="relative h-2">
-              {getMobileMilestones().map((milestone, index) => {
+              {getMobileMilestones().map((_, index) => {
                 const position = (index / (getMobileMilestones().length - 1)) * 100;
                 return (
                   <div

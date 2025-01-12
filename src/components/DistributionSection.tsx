@@ -126,7 +126,7 @@ const DistributionSection = () => {
         </div>
       </div>
 
-      <SectionDivider />
+      <SectionDivider nextSection="progress" />
     </div>
   );
 };

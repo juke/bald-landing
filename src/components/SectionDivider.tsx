@@ -2,9 +2,8 @@ import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
-const SectionDivider = ({ isLastSection, currentSection, nextSection }: { 
+const SectionDivider = ({ isLastSection, nextSection }: { 
   isLastSection?: boolean;
-  currentSection: string;
   nextSection: string;
 }) => {
   const { setActiveSection } = useActiveSection();
