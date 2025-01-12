@@ -457,7 +457,7 @@ const ProgressTracker = () => {
   return (
     <div 
       ref={progressRef}
-      className="relative w-full min-h-screen bg-gray-950 flex items-center section-content" 
+      className="relative w-full min-h-screen bg-gray-950 flex items-start md:items-center section-content overflow-y-auto md:overflow-y-hidden" 
       id="progress"
     >
       {/* Background */}
@@ -473,7 +473,7 @@ const ProgressTracker = () => {
       </div>
 
       {/* Content - Added more spacing between elements */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full h-full flex flex-col justify-center">
+      <div className="relative z-10 max-w-7xl mx-auto w-full py-20 pb-32 md:py-0 flex flex-col justify-start md:justify-center">
         <div className="flex flex-col gap-8 sm:gap-6"> {/* Increased gap even more */}
           {/* Header */}
           <motion.div 
