@@ -6,24 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>$BALD | A Memecoin Revolution</title>
     <style>
-      html {
-        scroll-behavior: smooth;
-        -webkit-text-size-adjust: 100%;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        position: fixed;
-        height: 100%;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      
-      body {
+
+      html, body {
+        position: fixed;
         width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
+        height: 100%;
+        overflow: hidden;
         overscroll-behavior: none;
         -webkit-overflow-scrolling: touch;
-        position: fixed;
-        height: 100%;
+        touch-action: pan-y pinch-zoom;
       }
       
       #root {
@@ -32,6 +28,8 @@
         overflow-y: auto;
         overflow-x: hidden;
         position: relative;
+        overscroll-behavior-x: none;
+        touch-action: pan-y pinch-zoom;
       }
       
       @media (max-width: 767px) {
@@ -39,7 +37,6 @@
           scroll-behavior: auto;
         }
         
-        /* Ensure content doesn't bounce on iOS */
         body {
           overscroll-behavior: none;
           touch-action: pan-y pinch-zoom;
