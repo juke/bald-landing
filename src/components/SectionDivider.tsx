@@ -2,14 +2,14 @@ import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
-const SectionDivider = () => {
-  const { activeSection, setActiveSection } = useActiveSection();
+const SectionDivider = ({ isLastSection, currentSection, nextSection }: { 
+  isLastSection?: boolean;
+  currentSection: string;
+  nextSection: string;
+}) => {
+  const { setActiveSection } = useActiveSection();
   
   const handleClick = () => {
-    const sections = ['home', 'public-good', 'distribution', 'progress'];
-    const currentIndex = sections.indexOf(activeSection);
-    const isLastSection = currentIndex === sections.length - 1;
-
     if (isLastSection) {
       // Scroll to home section
       const element = document.getElementById('home');
@@ -19,18 +19,15 @@ const SectionDivider = () => {
         window.history.pushState(null, '', '#home');
       }
     } else {
-      // Scroll to next section
-      const nextSectionId = sections[currentIndex + 1];
-      const element = document.getElementById(nextSectionId);
+      // Scroll directly to next section
+      const element = document.getElementById(nextSection);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
-        setActiveSection(nextSectionId);
-        window.history.pushState(null, '', `#${nextSectionId}`);
+        setActiveSection(nextSection);
+        window.history.pushState(null, '', `#${nextSection}`);
       }
     }
   };
-
-  const isLastSection = activeSection === 'progress';
 
   return (
     <>
@@ -52,7 +49,7 @@ const SectionDivider = () => {
         ) : (
           <ChevronDown 
             className="w-6 h-6 text-yellow-400/50 animate-bounce hover:text-yellow-400/80 transition-colors"
-            aria-label="Scroll to next section"
+            aria-label={`Scroll to ${nextSection} section`}
           />
         )}
       </motion.div>

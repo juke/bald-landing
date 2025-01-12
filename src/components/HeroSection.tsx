@@ -560,7 +560,7 @@ export default function HeroSection() {
                 <ClickTooltip 
                   trigger={
                     <motion.span
-                      className="relative z-10 font-semibold tracking-wide"
+                      className="relative z-10 font-semibold tracking-wide "
                     >
                       <motion.span
                         className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-yellow-400/10 to-transparent skew-x-12"

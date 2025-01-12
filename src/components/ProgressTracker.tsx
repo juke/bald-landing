@@ -553,9 +553,9 @@ const ProgressTracker = () => {
         <FloatingArrows />
       </div>
 
-      {/* Content - Added more spacing between elements */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full py-20 pb-32 md:py-0 flex flex-col justify-start md:justify-center">
-        <div className="flex flex-col gap-8 sm:gap-6"> {/* Increased gap even more */}
+      {/* Content - Update padding classes for better mobile spacing */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full py-12 md:py-0 pb-[calc(2rem+env(safe-area-inset-bottom,0px)+4rem)] flex flex-col justify-start md:justify-center">
+        <div className="flex flex-col gap-6 sm:gap-8"> {/* Adjusted gap for better mobile spacing */}
           {/* Header */}
           <motion.div 
             className="text-center"
@@ -780,11 +780,6 @@ const ProgressTracker = () => {
             </ScrollArea>
           </motion.div>
         </div>
-      </div>
-
-      {/* Add the SectionDivider component */}
-      <div className="absolute bottom-0 left-0 right-0 h-16">
-        <SectionDivider />
       </div>
     </div>
   );
