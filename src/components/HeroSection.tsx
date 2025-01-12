@@ -12,8 +12,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { cn } from "@/lib/utils";
 import SectionDivider from './SectionDivider';
-import { TrendingUp, Users, Wallet, Copy, ExternalLink, Check } from "lucide-react";
+import { TrendingUp, Users, Wallet, Copy, ExternalLink, Check, DollarSign, ChartBar, CircleDollarSign, Group, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Marquee } from "@devnomic/marquee";
+import "@devnomic/marquee/dist/index.css";
 
 const getAmountInNumber = (amount: string) => {
   const num = amount.replace(/[^0-9.]/g, '');
@@ -321,6 +323,44 @@ const ContractForm = () => {
             </a>
           </Button>
         </motion.div>
+      </div>
+
+      {/* Live Update Tracker */}
+      <div className="relative rounded-xl bg-black/20 backdrop-blur-sm border border-yellow-400/20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10 pointer-events-none" />
+        <Marquee
+          fade={true}
+          direction="left"
+          reverse={false}
+          pauseOnHover={true}
+          className="py-2.5"
+          innerClassName="gap-2"
+        >
+          {[
+            { label: "Price", value: "$0.00042", change: "+15.2%", icon: DollarSign },
+            { label: "Market Cap", value: "$325M", change: "+12.8%", icon: ChartBar },
+            { label: "24h Volume", value: "$8.2M", change: "+25.5%", icon: CircleDollarSign },
+            { label: "Holders", value: "2,851", change: "+124", icon: Group },
+            { label: "Liquidity", value: "$2.1M", change: "+5.2%", icon: Droplet }
+          ].map((item, index) => (
+            <div key={index} className="flex items-center mx-2">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center w-5 h-5 rounded-md bg-yellow-400/10">
+                  <item.icon className="size-3.5 text-yellow-400/70" />
+                </div>
+                <span className="text-xs text-gray-400">{item.label}:</span>
+                <span className="text-sm font-medium text-yellow-400">{item.value}</span>
+                <span className={cn(
+                  "text-xs font-medium flex items-center gap-0.5",
+                  item.change.startsWith("+") ? "text-green-400" : "text-red-400"
+                )}>
+                  <TrendingUp className="size-3" />
+                  {item.change}
+                </span>
+              </div>
+            </div>
+          ))}
+        </Marquee>
       </div>
     </motion.div>
   );
