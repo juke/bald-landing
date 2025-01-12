@@ -71,7 +71,7 @@ const DistributionSection = () => {
   return (
     <div 
       ref={setSectionRef}
-      className="relative w-full min-h-screen bg-gray-950 flex items-center section-content overflow-hidden" 
+      className="relative w-full h-full flex items-center section-content"
       id="distribution"
     >
       {/* Background container */}

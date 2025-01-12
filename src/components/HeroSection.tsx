@@ -466,7 +466,7 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
 
 export default function HeroSection() {
   return (
-    <div className="relative w-full flex items-center section-content" id="home">
+    <div className="relative w-full min-h-screen bg-gray-950 section-content" id="home">
       {/* Background elements */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-purple-900 animate-gradient-shift" />
@@ -479,7 +479,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative w-full flex items-center">
+      <div className="relative w-full h-screen flex items-center">
         <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 lg:gap-16">
           {/* Text Content */}
           <div className="flex flex-col justify-center pt-16 md:pt-0">

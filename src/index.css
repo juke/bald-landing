@@ -10,7 +10,6 @@ html, body {
   width: 100%;
   overflow: hidden;
   overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
 }
 
 #root {
@@ -18,29 +17,31 @@ html, body {
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior: none;
+  overscroll-behavior-y: contain;
+  overscroll-behavior-x: none;
   -webkit-overflow-scrolling: touch;
 }
 
 /* Main container */
 .snap-container {
-  height: 100%;
+  height: 100vh;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-behavior: smooth;
-  overscroll-behavior: none;
   position: relative;
+  z-index: 0;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Base section styles */
 .section-content {
   width: 100%;
+  height: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
   display: flex;
   align-items: center;
-  overflow: visible;
 }
 
 /* Content container styles */
@@ -110,34 +111,15 @@ html, body {
   }
 
   .section-content {
-    min-height: auto !important;
-    height: auto !important;
-    overflow: visible !important;
+    min-height: auto;
+    height: 100%;
+    overflow: visible;
   }
 
-  .section-content > div {
-    min-height: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  #home, #public-good {
-    min-height: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  /* Remove any fixed heights */
-  #home > div, #public-good > div {
-    min-height: auto !important;
-    height: auto !important;
-  }
-
-  /* Ensure content fills available space */
   .section-content > div:not(:last-child) {
+    min-height: auto;
+    height: auto;
     padding: clamp(3rem, 5vh, 4rem) clamp(1rem, 5vw, 2rem);
-    min-height: auto !important;
-    height: auto !important;
   }
 
   #progress {
@@ -156,15 +138,14 @@ html, body {
   #home.section-content {
     min-height: auto;
     height: auto;
-    overflow-y: auto;
+    overflow: visible;
   }
 
   /* Keep other sections full height */
   .section-content:not(#home) {
     min-height: 100vh;
-    min-height: 100dvh;
-    height: auto;
-    overflow: hidden;
+    height: 100%;
+    overflow: visible;
   }
 
   /* Adjust content padding for better mobile display */
@@ -190,6 +171,8 @@ html, body {
   /* Override overflow for #progress to ensure SectionDivider is visible */
   #progress.section-content {
     overflow: visible;
+    min-height: auto !important;
+    height: auto !important;
   }
 
   /* Optionally, adjust the height if necessary */
@@ -231,8 +214,8 @@ html, body {
   }
 
   .section-content {
-    min-height: 100vh;
     height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
   }
 
@@ -407,14 +390,24 @@ html, body {
   .snap-container {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
-    scroll-timeline-name: none;
   }
 
   .section-content {
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    height: 100vh;
-    overflow: hidden;
+  }
+}
+
+/* Disable scroll snap on mobile */
+@media (max-767px) {
+  .snap-container {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+  
+  .section-content {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
   }
 }
 
@@ -571,4 +564,18 @@ html, body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Ensure sections take full height */
+section.section-content {
+  min-height: 100vh;
+  height: 100vh;
+}
+
+/* Mobile adjustments for section height */
+@media (max-width: 768px) {
+  section.section-content {
+    min-height: 100vh;
+    height: auto;
+  }
 }
