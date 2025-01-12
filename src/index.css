@@ -17,31 +17,32 @@ html, body {
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior-y: contain;
   overscroll-behavior-x: none;
+  touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
 }
 
 /* Main container */
 .snap-container {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior: none;
   position: relative;
-  z-index: 0;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* Base section styles */
 .section-content {
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
-  height: 100%;
   position: relative;
   background-color: rgb(3, 7, 18);
   display: flex;
   align-items: center;
+  overflow-x: hidden;
 }
 
 /* Content container styles */
@@ -111,9 +112,9 @@ html, body {
   }
 
   .section-content {
-    min-height: auto;
-    height: 100%;
-    overflow: visible;
+    min-height: 100vh;
+    height: auto;
+    overflow-y: hidden;
   }
 
   .section-content > div:not(:last-child) {
@@ -138,14 +139,15 @@ html, body {
   #home.section-content {
     min-height: auto;
     height: auto;
-    overflow: visible;
+    overflow-y: auto;
   }
 
   /* Keep other sections full height */
   .section-content:not(#home) {
     min-height: 100vh;
-    height: 100%;
-    overflow: visible;
+    min-height: 100dvh;
+    height: auto;
+    overflow: hidden;
   }
 
   /* Adjust content padding for better mobile display */
@@ -171,8 +173,6 @@ html, body {
   /* Override overflow for #progress to ensure SectionDivider is visible */
   #progress.section-content {
     overflow: visible;
-    min-height: auto !important;
-    height: auto !important;
   }
 
   /* Optionally, adjust the height if necessary */
@@ -215,8 +215,7 @@ html, body {
 
   .section-content {
     height: 100vh;
-    min-height: 100vh;
-    overflow: hidden;
+    height: 100dvh;
   }
 
   .section-content > div:not(:last-child) {
@@ -390,24 +389,14 @@ html, body {
   .snap-container {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    scroll-timeline-name: none;
   }
 
   .section-content {
     scroll-snap-align: start;
     scroll-snap-stop: always;
-  }
-}
-
-/* Disable scroll snap on mobile */
-@media (max-767px) {
-  .snap-container {
-    scroll-snap-type: none;
-    scroll-behavior: auto;
-  }
-  
-  .section-content {
-    scroll-snap-align: none;
-    scroll-snap-stop: normal;
+    height: 100vh;
+    overflow: hidden;
   }
 }
 
@@ -564,18 +553,4 @@ html, body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-/* Ensure sections take full height */
-section.section-content {
-  min-height: 100vh;
-  height: 100vh;
-}
-
-/* Mobile adjustments for section height */
-@media (max-width: 768px) {
-  section.section-content {
-    min-height: 100vh;
-    height: auto;
-  }
 }

@@ -19,7 +19,7 @@ const PublicGoodSection = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-full flex items-center section-content" id="public-good">
+    <div className="relative w-full min-h-screen overflow-hidden bg-gray-950 flex items-center section-content" id="public-good">
       {/* Base gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-950 via-black to-gray-950" />
 
