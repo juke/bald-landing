@@ -9,17 +9,20 @@
       html {
         scroll-behavior: smooth;
       }
-      @media (max-width: 1023px) {
+      
+      @media (max-width: 767px) {
         html {
           scroll-behavior: auto;
         }
+        
+        /* Ensure content doesn't bounce on iOS */
+        body {
+          overscroll-behavior-y: none;
+        }
       }
-      /* Prevent scroll chaining on iOS */
-      body {
-        overscroll-behavior-y: none;
-      }
-      /* Remove scroll snap on mobile */
-      @media (max-width: 1023px) {
+      
+      /* Remove snap points on mobile */
+      @media (max-width: 767px) {
         .snap-container {
           scroll-snap-type: none;
         }
@@ -29,8 +32,8 @@
         }
       }
     </style>
-    <script type="module" crossorigin src="/bald-landing/assets/index-DjYPIbAe.js"></script>
-    <link rel="stylesheet" crossorigin href="/bald-landing/assets/index-CDsgr7ef.css">
+    <script type="module" crossorigin src="/bald-landing/assets/index-BhFYlvdI.js"></script>
+    <link rel="stylesheet" crossorigin href="/bald-landing/assets/index-CDUMkbjD.css">
   </head>
   <body>
     <div id="root"></div>
