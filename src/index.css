@@ -3,7 +3,17 @@
 @tailwind utilities;
 
 /* Base styles */
-html, body {
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  touch-action: none;
+}
+
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -11,7 +21,9 @@ html, body {
   overflow: hidden;
   position: fixed;
   overscroll-behavior: none;
-  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  -webkit-text-size-adjust: none;
 }
 
 #root {
@@ -20,8 +32,10 @@ html, body {
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  overscroll-behavior-x: none;
-  touch-action: pan-y pinch-zoom;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  -webkit-transform: translateZ(0);
 }
 
 /* Main container */
@@ -33,7 +47,9 @@ html, body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
   position: relative;
-  touch-action: pan-y pinch-zoom;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Base section styles */
