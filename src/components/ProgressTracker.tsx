@@ -122,23 +122,6 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
   );
 };
 
-const getLevelProgress = (selectedLevel: number | null, unlockedLevels: number) => {
-  if (!selectedLevel) {
-    const currentAmount = getAmountInNumber(getLevelAmount(unlockedLevels));
-    const nextAmount = getAmountInNumber(getLevelAmount(unlockedLevels + 1));
-    return (currentAmount / nextAmount) * 100;
-  }
-
-  if (selectedLevel <= unlockedLevels) {
-    return 100;
-  } else if (selectedLevel === unlockedLevels + 1) {
-    const currentAmount = getAmountInNumber(getLevelAmount(unlockedLevels));
-    const targetAmount = getAmountInNumber(getLevelAmount(selectedLevel));
-    return (currentAmount / targetAmount) * 100;
-  }
-  return 0;
-};
-
 const FloatingArrows = () => {
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
@@ -246,13 +229,6 @@ const FloatingArrows = () => {
   );
 };
 
-const SubtleDivider = () => (
-  <div className="relative w-full h-6 mt-6 flex items-center justify-center">
-    {/* Main horizontal line */}
-    <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-yellow-400/20 to-transparent" />
-  </div>
-);
-
 const TotalProgressBar = () => {
   // Define key milestone values
   const levelAmounts = [0, 100000, 1000000, 5000000, 10000000, 50000000, 100000000, 250000000, 325000000, 500000000, 1000000000];
@@ -266,7 +242,7 @@ const TotalProgressBar = () => {
   };
 
   // Calculate positions with even spacing between markers
-  const getCurrentPosition = (amount: number, index: number) => {
+  const getCurrentPosition = (_: number, index: number) => {
     if (index === 0) return 0; // First marker
     if (index === levelAmounts.length - 1) return 100; // Last marker
     return (index / (levelAmounts.length - 1)) * 100; // Even spacing
@@ -297,7 +273,7 @@ const TotalProgressBar = () => {
   const progressPosition = getProgressPosition(currentAmount);
 
   return (
-    <div className="w-full space-y-4 mt-6">
+    <div className="w-full space-y-4 mt-6 progress-container">
       {/* Desktop Progress Bar - Removed px-8 padding */}
       <div className="hidden md:block relative w-full max-w-2xl mx-auto mb-12">
         {/* Current Value Indicator */}
@@ -321,7 +297,7 @@ const TotalProgressBar = () => {
         {/* Progress Bar */}
         <div className="h-2 bg-gray-800 w-full">
           <motion.div
-            className="absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
+            className="progress-bar absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
             style={{ width: `${progressPosition}%` }}
             initial={{ width: 0 }}
             animate={{ width: `${progressPosition}%` }}
@@ -332,10 +308,10 @@ const TotalProgressBar = () => {
         </div>
 
         {/* Level Markers */}
-        <div className="absolute top-0 left-0 w-full">
+        <div className="absolute top-0 left-0 w-full progress-markers">
           <div className="relative h-2">
-            {levelAmounts.map((amount, index) => {
-              const position = getCurrentPosition(amount, index);
+            {levelAmounts.map((_, index) => {
+              const position = getCurrentPosition(_, index);
               return (
                 <div
                   key={index}
@@ -344,7 +320,7 @@ const TotalProgressBar = () => {
                 >
                   <div className="h-2 w-[1px] bg-gray-600" />
                   <div className="mt-1 text-xs text-gray-400 whitespace-nowrap" style={{ marginLeft: '-50%' }}>
-                    ${formatValue(amount)}
+                    ${formatValue(_)}
                   </div>
                 </div>
               );
@@ -387,7 +363,7 @@ const TotalProgressBar = () => {
           {/* Level Markers for Mobile */}
           <div className="absolute top-0 left-0 w-full">
             <div className="relative h-2">
-              {[0, 100000, 10000000, 100000000, 1000000000].map((amount, index) => {
+              {[0, 100000, 10000000, 100000000, 1000000000].map((_, index) => {
                 const position = (index / 4) * 100; // Even spacing for mobile markers
                 return (
                   <div
@@ -423,6 +399,26 @@ const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const unlockedLevels = 8; // Static level 8
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      },
+      {
+        threshold: 0.2
+      }
+    );
+
+    if (progressRef.current) {
+      observer.observe(progressRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   // Update the scroll effect for horizontal scrolling on mobile/tablet
   useEffect(() => {
@@ -461,7 +457,11 @@ const ProgressTracker = () => {
   }, []); // Only run once on mount
 
   return (
-    <div className="relative w-full min-h-screen bg-gray-950 flex items-center section-content" id="progress">
+    <div 
+      ref={progressRef}
+      className="relative w-full min-h-screen bg-gray-950 flex items-center section-content" 
+      id="progress"
+    >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-t from-black via-gray-900 to-black animate-gradient-shift" />

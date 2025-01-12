@@ -366,3 +366,87 @@ html, body, #root {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+
+/* Add these new animation keyframes near the top of the file */
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progressFill {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add these new styles in the Progress section styles area */
+#progress .progress-container {
+  opacity: 0;
+  animation: slideInFromBottom 0.6s ease-out forwards;
+  animation-play-state: paused;
+}
+
+#progress .progress-bar {
+  opacity: 0;
+  animation: progressFill 1s ease-out 0.3s forwards;
+  animation-play-state: paused;
+}
+
+#progress .progress-markers > div {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-play-state: paused;
+}
+
+/* Add this to trigger animations when the section is in view */
+#progress.in-view .progress-container {
+  animation-play-state: running;
+}
+
+#progress.in-view .progress-bar {
+  animation-play-state: running;
+}
+
+#progress.in-view .progress-markers > div {
+  animation-play-state: running;
+}
+
+/* Add animation delays for markers */
+#progress .progress-markers > div:nth-child(1) { animation-delay: 0.4s; }
+#progress .progress-markers > div:nth-child(2) { animation-delay: 0.5s; }
+#progress .progress-markers > div:nth-child(3) { animation-delay: 0.6s; }
+#progress .progress-markers > div:nth-child(4) { animation-delay: 0.7s; }
+#progress .progress-markers > div:nth-child(5) { animation-delay: 0.8s; }
+
+/* Update existing progress bar styles */
+#progress [data-radix-scroll-area-viewport] {
+  transition: opacity 0.3s ease-out;
+}
+
+#progress .current-value-indicator {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Ensure smooth transitions for all animated elements */
+#progress .animate-gradient-shift {
+  transition: opacity 0.3s ease-out;
+}

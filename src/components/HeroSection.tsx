@@ -14,22 +14,6 @@ import { cn } from "@/lib/utils";
 import SectionDivider from './SectionDivider';
 import { TrendingUp, Users, Wallet } from "lucide-react";
 
-const getLevelAmount = (level: number) => {
-  switch(level) {
-    case 1: return '0';
-    case 2: return '100K';
-    case 3: return '1M';
-    case 4: return '5M';
-    case 5: return '10M';
-    case 6: return '50M';
-    case 7: return '100M';
-    case 8: return '250M';
-    case 9: return '500M';
-    case 10: return '1B';
-    default: return '0';
-  }
-};
-
 const getAmountInNumber = (amount: string) => {
   const num = amount.replace(/[^0-9.]/g, '');
   const multiplier = amount.includes('K') ? 1000 : 
@@ -355,7 +339,6 @@ const ContractForm = () => {
 };
 
 const LevelProgressIndicator = ({ className }: { className?: string }) => {
-  const unlockedLevels = 8;
   const { setActiveSection } = useActiveSection();
 
   const currentAmount = "325M";
