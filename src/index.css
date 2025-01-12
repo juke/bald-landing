@@ -78,9 +78,9 @@ html, body {
 /* Mobile adjustments */
 @media (max-width: 768px) {
   #home {
-    min-height: auto;
+    min-height: 100vh;
     height: auto;
-    overflow-y: visible;
+    overflow-y: auto;
     padding-top: 0;
     padding-bottom: 0;
     position: relative;
@@ -88,9 +88,9 @@ html, body {
 
   /* Target the main content container specifically */
   #home > div.relative.w-full.h-screen {
-    min-height: auto;
+    min-height: 100%;
     height: auto;
-    padding-bottom: clamp(3rem, 10vh, 3rem);
+    padding-bottom: clamp(5rem, 20vh, 3rem);
   }
 
   #home .space-y-4 > * + * {
@@ -102,7 +102,7 @@ html, body {
   }
 
   .py-safe {
-    padding-top: max(3rem, env(safe-area-inset-top));
+    padding-top: max(5rem, env(safe-area-inset-top));
     padding-bottom: max(2rem, env(safe-area-inset-bottom));
   }
 
@@ -112,21 +112,21 @@ html, body {
   }
 
   .section-content {
-    min-height: auto;
+    min-height: 100vh;
     height: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
   }
 
   .section-content > div:not(:last-child) {
     min-height: auto;
     height: auto;
-    padding: clamp(2rem, 4vh, 3rem) clamp(1rem, 5vw, 2rem);
+    padding: clamp(3rem, 5vh, 4rem) clamp(1rem, 5vw, 2rem);
   }
 
   #progress {
+    min-height: 100vh !important;
     height: auto !important;
-    min-height: auto;
-    overflow-y: visible;
+    overflow-y: auto;
   }
 
   #progress > div:not(:last-child) {
@@ -139,7 +139,7 @@ html, body {
   #home.section-content {
     min-height: auto;
     height: auto;
-    overflow-y: visible;
+    overflow-y: auto;
   }
 
   /* Keep other sections full height */
@@ -152,13 +152,13 @@ html, body {
 
   /* Adjust content padding for better mobile display */
   .section-content > div:not(:last-child) {
-    padding: clamp(2rem, 4vh, 3rem) clamp(1rem, 5vw, 2rem);
-    padding-bottom: 2rem;
+    padding: clamp(3rem, 5vh, 4rem) clamp(1rem, 5vw, 2rem);
+    padding-bottom: 3rem;
   }
 
   /* Special handling for home section content */
   #home > div:not(:last-child) {
-    min-height: auto;
+    min-height: 100%;
     height: auto;
     padding-top: clamp(2rem, 4vh, 3rem);
     padding-bottom: 0;
@@ -185,7 +185,7 @@ html, body {
   #progress > div {
     min-height: auto;
     height: auto;
-    padding-bottom: calc(env(safe-area-inset-bottom, 1rem) + 2rem);
+    padding-bottom: calc(env(safe-area-inset-bottom, 2rem) + 3rem);
   }
 
   /* Ensure content is properly spaced on mobile */
@@ -195,7 +195,7 @@ html, body {
 
   /* Add extra space before the section divider */
   #progress .absolute.bottom-0 {
-    margin-top: 3rem;
+    margin-top: 4rem;
   }
 }
 
