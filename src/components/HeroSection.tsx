@@ -12,7 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { cn } from "@/lib/utils";
 import SectionDivider from './SectionDivider';
-import { TrendingUp, Users, Wallet } from "lucide-react";
+import { TrendingUp, Users, Wallet, Copy, ExternalLink, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const getAmountInNumber = (amount: string) => {
   const num = amount.replace(/[^0-9.]/g, '');
@@ -180,9 +181,16 @@ const ParticleEffect = () => {
 
 const ContractForm = () => {
   const contractAddress = "0xE1aBD004...01d094FAa420";
+  const [copySuccess, setCopySuccess] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(contractAddress);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(contractAddress);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   return (
@@ -193,189 +201,127 @@ const ContractForm = () => {
       transition={{ duration: 0.5, delay: 0.6 }}
     >
       {/* Contract Address Display */}
-      <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm p-2 rounded-xl border border-yellow-400/20 overflow-hidden">
-        <div className="flex-1 px-3 sm:px-4 py-2 text-yellow-400 font-mono text-sm md:text-base overflow-x-auto">
-          {contractAddress}
+      <motion.div 
+        className="group relative flex items-center gap-2 bg-black/20 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl border border-yellow-400/20 overflow-hidden"
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+      >
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
+          animate={{
+            x: ['-100%', '100%'],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+
+        <div className="relative flex-1 px-2 sm:px-3 py-1.5 sm:py-2">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-yellow-400/50 animate-pulse" />
+            <span className="text-[10px] uppercase tracking-wider text-yellow-400/70">Contract Address</span>
+          </div>
+          <div className="font-mono text-sm md:text-base text-yellow-400 mt-1 overflow-x-auto scrollbar-hide pr-2">
+            {contractAddress}
+          </div>
         </div>
-        <motion.button
-          onClick={handleCopy}
-          className="bg-yellow-400 text-black px-3 sm:px-4 md:px-6 py-2 rounded-lg font-bold hover:bg-yellow-300 transition-colors shrink-0 z-10"
-          whileHover={{ scale: 1.05 }}
+
+        <motion.div
           whileTap={{ scale: 0.95 }}
+          className="relative shrink-0 mr-1.5"
         >
-          COPY
-        </motion.button>
-      </div>
+          <Button
+            onClick={handleCopy}
+            variant="secondary"
+            className={cn(
+              "relative overflow-hidden transition-colors duration-200",
+              copySuccess
+                ? "bg-green-500 text-white hover:bg-green-400"
+                : "bg-yellow-400 hover:bg-yellow-300 text-black"
+            )}
+            size="sm"
+          >
+            <motion.div
+              initial={false}
+              animate={{ 
+                opacity: copySuccess ? 1 : 0,
+                scale: copySuccess ? 1 : 0.5,
+              }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <Check className="size-4" />
+            </motion.div>
+            <motion.div
+              initial={false}
+              animate={{ 
+                opacity: copySuccess ? 0 : 1,
+                scale: copySuccess ? 0.5 : 1,
+              }}
+              className="flex items-center gap-2"
+            >
+              <Copy className="size-4" />
+              <span className="hidden sm:inline">Copy</span>
+            </motion.div>
+          </Button>
+        </motion.div>
+      </motion.div>
 
       {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-2 sm:gap-4">
-        <motion.a
-          href="#"
-          className="bg-yellow-400 text-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold hover:bg-yellow-300 transition-colors text-center text-sm sm:text-base"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          BUY $BALD
-        </motion.a>
-        <motion.a
-          href="#"
-          className="bg-black/20 backdrop-blur-sm text-yellow-400 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors text-center text-sm sm:text-base"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          CHART
-        </motion.a>
-      </div>
-
-      {/* Live Updates Tracker */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="relative mt-2 sm:mt-3"
-      >
-        <Card className="bg-black/20 backdrop-blur-sm border-yellow-400/20 overflow-hidden">
-          <CardContent className="p-0">
-            {/* Header */}
-            <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-yellow-400/10 flex items-center justify-between bg-black/20">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="relative flex items-center">
-                  <div className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-green-500" />
-                  <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
-                </div>
-                <div className="flex flex-col gap-0.5 ml-1">
-                  <span className="text-[10px] sm:text-xs font-semibold text-yellow-400/90 tracking-wide uppercase">Live Market Data</span>
-                  <span className="text-[8px] sm:text-[10px] text-gray-400/80">Last updated: Just now</span>
-                </div>
-              </div>
-              <Badge 
-                variant="outline" 
-                className="text-[8px] sm:text-[10px] border-yellow-400/20 bg-yellow-400/5 px-2 sm:px-3 py-0.5 sm:py-1"
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button
+            asChild
+            size="lg"
+            className="relative w-full overflow-hidden bg-yellow-400 hover:bg-yellow-300 text-black font-bold group"
+          >
+            <a href="#" className="flex items-center justify-center gap-2">
+              {/* Animated gradient overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-white/20 to-yellow-400/0"
+                animate={{
+                  x: ['-200%', '200%'],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear",
+                  repeatDelay: 1,
+                }}
+              />
+              <motion.div
+                animate={{
+                  rotate: [0, 15, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               >
-                <motion.span
-                  animate={{
-                    opacity: [0.7, 1, 0.7],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="text-yellow-400 tracking-wider uppercase font-medium"
-                >
-                  Real-Time
-                </motion.span>
-              </Badge>
-            </div>
+                <Wallet className="size-4" />
+              </motion.div>
+              <span className="relative">Buy $BALD</span>
+            </a>
+          </Button>
+        </motion.div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-yellow-400/10">
-              {[
-                { 
-                  label: "24h Volume", 
-                  value: "$1.2M",
-                  icon: TrendingUp,
-                  change: '+12.5%',
-                  trend: 'up',
-                  subtitle: 'vs. previous day'
-                },
-                { 
-                  label: "Holders", 
-                  value: "5,234",
-                  icon: Users,
-                  change: '+156',
-                  trend: 'up',
-                  subtitle: 'new today'
-                },
-                { 
-                  label: "Market Cap", 
-                  value: "$325M",
-                  icon: Wallet,
-                  change: '+2.3%',
-                  trend: 'up',
-                  subtitle: 'vs. previous day'
-                },
-              ].map((stat, index) => (
-                <div 
-                  key={stat.label} 
-                  className="relative group"
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/5 to-yellow-400/0"
-                    animate={{
-                      opacity: [0, 1, 0],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: index * 0.5,
-                    }}
-                  />
-                  <div className="px-4 sm:px-5 py-3 sm:py-4 flex flex-row sm:flex-col justify-between sm:justify-start items-center sm:items-center gap-3 sm:gap-4 group-hover:bg-yellow-400/5 transition-colors duration-300">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="h-12 w-12 sm:h-10 sm:w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center sm:mt-0.5">
-                        <stat.icon className="h-6 w-6 sm:h-5 sm:w-5 text-yellow-400/70" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-medium uppercase tracking-wider text-gray-400/80">
-                          {stat.label}
-                        </div>
-                        <motion.div 
-                          className="text-lg sm:text-xl font-bold text-yellow-400 mt-1"
-                          animate={{
-                            opacity: [0.7, 1, 0.7],
-                            scale: [1, 1.02, 1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: index * 0.3,
-                          }}
-                        >
-                          {stat.value}
-                        </motion.div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end sm:items-center gap-1.5">
-                      <div className={`
-                        flex items-center gap-1.5 px-2.5 py-1 rounded-md min-w-[80px] justify-center
-                        ${stat.trend === 'up' ? 'bg-green-400/10 text-green-400' : 'bg-red-400/10 text-red-400'}
-                      `}>
-                        <motion.span 
-                          className="text-xs font-medium"
-                          animate={{
-                            opacity: [0.7, 1, 0.7],
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                            delay: index * 0.2,
-                          }}
-                        >
-                          {stat.change}
-                        </motion.span>
-                        {stat.trend === 'up' ? (
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                          </svg>
-                        )}
-                      </div>
-                      <span className="text-[10px] text-gray-400/60 text-center">{stat.subtitle}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="w-full border-yellow-400/20 bg-black/20 backdrop-blur-sm text-yellow-400 hover:bg-black/30 hover:text-yellow-300 font-bold group"
+          >
+            <a href="#" className="flex items-center justify-center gap-2">
+              <ExternalLink className="size-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <span>Chart</span>
+            </a>
+          </Button>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };
