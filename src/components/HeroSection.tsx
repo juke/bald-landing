@@ -371,7 +371,11 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
 
   const currentAmount = "325M";
   const nextLevelAmount = "500M";
-  const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextLevelAmount)) * 100).toFixed(1);
+  const prevLevelAmount = "250M";
+  
+  // Calculate progress between current level (8) and next level (9)
+  const progress = ((getAmountInNumber(currentAmount) - getAmountInNumber(prevLevelAmount)) / 
+                   (getAmountInNumber(nextLevelAmount) - getAmountInNumber(prevLevelAmount)) * 100).toFixed(1);
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
@@ -498,7 +502,7 @@ export default function HeroSection() {
                 transition={{ duration: 1 }}
               >
                 <motion.h1 
-                  className="relative text-7xl md:text-8xl font-bold tracking-tight"
+                  className="relative text-7xl md:text-8xl font-bold tracking-tight mt-10 md:mt-0"
                   whileHover={{ scale: 1.02 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -537,7 +541,7 @@ export default function HeroSection() {
               </motion.div>
 
               <motion.p
-                className="text-xl text-gray-200 max-w-xl leading-relaxed"
+                className="text-xl text-gray-200 max-w-xl leading-relaxed pb-6 md:pb-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.2 }}

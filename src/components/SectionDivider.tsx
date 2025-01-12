@@ -6,25 +6,21 @@ const SectionDivider = ({ isLastSection, nextSection }: {
   isLastSection?: boolean;
   nextSection: string;
 }) => {
-  const { setActiveSection } = useActiveSection();
+  const { setActiveSection, setLastInteractionTime } = useActiveSection();
   
   const handleClick = () => {
-    if (isLastSection) {
-      // Scroll to home section
-      const element = document.getElementById('home');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        setActiveSection('home');
-        window.history.pushState(null, '', '#home');
-      }
-    } else {
-      // Scroll directly to next section
-      const element = document.getElementById(nextSection);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        setActiveSection(nextSection);
-        window.history.pushState(null, '', `#${nextSection}`);
-      }
+    const targetId = isLastSection ? 'home' : nextSection;
+    const element = document.getElementById(targetId);
+    if (element) {
+      setLastInteractionTime();
+      setActiveSection(targetId);
+      
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      window.history.replaceState(null, '', `#${targetId}`);
     }
   };
 

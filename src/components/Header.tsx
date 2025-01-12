@@ -1,109 +1,125 @@
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ArrowRight, Menu, ChevronUp } from "lucide-react";
+import { useState, useCallback } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { buttonVariants } from "@/components/ui/button";
+
+const navItems = [
+  { id: 'home', label: 'Home' },
+  { id: 'public-good', label: 'Public Good' },
+  { id: 'distribution', label: 'Distribution' },
+  { id: 'progress', label: 'Progress' },
+];
 
 const Header = () => {
-  const { activeSection, setActiveSection } = useActiveSection();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { activeSection, setActiveSection, setLastInteractionTime } = useActiveSection();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
-  // Add scroll observer to update active section
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-            // Update URL without triggering a new history entry
-            window.history.replaceState(null, '', `#${entry.target.id}`);
-          }
-        });
-      },
-      {
-        rootMargin: '-50% 0px',
-        threshold: 0,
-      }
-    );
+  const isAtTop = activeSection === 'home';
 
-    document.querySelectorAll('.section-content').forEach((section) => {
-      observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, [setActiveSection]);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
+  const handleClick = useCallback((id: string, isMobile?: boolean) => {
     const element = document.getElementById(id);
     if (element) {
-      window.history.pushState(null, '', `#${id}`);
+      setLastInteractionTime();
       setActiveSection(id);
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
+      
+      if (isMobile) setIsOpen(false);
+
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      window.history.replaceState(null, '', `#${id}`);
+    }
+  }, [setActiveSection, setLastInteractionTime, setIsOpen]);
+
+  const handleLogoClick = () => {
+    if (isAtTop) return;
+
+    const element = document.getElementById('home');
+    if (element) {
+      setLastInteractionTime();
+      setActiveSection('home');
+      
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      window.history.replaceState(null, '', '#home');
     }
   };
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (isMenuOpen && !target.closest('.mobile-menu') && !target.closest('.menu-button')) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [isMenuOpen]);
-
-  // Lock body scroll when menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isMenuOpen]);
-
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'public-good', label: 'Public Good' },
-    { id: 'distribution', label: 'Distribution' },
-    { id: 'progress', label: 'Progress' },
-  ];
+  const NavigationLink = ({ item, isMobile = false }: { item: typeof navItems[0], isMobile?: boolean }) => (
+    <div className="relative">
+      <motion.button
+        onClick={() => {
+          handleClick(item.id, isMobile);
+        }}
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "sm" }),
+          "cursor-pointer transition-colors relative z-10",
+          activeSection === item.id 
+            ? "text-yellow-400 hover:text-yellow-400" 
+            : "text-gray-400 hover:text-yellow-400",
+          isMobile ? "w-full justify-start px-2" : "px-3",
+          "!cursor-pointer"
+        )}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        {item.label}
+      </motion.button>
+    </div>
+  );
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16">
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-transparent backdrop-blur-[2px]" />
       <div className="relative max-w-7xl mx-auto px-6 md:px-12">
-        <nav className="flex items-center justify-between h-14">
-          <div className="text-xl font-bold text-yellow-400">$BALD</div>
+        <nav className="flex items-center justify-between h-16">
+          <motion.div 
+            className={cn(
+              "flex items-center text-2xl font-bold text-yellow-400 select-none",
+              !isAtTop && "cursor-pointer"
+            )}
+            onClick={handleLogoClick}
+            onHoverStart={() => !isAtTop && setIsLogoHovered(true)}
+            onHoverEnd={() => setIsLogoHovered(false)}
+            whileHover={!isAtTop ? { scale: 1.05 } : {}}
+            whileTap={!isAtTop ? { scale: 0.95 } : {}}
+          >
+            <span>$BALD</span>
+            <AnimatePresence>
+              {isLogoHovered && !isAtTop && (
+                <motion.div
+                  initial={{ width: 0, opacity: 0, x: -10 }}
+                  animate={{ width: 'auto', opacity: 1, x: 0 }}
+                  exit={{ width: 0, opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="ml-2 overflow-hidden"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
           
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                onClick={(e) => handleNavClick(e, item.id)}
-                className={cn(
-                  "relative py-2",
-                  activeSection === item.id 
-                    ? "text-yellow-400" 
-                    : "text-gray-400 hover:text-yellow-400 transition-colors"
-                )}
-              >
-                {item.label}
-                {activeSection === item.id && (
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400"
-                    layoutId="activeSection"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </a>
-            ))}
+            {/* Desktop Navigation */}
+            <div className="flex items-center gap-1">
+              {navItems.map((item) => (
+                <NavigationLink key={item.id} item={item} />
+              ))}
+            </div>
 
             <div className="flex items-center gap-4">
               <motion.a
@@ -130,84 +146,45 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMenuOpen(!isMenuOpen);
-            }}
-            className="md:hidden text-gray-400 hover:text-yellow-400 transition-colors menu-button"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </nav>
-
-        {/* Mobile Menu with Backdrop */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <>
-              {/* Dark overlay behind menu */}
-              <motion.div
-                className="fixed inset-0 top-16 bg-black/60 md:hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              />
-              
-              {/* Menu Content */}
-              <motion.div
-                className="fixed inset-x-4 top-[4.5rem] bg-black supports-[backdrop-filter]:backdrop-blur-lg md:hidden mobile-menu rounded-2xl border border-white/5 shadow-lg shadow-black/20"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="flex flex-col items-center py-6 px-4 max-h-[calc(100vh-6rem)] overflow-y-auto">
-                  {navItems.map((item) => (
-                    <a
-                      key={item.id}
-                      href={`#${item.id}`}
-                      onClick={(e) => handleNavClick(e, item.id)}
-                      className={cn(
-                        "w-full text-center py-4 text-lg font-medium transition-colors hover:bg-white/5 rounded-xl",
-                        activeSection === item.id 
-                          ? "text-yellow-400" 
-                          : "text-gray-400"
-                      )}
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-
-                  <div className="flex flex-col w-full gap-4 mt-6">
-                    <motion.a
-                      href="https://app.uniswap.org"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 bg-yellow-400 text-black px-4 py-3 rounded-xl text-base font-bold hover:bg-yellow-300 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Buy Now
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.a>
-                    <motion.a
-                      href="https://dexscreener.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 bg-black/20 backdrop-blur-sm text-yellow-400 px-4 py-3 rounded-xl text-base font-bold border border-yellow-400/20 hover:bg-black/30 transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Chart
-                    </motion.a>
-                  </div>
+          {/* Mobile Navigation */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <button className="md:hidden text-gray-400 hover:text-yellow-400 transition-colors cursor-pointer">
+                <Menu className="w-6 h-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full max-w-xs bg-black/95 backdrop-blur-sm border-white/5">
+              <nav className="flex flex-col gap-2 mt-6">
+                {navItems.map((item) => (
+                  <NavigationLink key={item.id} item={item} isMobile />
+                ))}
+                <div className="flex flex-col gap-3 mt-4">
+                  <motion.a
+                    href="https://app.uniswap.org"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Buy Now
+                    <ArrowRight className="w-4 h-4" />
+                  </motion.a>
+                  <motion.a
+                    href="https://dexscreener.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 bg-black/20 text-yellow-400 px-4 py-2 rounded-lg font-bold border border-yellow-400/20"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Chart
+                  </motion.a>
                 </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </nav>
       </div>
     </header>
   );

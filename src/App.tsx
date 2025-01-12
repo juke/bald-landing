@@ -3,33 +3,55 @@ import HeroSection from "@/components/HeroSection";
 import PublicGoodSection from "@/components/PublicGoodSection";
 import DistributionSection from "@/components/DistributionSection";
 import ProgressTracker from "@/components/ProgressTracker";
-import { useScrollSnap } from "@/hooks/useScrollSnap";
 import { useActiveSection } from '@/hooks/useActiveSection';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import SectionDivider from "@/components/SectionDivider";
 
 function App() {
-  const { setActiveSection } = useActiveSection();
-  useScrollSnap({ onSectionChange: setActiveSection });
+  const { setActiveSection, lastInteractionTime } = useActiveSection();
+  const sectionsRef = useRef<HTMLDivElement>(null);
 
-  // Handle initial scroll
   useEffect(() => {
-    const hash = window.location.hash;
-    const sectionId = hash ? hash.split('?')[0].slice(1) : 'home';
-    const element = document.getElementById(sectionId);
-    if (element) {
-      // Use requestAnimationFrame to ensure the scroll happens after the page is fully loaded
-      requestAnimationFrame(() => {
-        element.scrollIntoView({ behavior: 'instant' });
-      });
+    // Handle initial hash on page load
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const element = document.getElementById(hash);
+      if (element) {
+        // Set initial section with smooth scroll
+        element.scrollIntoView({ behavior: 'smooth' });
+        setActiveSection(hash);
+      }
     }
-  }, []);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && 
+              entry.intersectionRatio >= 0.5 && 
+              Date.now() - lastInteractionTime > 1000) {
+            const sectionId = entry.target.id;
+            setActiveSection(sectionId);
+            window.history.replaceState(null, '', `#${sectionId}`);
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+        rootMargin: '-50px 0px -50px 0px'
+      }
+    );
+
+    const sections = document.querySelectorAll('.section-content');
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, [setActiveSection, lastInteractionTime]);
 
   return (
     <div className="relative min-h-screen w-full bg-black text-white">
       <Header />
-      <div className="snap-container">
-        <section id="home" className="section-content relative">
+      <div ref={sectionsRef} className="h-screen overflow-y-auto md:snap-y md:snap-mandatory scrollbar-hide">
+        <section id="home" className="section-content relative min-h-screen h-screen md:snap-start">
           <HeroSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
@@ -38,7 +60,7 @@ function App() {
             />
           </div>
         </section>
-        <section id="public-good" className="section-content relative overflow-hidden">
+        <section id="public-good" className="section-content relative min-h-screen h-screen md:snap-start">
           <PublicGoodSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
@@ -47,7 +69,7 @@ function App() {
             />
           </div>
         </section>
-        <section id="distribution" className="section-content relative overflow-hidden">
+        <section id="distribution" className="section-content relative min-h-screen h-screen md:snap-start">
           <DistributionSection />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
@@ -56,7 +78,7 @@ function App() {
             />
           </div>
         </section>
-        <section id="progress" className="section-content relative overflow-hidden">
+        <section id="progress" className="section-content relative min-h-screen h-screen md:snap-start">
           <ProgressTracker />
           <div className="absolute bottom-0 left-0 right-0 h-16">
             <SectionDivider 
