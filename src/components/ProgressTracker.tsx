@@ -190,11 +190,10 @@ const FloatingArrows = () => {
           initial={{
             x: (dimensions.width / 6) * i + (Math.random() * 100 - 50),
             y: dimensions.height + 100,
-            opacity: 0,
           }}
           animate={{
             y: -200,
-            opacity: [0, 0.08, 0.08, 0],
+            opacity: [0, 1, 1, 0],
           }}
           transition={{
             duration: 20,
@@ -203,7 +202,9 @@ const FloatingArrows = () => {
             ease: "linear",
           }}
         >
-          <ArrowUp className="w-40 h-40 text-yellow-400/10" />
+          <div className="w-40 h-40 text-yellow-400" style={{ opacity: 0.03 }}>
+            <ArrowUp className="w-full h-full" />
+          </div>
         </motion.div>
       ))}
 
@@ -218,12 +219,11 @@ const FloatingArrows = () => {
             initial={{
               x: startX,
               y: dimensions.height + 50,
-              opacity: 0,
               scale: 0.8,
             }}
             animate={{
               y: -100,
-              opacity: [0, 0.25, 0.25, 0],
+              opacity: [0, 1, 1, 0],
               scale: [0.8, 1, 0.9],
             }}
             transition={{
@@ -233,7 +233,9 @@ const FloatingArrows = () => {
               ease: "linear",
             }}
           >
-            <ArrowUp className="w-16 h-16 text-yellow-400/20" />
+            <div className="w-16 h-16 text-yellow-400" style={{ opacity: 0.06 }}>
+              <ArrowUp className="w-full h-full" />
+            </div>
           </motion.div>
         );
       })}
@@ -249,12 +251,11 @@ const FloatingArrows = () => {
             initial={{
               x: startX,
               y: dimensions.height,
-              opacity: 0,
               scale: 0.6,
             }}
             animate={{
               y: 0,
-              opacity: [0, 0.3, 0.3, 0],
+              opacity: [0, 1, 1, 0],
               scale: [0.6, 0.8, 0.7],
             }}
             transition={{
@@ -264,7 +265,9 @@ const FloatingArrows = () => {
               ease: "linear",
             }}
           >
-            <ArrowUp className="w-8 h-8 text-yellow-400/30" />
+            <div className="w-8 h-8 text-yellow-400" style={{ opacity: 0.08 }}>
+              <ArrowUp className="w-full h-full" />
+            </div>
           </motion.div>
         );
       })}
