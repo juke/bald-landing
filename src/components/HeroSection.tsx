@@ -6,13 +6,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
 import { useActiveSection } from "@/hooks/useActiveSection";
-import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import { cn } from "@/lib/utils";
 import SectionDivider from './SectionDivider';
-import { TrendingUp, Users, Wallet, Copy, ExternalLink, Check, DollarSign, ChartBar, CircleDollarSign, Group, Droplet } from "lucide-react";
+import { TrendingUp, Wallet, Copy, ExternalLink, Check, DollarSign, ChartBar, CircleDollarSign, Group, Droplet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Marquee } from "@devnomic/marquee";
 import "@devnomic/marquee/dist/index.css";
