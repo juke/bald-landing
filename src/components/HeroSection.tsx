@@ -355,19 +355,10 @@ const ContractForm = () => {
 };
 
 const LevelProgressIndicator = ({ className }: { className?: string }) => {
-  const [unlockedLevels, setUnlockedLevels] = useState(7);
+  const unlockedLevels = 8;
   const { setActiveSection } = useActiveSection();
 
-  useEffect(() => {
-    if (unlockedLevels < 10) {
-      const timer = setInterval(() => {
-        setUnlockedLevels(prev => Math.min(prev + 1, 10));
-      }, 30000);
-      return () => clearInterval(timer);
-    }
-  }, [unlockedLevels]);
-
-  const currentAmount = getLevelAmount(unlockedLevels);
+  const currentAmount = "325M";
   const nextLevelAmount = "500M";
   const progress = ((getAmountInNumber(currentAmount) / getAmountInNumber(nextLevelAmount)) * 100).toFixed(1);
 
@@ -401,8 +392,8 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
       >
         <div className="relative w-full h-full">
           <img
-            src={`/bald-landing/levels/${unlockedLevels}.jpg`}
-            alt={`Level ${unlockedLevels}`}
+            src={`/bald-landing/levels/8.jpg`}
+            alt="Level 8"
             className="w-full h-full object-cover"
           />
 
@@ -413,37 +404,35 @@ const LevelProgressIndicator = ({ className }: { className?: string }) => {
                 <div>
                   <div className="text-xs sm:text-sm text-yellow-400/90">Current Level</div>
                   <div className="text-xl sm:text-2xl font-bold text-yellow-400">
-                    Level {unlockedLevels}
+                    Level 8
                   </div>
                   <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5">
-                    {unlockedLevels < 10 ? 'Next Level:' : 'Max Level Reached'} {unlockedLevels < 10 ? `$${nextLevelAmount}` : ''}
+                    Next Level: $500M
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="text-xs sm:text-sm text-yellow-400/90">Current Value</div>
                   <div className="text-lg sm:text-xl font-bold text-yellow-400">
-                    ${currentAmount}
+                    $325M
                   </div>
                   <div className="text-[10px] sm:text-xs text-gray-400 mt-0.5">
-                    {unlockedLevels < 10 ? `${progress}% to Next` : 'Enlightened'}
+                    {progress}% to Next
                   </div>
                 </div>
               </div>
               
               {/* Progress Bar */}
-              {unlockedLevels < 10 && (
-                <div className="space-y-1">
-                  <div className="relative h-1.5 bg-yellow-400/10 rounded-full overflow-hidden">
-                    <motion.div
-                      className="absolute inset-y-0 left-0 bg-yellow-400 rounded-full"
-                      style={{ width: `${progress}%` }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progress}%` }}
-                      transition={{ duration: 1 }}
-                    />
-                  </div>
+              <div className="space-y-1">
+                <div className="relative h-1.5 bg-yellow-400/10 rounded-full overflow-hidden">
+                  <motion.div
+                    className="absolute inset-y-0 left-0 bg-yellow-400 rounded-full"
+                    style={{ width: `${progress}%` }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 1 }}
+                  />
                 </div>
-              )}
+              </div>
 
               {/* Track Progress Button */}
               <motion.button

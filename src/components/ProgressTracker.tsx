@@ -253,9 +253,175 @@ const SubtleDivider = () => (
   </div>
 );
 
+const TotalProgressBar = () => {
+  // Define key milestone values
+  const levelAmounts = [0, 100000, 1000000, 5000000, 10000000, 50000000, 100000000, 250000000, 325000000, 500000000, 1000000000];
+  const currentAmount = 325000000;
+  
+  const formatValue = (value: number) => {
+    if (value >= 1000000000) return `${value / 1000000000}B`;
+    if (value >= 1000000) return `${value / 1000000}M`;
+    if (value >= 1000) return `${value / 1000}K`;
+    return value.toString();
+  };
+
+  // Calculate positions with even spacing between markers
+  const getCurrentPosition = (amount: number, index: number) => {
+    if (index === 0) return 0; // First marker
+    if (index === levelAmounts.length - 1) return 100; // Last marker
+    return (index / (levelAmounts.length - 1)) * 100; // Even spacing
+  };
+
+  // Calculate progress position using the same scale
+  const getProgressPosition = (amount: number) => {
+    // Find the two markers that bound the current amount
+    let lowerIndex = 0;
+    let upperIndex = levelAmounts.length - 1;
+    
+    for (let i = 0; i < levelAmounts.length - 1; i++) {
+      if (amount >= levelAmounts[i] && amount <= levelAmounts[i + 1]) {
+        lowerIndex = i;
+        upperIndex = i + 1;
+        break;
+      }
+    }
+
+    // Calculate the progress position between the two markers
+    const lowerPos = getCurrentPosition(levelAmounts[lowerIndex], lowerIndex);
+    const upperPos = getCurrentPosition(levelAmounts[upperIndex], upperIndex);
+    const progress = (amount - levelAmounts[lowerIndex]) / (levelAmounts[upperIndex] - levelAmounts[lowerIndex]);
+    
+    return lowerPos + (upperPos - lowerPos) * progress;
+  };
+
+  const progressPosition = getProgressPosition(currentAmount);
+
+  return (
+    <div className="w-full space-y-4 mt-6">
+      {/* Desktop Progress Bar - Removed px-8 padding */}
+      <div className="hidden md:block relative w-full max-w-2xl mx-auto mb-12">
+        {/* Current Value Indicator */}
+        <div 
+          className="absolute bottom-full mb-0 w-0.5"
+          style={{ left: `${progressPosition}%` }}
+        >
+          <div className="relative">
+            <div className="absolute bottom-[-0.5rem] w-0.5 h-5 bg-yellow-300" />
+            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap">
+              <Badge 
+                variant="outline" 
+                className="bg-black/40 backdrop-blur-sm border-yellow-400/20 text-yellow-300 font-medium shadow-lg hover:bg-black/60"
+              >
+                Current: ${formatValue(currentAmount)}
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="h-2 bg-gray-800 w-full">
+          <motion.div
+            className="absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
+            style={{ width: `${progressPosition}%` }}
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPosition}%` }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+            <div className="absolute inset-0 bg-[rgba(255,255,255,0.2)] animate-pulse"></div>
+          </motion.div>
+        </div>
+
+        {/* Level Markers */}
+        <div className="absolute top-0 left-0 w-full">
+          <div className="relative h-2">
+            {levelAmounts.map((amount, index) => {
+              const position = getCurrentPosition(amount, index);
+              return (
+                <div
+                  key={index}
+                  className="absolute"
+                  style={{ left: `calc(${position}% - 0.5px)` }}
+                >
+                  <div className="h-2 w-[1px] bg-gray-600" />
+                  <div className="mt-1 text-xs text-gray-400 whitespace-nowrap" style={{ marginLeft: '-50%' }}>
+                    ${formatValue(amount)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Progress Bar - No padding */}
+      <div className="md:hidden space-y-4">
+        {/* Current Value Indicator */}
+        <div className="relative">
+          <div 
+            className="absolute bottom-full mb-0 w-0.5"
+            style={{ left: `${progressPosition}%` }}
+          >
+            <div className="relative">
+              <div className="absolute bottom-[-0.5rem] w-0.5 h-5 bg-yellow-300" />
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                <Badge 
+                  variant="outline" 
+                  className="bg-black/40 backdrop-blur-sm border-yellow-400/20 text-yellow-300 font-medium shadow-lg hover:bg-black/60"
+                >
+                  Current: ${formatValue(currentAmount)}
+                </Badge>
+              </div>
+            </div>
+          </div>
+          <div className="h-2 bg-gray-800 w-full">
+            <motion.div
+              className="absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
+              style={{ width: `${progressPosition}%` }}
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPosition}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              <div className="absolute inset-0 bg-[rgba(255,255,255,0.2)] animate-pulse"></div>
+            </motion.div>
+          </div>
+          {/* Level Markers for Mobile */}
+          <div className="absolute top-0 left-0 w-full">
+            <div className="relative h-2">
+              {[0, 100000, 10000000, 100000000, 1000000000].map((amount, index) => {
+                const position = (index / 4) * 100; // Even spacing for mobile markers
+                return (
+                  <div
+                    key={index}
+                    className="absolute"
+                    style={{ left: `calc(${position}% - 0.5px)` }}
+                  >
+                    <div className="h-2 w-[1px] bg-gray-600" />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto hide-scrollbar">
+          <div className="flex justify-between min-w-[300px] px-2">
+            {[0, 100000, 10000000, 100000000, 1000000000].map((amount, index) => (
+              <div
+                key={index}
+                className="text-xs text-gray-400 whitespace-nowrap"
+              >
+                ${formatValue(amount)}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [unlockedLevels] = useState(7);
+  const unlockedLevels = 8; // Static level 8
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   // Update the scroll effect for horizontal scrolling on mobile/tablet
@@ -289,18 +455,10 @@ const ProgressTracker = () => {
     }
   }, [selectedLevel]);
 
-  // Set initial selected level and scroll into view
+  // Set initial selected level
   useEffect(() => {
-    const nextLevel = Math.min(unlockedLevels + 1, 10);
-    setSelectedLevel(nextLevel);
+    setSelectedLevel(8); // Set to current level 8
   }, []); // Only run once on mount
-
-  // Remove the vertical scroll effect since we don't need it
-  useEffect(() => {
-    if (window.innerWidth <= 768 && selectedLevel) {
-      // Remove this effect or update it if needed for other functionality
-    }
-  }, [selectedLevel]);
 
   return (
     <div className="relative w-full min-h-screen bg-gray-950 flex items-center section-content" id="progress">
@@ -316,9 +474,9 @@ const ProgressTracker = () => {
         <FloatingArrows />
       </div>
 
-      {/* Content */}
+      {/* Content - Added more spacing between elements */}
       <div className="relative z-10 max-w-7xl mx-auto w-full h-full flex flex-col justify-center">
-        <div className="flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-8 sm:gap-6"> {/* Increased gap even more */}
           {/* Header */}
           <motion.div 
             className="text-center"
@@ -339,7 +497,7 @@ const ProgressTracker = () => {
             </motion.div>
             
             <motion.h2 
-              className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 mt-2"
+              className="text-2xl sm:text-3xl font-bold text-white  mt-4"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
@@ -355,7 +513,7 @@ const ProgressTracker = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="flex justify-center"
+            className="flex justify-center mb-4"
           >
             <Card className="bg-black/20 backdrop-blur-sm border-yellow-400/10 inline-flex">
               <CardContent className="flex items-center gap-4 py-3 px-4 sm:py-4 sm:px-6">
@@ -387,6 +545,11 @@ const ProgressTracker = () => {
               </CardContent>
             </Card>
           </motion.div>
+
+          {/* Progress Bar Section - Added even more margin */}
+          <div className="mb-8 md:mb-2"> {/* Increased margin */}
+            <TotalProgressBar />
+          </div>
 
           {/* Info Box */}
           <motion.div 
