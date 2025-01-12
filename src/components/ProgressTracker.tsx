@@ -51,9 +51,29 @@ interface LevelCardProps {
   onClick: () => void;
   isSelected: boolean;
   unlockedLevels: number;
+  currentAmount: string;
 }
 
-const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: LevelCardProps) => {
+const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels, currentAmount }: LevelCardProps) => {
+  const isNextLevel = level === unlockedLevels + 1;
+  
+  // Calculate progress for both the image overlay and progress bar
+  const getProgress = () => {
+    if (isUnlocked) return 100;
+    if (level <= unlockedLevels) return 0;
+    
+    const prevLevelAmount = getAmountInNumber(getLevelAmount(level - 1));
+    const currentLevelAmount = getAmountInNumber(getLevelAmount(level));
+    const actualAmount = getAmountInNumber(currentAmount);
+    
+    if (actualAmount <= prevLevelAmount) return 0;
+    if (actualAmount >= currentLevelAmount) return 100;
+    
+    return ((actualAmount - prevLevelAmount) / (currentLevelAmount - prevLevelAmount)) * 100;
+  };
+
+  const progressValue = getProgress();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -76,16 +96,46 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
       >
         <CardContent className="p-1.5 sm:p-2 h-full flex flex-col">
           <div className="aspect-[4/3] rounded-lg overflow-hidden relative flex-shrink-0">
-            <img 
-              src={`/bald-landing/levels/${level}.jpg`}
-              alt={`Level ${level} baldness`}
-              className={cn(
-                "w-full h-full object-cover transition-transform duration-300",
-                isUnlocked && "group-hover:scale-110",
-                !isUnlocked && "grayscale"
-              )}
-            />
-            {!isUnlocked && (
+            {isNextLevel ? (
+              <div className="relative w-full h-full">
+                {/* Grayscale base */}
+                <img 
+                  src={`/bald-landing/levels/${level}.jpg`}
+                  alt={`Level ${level} baldness`}
+                  className="absolute inset-0 w-full h-full object-cover grayscale"
+                />
+                
+                {/* Colored overlay with clip-path */}
+                <img 
+                  src={`/bald-landing/levels/${level}.jpg`}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+                  style={{
+                    clipPath: `polygon(0 0, ${progressValue}% 0, ${progressValue}% 100%, 0 100%)`
+                  }}
+                />
+                
+                {/* Progress line */}
+                <div 
+                  className="absolute inset-y-0 w-0.5 bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.5)] transition-all duration-300"
+                  style={{ left: `${progressValue}%` }}
+                />
+              </div>
+            ) : (
+              /* Regular image for other levels */
+              <img 
+                src={`/bald-landing/levels/${level}.jpg`}
+                alt={`Level ${level} baldness`}
+                className={cn(
+                  "w-full h-full object-cover transition-transform duration-300",
+                  isUnlocked && "group-hover:scale-110",
+                  !isUnlocked && "grayscale"
+                )}
+              />
+            )}
+
+            {/* Lock Overlay */}
+            {!isUnlocked && !isNextLevel && (
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                 <Lock className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400/50" />
               </div>
@@ -103,10 +153,7 @@ const LevelCard = ({ level, isUnlocked, onClick, isSelected, unlockedLevels }: L
             </div>
 
             <Progress 
-              value={isUnlocked ? 100 : Math.min(
-                ((getAmountInNumber(getLevelAmount(unlockedLevels)) / 
-                  getAmountInNumber(getLevelAmount(level))) * 100
-                ), 100)} 
+              value={progressValue}
               className="h-0.5 w-full overflow-hidden rounded-full bg-gray-900/20"
               indicatorClassName={cn(
                 "h-full w-full flex-1 transition-all duration-700",
@@ -228,6 +275,30 @@ const FloatingArrows = () => {
 };
 
 const TotalProgressBar = () => {
+  const [isInView, setIsInView] = useState(false);
+  const progressRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        } else {
+          setIsInView(false); // Reset when out of view
+        }
+      },
+      {
+        threshold: 0.2
+      }
+    );
+
+    if (progressRef.current) {
+      observer.observe(progressRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   // Define key milestone values
   const levelAmounts = [0, 100000, 1000000, 5000000, 10000000, 50000000, 100000000, 250000000, 325000000, 500000000, 1000000000];
   const currentAmount = 325000000;
@@ -271,7 +342,7 @@ const TotalProgressBar = () => {
   const progressPosition = getProgressPosition(currentAmount);
 
   return (
-    <div className="w-full space-y-4 mt-6 progress-container">
+    <div ref={progressRef} className="w-full space-y-4 mt-6 progress-container">
       {/* Desktop Progress Bar - Removed px-8 padding */}
       <div className="hidden md:block relative w-full max-w-2xl mx-auto mb-12">
         {/* Current Value Indicator */}
@@ -295,10 +366,10 @@ const TotalProgressBar = () => {
         {/* Progress Bar */}
         <div className="h-2 bg-gray-800 w-full">
           <motion.div
+            key={isInView ? "visible" : "hidden"} // Force re-render when visibility changes
             className="progress-bar absolute h-full bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-300"
-            style={{ width: `${progressPosition}%` }}
             initial={{ width: 0 }}
-            animate={{ width: `${progressPosition}%` }}
+            animate={{ width: isInView ? `${progressPosition}%` : 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <div className="absolute inset-0 bg-[rgba(255,255,255,0.2)] animate-pulse"></div>
@@ -396,6 +467,7 @@ const TotalProgressBar = () => {
 const ProgressTracker = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const unlockedLevels = 8; // Static level 8
+  const currentAmount = '325M'; // Add this line to define the current amount
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(null);
 
@@ -652,6 +724,7 @@ const ProgressTracker = () => {
                         onClick={() => setSelectedLevel(idx + 1)}
                         isSelected={selectedLevel === idx + 1}
                         unlockedLevels={unlockedLevels}
+                        currentAmount={currentAmount}
                       />
                     </div>
                   ))}
