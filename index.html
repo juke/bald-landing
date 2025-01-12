@@ -3,11 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>$BALD | A Memecoin Revolution</title>
     <style>
       html {
         scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+      
+      body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+        -webkit-overflow-scrolling: touch;
       }
       
       @media (max-width: 767px) {
@@ -18,6 +30,8 @@
         /* Ensure content doesn't bounce on iOS */
         body {
           overscroll-behavior-y: none;
+          overscroll-behavior-x: none;
+          touch-action: pan-y pinch-zoom;
         }
       }
       
@@ -25,6 +39,7 @@
       @media (max-width: 767px) {
         .snap-container {
           scroll-snap-type: none;
+          overscroll-behavior: none;
         }
         .section-content {
           scroll-snap-align: none;
