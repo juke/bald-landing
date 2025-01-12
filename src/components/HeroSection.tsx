@@ -106,15 +106,6 @@ const ClickTooltip = React.forwardRef<
               ease: "easeInOut"
             }}
           />
-          
-          {/* Arrow with glow effect */}
-          <div className={cn(
-            "absolute w-3 h-3",
-            isMobile ? "-top-1.5 left-1/2 -translate-x-1/2" : "-top-1.5 left-6"
-          )}>
-            <div className="absolute w-3 h-3 bg-black/95 border-t border-l border-yellow-400/20 rotate-45 transform origin-center" />
-            <div className="absolute w-3 h-3 bg-gradient-to-t from-yellow-400/5 to-transparent rotate-45 transform origin-center" />
-          </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -1,28 +1,131 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { PieChart, Wallet, Lock, ArrowUp } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const DistributionSection = () => {
+  const [mousePosition, setMousePosition] = useState({ x: -1000, y: -1000 });
+  const [sectionRef, setSectionRef] = useState<HTMLDivElement | null>(null);
+  const [isMouseInside, setIsMouseInside] = useState(false);
+
+  useEffect(() => {
+    if (!sectionRef) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isMouseInside) setIsMouseInside(true);
+      
+      const rect = sectionRef.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      setMousePosition({ x, y });
+    };
+
+    const handleMouseLeave = () => {
+      setIsMouseInside(false);
+    };
+
+    const handleMouseEnter = () => {
+      setIsMouseInside(true);
+    };
+
+    sectionRef.addEventListener('mousemove', handleMouseMove);
+    sectionRef.addEventListener('mouseleave', handleMouseLeave);
+    sectionRef.addEventListener('mouseenter', handleMouseEnter);
+    
+    return () => {
+      if (sectionRef) {
+        sectionRef.removeEventListener('mousemove', handleMouseMove);
+        sectionRef.removeEventListener('mouseleave', handleMouseLeave);
+        sectionRef.removeEventListener('mouseenter', handleMouseEnter);
+      }
+    };
+  }, [sectionRef, isMouseInside]);
+
+  // Effect to smoothly move cursor position off-screen when mouse leaves
+  useEffect(() => {
+    if (!isMouseInside) {
+      const timer = setTimeout(() => {
+        setMousePosition({ x: -1000, y: -1000 });
+      }, 300); // Delay moving cursor off-screen until fade completes
+      return () => clearTimeout(timer);
+    }
+  }, [isMouseInside]);
+
   return (
-    <div className="relative w-full min-h-screen bg-gray-950 flex items-center section-content" id="distribution">
+    <div 
+      ref={setSectionRef}
+      className="relative w-full min-h-screen bg-gray-950 flex items-center section-content overflow-hidden" 
+      id="distribution"
+    >
       {/* Background container */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-950 to-black" />
         
-        {/* Grid pattern with dots - combined to reduce layers */}
+        {/* Grid lines */}
         <div 
           className="absolute inset-0"
           style={{
             backgroundImage: `
               linear-gradient(to right, rgba(250,204,21,0.1) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(250,204,21,0.1) 1px, transparent 1px),
-              radial-gradient(circle at center, rgba(250,204,21,0.3) 1px, transparent 1px)
+              linear-gradient(to bottom, rgba(250,204,21,0.1) 1px, transparent 1px)
             `,
-            backgroundSize: '64px 64px, 64px 64px, 64px 64px',
+            backgroundSize: '64px 64px',
           }}
         />
 
-        {/* Animated overlay */}
+        {/* Interactive dots */}
+        {sectionRef && (
+          <motion.div 
+            className="absolute inset-0"
+            animate={{
+              opacity: isMouseInside ? 1 : 0
+            }}
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut"
+            }}
+          >
+            {[...Array(Math.ceil(sectionRef.clientHeight / 64))].map((_, row) => (
+              [...Array(Math.ceil(sectionRef.clientWidth / 64))].map((_, col) => {
+                const dotX = col * 64 + 32;
+                const dotY = row * 64 + 32;
+                const distance = Math.sqrt(
+                  Math.pow(mousePosition.x - dotX, 2) + 
+                  Math.pow(mousePosition.y - dotY, 2)
+                );
+                const maxDistance = 250;
+                const intensity = Math.max(0, 1 - distance / maxDistance);
+
+                return (
+                  <motion.div
+                    key={`${row}-${col}`}
+                    className="absolute w-1 h-1 rounded-full bg-yellow-400"
+                    style={{
+                      left: `${dotX}px`,
+                      top: `${dotY}px`,
+                      opacity: 0.08 + (intensity * 0.3),
+                      transform: `translate(-50%, -50%) scale(${1 + (intensity * 0.5)})`,
+                    }}
+                    animate={{
+                      opacity: 0.08 + (intensity * 0.3),
+                      scale: 1 + (intensity * 0.5),
+                    }}
+                    transition={{
+                      duration: 0.1,
+                      ease: "linear",
+                      opacity: {
+                        duration: 0.05
+                      }
+                    }}
+                  />
+                );
+              })
+            ))}
+          </motion.div>
+        )}
+
+        {/* Rest of your background elements */}
         <motion.div
           className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(250,204,21,0.15),transparent_70%)]"
           initial={{ opacity: 0.3 }}

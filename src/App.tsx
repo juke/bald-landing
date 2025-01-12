@@ -27,8 +27,8 @@ function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && 
-              entry.intersectionRatio >= 0.5 && 
-              Date.now() - lastInteractionTime > 1000) {
+              entry.intersectionRatio >= 0.3 && 
+              Date.now() - lastInteractionTime > 500) {
             const sectionId = entry.target.id;
             setActiveSection(sectionId);
             window.history.replaceState(null, '', `#${sectionId}`);
@@ -36,8 +36,8 @@ function App() {
         });
       },
       {
-        threshold: 0.5,
-        rootMargin: '-50px 0px -50px 0px'
+        threshold: 0.3,
+        rootMargin: '-20px 0px -20px 0px'
       }
     );
 

@@ -379,6 +379,7 @@ html, body, #root {
   .snap-container {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    scroll-timeline-name: none;
   }
 
   .section-content {
