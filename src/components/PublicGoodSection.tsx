@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import SectionDivider from './SectionDivider';
 
 const PublicGoodSection = () => {
   return (
@@ -166,8 +165,6 @@ const PublicGoodSection = () => {
           </div>
         </div>
       </div>
-
-      <SectionDivider nextSection="roadmap" />
     </div>
   );
 };

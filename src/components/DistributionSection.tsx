@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { PieChart, Wallet, Lock, ArrowUp } from "lucide-react";
-import SectionDivider from './SectionDivider';
 
 const DistributionSection = () => {
   return (
@@ -125,8 +124,6 @@ const DistributionSection = () => {
           </div>
         </div>
       </div>
-
-      <SectionDivider nextSection="progress" />
     </div>
   );
 };
