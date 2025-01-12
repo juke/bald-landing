@@ -3,26 +3,13 @@
 @tailwind utilities;
 
 /* Base styles */
-html {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
   overflow: hidden;
-  position: fixed;
-  touch-action: none;
-}
-
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow: hidden;
-  position: fixed;
   overscroll-behavior: none;
-  touch-action: pan-y;
-  -webkit-touch-callout: none;
 }
 
 #root {
@@ -30,10 +17,9 @@ body {
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  position: fixed;
   overscroll-behavior-x: none;
   touch-action: pan-y;
-  -webkit-user-drag: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Main container */
@@ -45,7 +31,6 @@ body {
   scroll-behavior: smooth;
   overscroll-behavior: none;
   position: relative;
-  touch-action: pan-y;
 }
 
 /* Base section styles */
@@ -58,7 +43,6 @@ body {
   display: flex;
   align-items: center;
   overflow-x: hidden;
-  touch-action: pan-y;
 }
 
 /* Content container styles */
